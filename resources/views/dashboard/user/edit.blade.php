@@ -45,21 +45,6 @@
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
-                                <label for="no_phone">Nomer Handphone</label>
-                                <input type="text" class="form-control" name="no_phone" id="no_phone"
-                                    placeholder="0812XXXXXX" value="{{$data->no_phone}}">
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <label for="alamat">Alamat</label>
-                            <input type="text" class="form-control" name="alamat" id="alamat"
-                            placeholder="Jl.kayu" value="{{$data->alamat}}">
-                        </div>
-                    </div>
-                    <div class="row">
-
-                        {{-- <div class="col-12 col-md-6">
-                            <div class="form-group">
                                 <label for="roles">Roles</label>
                                 <select @cannot('create-user') disabled @endcannot class="allRole" name="roles[]"
                                     multiple="multiple" style="width: 100%;">
@@ -70,12 +55,21 @@
                                     @endforeach
                                 </select>
                             </div>
-                            @cannot('create-user')
-                                @foreach ($userRole as $role)
-                                    <input type="hidden" name="roles[]" value="{{ $role }}">
-                                @endforeach
-                            @endcannot
-                        </div> --}}
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="form-group">
+                                <label for="no_phone">Nomer Handphone</label>
+                                <input type="text" class="form-control" name="no_phone" id="no_phone"
+                                    placeholder="0812XXXXXX" value="{{$data->no_phone}}">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="alamat">Alamat</label>
+                            <input type="text" class="form-control" name="alamat" id="alamat"
+                            placeholder="Jl.kayu" value="{{$data->alamat}}">
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="photo">Foto Profile</label>

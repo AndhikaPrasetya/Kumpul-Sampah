@@ -31,7 +31,7 @@
                                         <th>No</th>
                                         <th>Name</th>
                                         <th>Email</th>
-                                        {{-- <th>Role</th> --}}
+                                        <th>Role</th>
                                         <th class="w-25 text-center">Action</th>
                                     </tr>
                                 </thead>
