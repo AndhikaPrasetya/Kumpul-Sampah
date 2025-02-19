@@ -12,7 +12,7 @@
   <link rel="stylesheet" href={{asset('/template/plugins/fontawesome-free/css/all.min.css')}}>
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css">
-  
+  <link rel="stylesheet" href={{asset('/template/plugins/select2/css/select2.min.css')}}>
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.min.css"
         crossorigin="anonymous">
@@ -41,28 +41,28 @@
     <ul class="navbar-nav ml-auto">
       <li class="nav-item dropdown user-menu">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-          <img src={{ asset('template/assets/3135715.png') }}
+          <img src="{{ Auth::user()->photo ? asset(Auth::user()->photo) : asset('template/assets/3135715.png') }}" 
           class="img-circle elevation-2 user-image" 
           alt="User Image">
-          <span class="d-none d-md-inline">dhika</span>
+          <span class="d-none d-md-inline">{{Auth::user()->name}}</span>
         </a>
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <!-- User image -->
           <li class="user-header bg-primary">
-            <img src={{ asset('template/assets/3135715.png') }}
+            <img src="{{ Auth::user()->image ? asset(Auth::user()->image) : asset('template/assets/3135715.png') }}" 
             class="img-circle elevation-2 user-image" 
             alt="User Image">
 
             <p>
-             dhika
+              {{Auth::user()->name}}
             </p>
           </li>
           <!-- Menu Footer-->
           <li class="user-footer border-black d-flex justify-content-between w-100">
            
-              <a href="#" class="btn btn-default btn-flat w-50">Profile</a>
+              <a href="{{route('users.edit', Auth::user()->id)}}" class="btn btn-default btn-flat w-50">Profile</a>
             
-            <form method="POST" action="#" id="logout-form" class="w-100 d-flex justify-content-end">
+            <form method="POST" action="{{ route('logout') }}" id="logout-form" class="w-100 d-flex justify-content-end">
               @csrf
               <a href="#" class="btn btn-danger w-50" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                   Logout
@@ -89,10 +89,10 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-         <img src={{ asset('template/assets/3135715.png') }}>
+         <img src="{{ Auth::user()->photo ? asset(Auth::user()->photo) : asset('template/assets/3135715.png') }}">
         </div>
         <div class="info">
-          <a href="#" class="d-block">dhika</a>
+          <a href="#" class="d-block">{{ Auth::user()->name }}</a>
         </div>
       </div>
       <!-- Sidebar Menu -->
@@ -101,7 +101,7 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/dashboard" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
@@ -109,36 +109,37 @@
             </a>
           </li>
 
-          <li class="nav-item {{ Route::is('users.*') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Route::is('users.*') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-users"></i>
-              <p>
-                Users Management
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview" style="display: none;">
-              <li class="nav-item">
-                <a href="{{ route('users.index') }}" class="nav-link {{ Route::is('users.*') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-user"></i>
-                    <p>Users</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('users.index') }}" class="nav-link">
-                    <i class="nav-icon fas fa-user"></i>
-                    <p>Roles</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('users.index') }}" class="nav-link">
-                    <i class="nav-icon fas fa-user"></i>
-                    <p>Permission</p>
-                </a>
-              </li>
-            </ul>
+          @if (auth()->user()->hasRole('admin'))
+          <li class="nav-item {{ Route::is('users.*', 'roles.*', 'permission.*',) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('users.*', 'roles.*', 'permission.*',) ? 'active' : '' }}">
+                  <i class="fas fa-users mr-2"></i>
+                  <p>
+                      Users Management
+                      <i class="right fas fa-angle-left"></i>
+                  </p>
+              </a>
+              <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                      <a href="{{ route('users.index') }}" class="nav-link {{ Route::is('users.*') ? 'active' : '' }}">
+                          <i class="nav-icon fas fa-user"></i>
+                          <p>Users</p>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{{ route('roles.index') }}" class="nav-link {{ Route::is('roles.*') ? 'active' : '' }}">
+                          <i class="nav-icon fas fa-shield-alt"></i>
+                          <p>Roles</p>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{{ route('permission.index') }}" class="nav-link {{ Route::is('permission.*') ? 'active' : '' }}">
+                          <i class="nav-icon fas fa-cogs"></i>
+                          <p>Permission</p>
+                      </a>
+                  </li>
+              </ul>
           </li>
-        
+          @endif
       </ul>
       
       </nav>
@@ -188,7 +189,7 @@
 <script src={{asset('/template/plugins/moment/moment.min.js')}}></script>
 <script src={{asset('/template/plugins/daterangepicker/daterangepicker.js')}}></script>
 
-<script src={{asset('/template/plugins/fullcalendar/main.js')}}></script>
+
 <script src={{asset('/template/dist/js/index.js')}}></script>
 <script src={{ asset('/template/plugins/summernote/summernote-bs4.min.js') }}></script>
 <script src={{asset('/template/plugins/datatables/jquery.dataTables.min.js')}}></script>
@@ -208,7 +209,7 @@
 <script src="{{asset('/template/plugins/select2/js/select2.full.min.js')}}"></script>
 <script src="{{asset('template/plugins/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"></script>
-<script src="{{asset('public/index.js')}}"></script>
+
 
 <script>
   $(function () {

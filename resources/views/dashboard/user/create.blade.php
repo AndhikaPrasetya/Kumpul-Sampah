@@ -30,13 +30,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        {{-- <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label for="roles">Roles</label>
                                 <select class="allRole" name="roles[]" multiple="multiple" style="width: 100%;">
                                 </select>
                             </div>
-                        </div> --}}
+                        </div>
                         <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label for="no_phone">Nomer Handphone</label>

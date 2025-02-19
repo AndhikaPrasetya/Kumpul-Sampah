@@ -6,6 +6,7 @@ use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
@@ -39,43 +40,34 @@ class UserController extends Controller
                 ->addColumn('email', function ($data) {
                     return $data->email;
                 })
-                // ->addColumn('role', function ($data) {
-                //     $roles = $data->getRoleNames();
-                //     $rolesList = '';
+                ->addColumn('role', function ($data) {
+                    $roles = $data->getRoleNames();
+                    $rolesList = '';
 
-                //     foreach ($roles as $role) {
-                //         $rolesList .= '<span class="badge badge-primary">' . $role . '</span> ';
-                //     }
+                    foreach ($roles as $role) {
+                        $rolesList .= '<span class="badge badge-primary">' . $role . '</span> ';
+                    }
 
-                //     return $rolesList;
-                // })
+                    return $rolesList;
+                })
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
-                    $buttons .= '<a href="' . route('users.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Edit</span></a>';
-                    $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '"  data-section="users">' .
-                        ' Delete</button>';
+                    //Check permission for adding/editing permissions
+                    if (Gate::allows('update-user')) {
+                        $buttons .= '<a href="' . route('users.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Edit</span></a>';
+                    }
+
+                    // Check permission for deleting roles
+                    if (Gate::allows('delete-user')) {
+                        $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="users">' .
+                            ' Delete</button>';
+                    }
+
                     $buttons .= '</div>';
 
                     return $buttons;
                 })
-                // ->addColumn('action', function ($data) {
-                //     $buttons = '<div class="text-center">';
-                //     //Check permission for adding/editing permissions
-                //     if (Gate::allows('update-user')) {
-                //         $buttons .= '<a href="' . route('users.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Edit</span></a>';
-                //     }
-
-                //     // Check permission for deleting roles
-                //     if (Gate::allows('delete-user')) {
-                //         $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="users">' .
-                //             ' Delete</button>';
-                //     }
-
-                //     $buttons .= '</div>';
-
-                //     return $buttons;
-                // })
-                ->rawColumns(['action'])
+                ->rawColumns(['action','role'])
                 ->make(true);
         }
         return view('dashboard.user.index', get_defined_vars());
@@ -87,7 +79,7 @@ class UserController extends Controller
     {
         $title = "Create Data Users";
         $breadcrumb = "Create Users";
-        // $roles = Role::pluck('name', 'name')->all();
+        $roles = Role::pluck('name', 'name')->all();
         return view('dashboard.user.create', get_defined_vars());
     }
 
@@ -126,9 +118,9 @@ class UserController extends Controller
             'photo' => 'storage/foto-profile/' . $fileName,
         ]);
 
-        // if (!empty($request->roles)) {
-        //     $data->syncRoles($request->roles);
-        // }
+        if (!empty($request->roles)) {
+            $data->syncRoles($request->roles);
+        }
 
         return response()->json([
             'success' => true,
@@ -155,8 +147,8 @@ class UserController extends Controller
         $title = "Edit Data Users";
         $breadcrumb = "Edit Users";
         $data = User::find($id);
-        // $roles = Role::pluck('name', 'name')->all();
-        // $userRole = $data->roles->pluck('name', 'name')->all();
+        $roles = Role::pluck('name', 'name')->all();
+        $userRole = $data->roles->pluck('name', 'name')->all();
         return view('dashboard.user.edit', get_defined_vars());
     }
 
@@ -200,8 +192,8 @@ class UserController extends Controller
                 $user->email = $request->email;
             }
 
-            // // Update role
-            // $user->syncRoles($request->roles);
+             // Update role
+            $user->syncRoles($request->roles);
             $user->save();
 
             return response()->json([

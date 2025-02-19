@@ -67,6 +67,11 @@ $(document).ready(function() {
                 orderable: false,
             },
             {
+                data: 'role',
+                name: 'role',
+                orderable: false,
+            },
+            {
                 data: 'action',
                 name: 'action',
                 orderable: false,
