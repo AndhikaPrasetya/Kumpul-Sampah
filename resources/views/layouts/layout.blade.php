@@ -112,7 +112,8 @@
               </p>
             </a>
           </li>
-
+          
+          @if (auth()->user()->hasRole('super admin'))
           <li class="nav-item">
             <a href="/website-settings" class="nav-link {{ Route::is('website-settings.*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-cog"></i>
@@ -121,8 +122,6 @@
               </p>
             </a>
           </li>
-
-          @if (auth()->user()->hasRole('super admin'))
           <li class="nav-item {{ Route::is('users.*', 'roles.*', 'permission.*',) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('users.*', 'roles.*', 'permission.*',) ? 'active' : '' }}">
                   <i class="fas fa-users mr-2"></i>

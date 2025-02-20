@@ -20,7 +20,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        @can('create-permission')
+                        @can('create permission')
                         <div class="p-3">
                             <a href="{{ route('permission.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Create Permission</a>
                         </div>
