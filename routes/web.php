@@ -10,11 +10,9 @@ use App\Http\Controllers\WebsiteSettingController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome')->middleware(['auth', 'verified','role:nasabah']);
 
-Route::get('/dashboard', function () {
-    return view('dashboard.index');
-})->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -23,6 +21,10 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'verified', 'role:super admin'])->group(function () {
+
+    Route::get('/dashboard', function () {
+    return view('dashboard.index');
+})->name('dashboard');
 
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');

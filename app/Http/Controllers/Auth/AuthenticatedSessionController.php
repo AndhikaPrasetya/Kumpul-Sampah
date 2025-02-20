@@ -14,9 +14,24 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function createLoginAdmin(): View
     {
+        if(Auth::check()){
+            if(Auth::user()->hasRole('super admin')){
+                return redirect()->route('dashboard');
+            }
+        }
         return view('auth.login');
+    }
+
+    public function createLoginUser(): View
+    {
+        if(Auth::check()){
+            if(Auth::user()->hasRole('nasabah')){
+                return redirect()->route('welcome');
+            }
+        }
+        return view('auth.user_login');
     }
 
     /**
@@ -28,11 +43,11 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        if(Auth::user()->hasRole('admin')){
+        if(Auth::user()->hasRole('super admin')){
             return redirect()->to('dashboard');
         }
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route('welcome'));
     }
 
     /**
@@ -40,12 +55,19 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+
+        $user = Auth::user();
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
 
+        if($user && $user->hasRole('super admin')){
+            return redirect('/admin/login');
+        }
+        
         return redirect('/login');
     }
 }
