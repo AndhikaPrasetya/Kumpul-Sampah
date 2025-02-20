@@ -48,11 +48,11 @@ class RoleController extends Controller
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
                     //Check permission for adding/editing permissions
-                    if (Gate::allows('update-role')) {
+                    if (Gate::allows('update role')) {
                         $buttons .= '<a href="' . route('roles.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Add/Edit Permission & Role</span></a>';
                     }
                     // Check permission for deleting roles
-                    if (Gate::allows('delete-role')) {
+                    if (Gate::allows('delete role')) {
                         $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="roles">' .
                             ' Delete</button>';
                     }
@@ -74,9 +74,10 @@ class RoleController extends Controller
         $title = "Create Role";
         $breadcrumb = "Create Role";
         $permissionGroups = [
-            'Role' => Permission::whereIn('name', ['create-role', 'read-role', 'update-role', 'delete-role'])->get(),
-            'Permission' => Permission::whereIn('name', ['create-permission', 'read-permission', 'update-permission', 'delete-permission'])->get(),
-            'User' => Permission::whereIn('name', ['create-user', 'read-user', 'update-user', 'delete-user'])->get(),
+            'Role' => Permission::whereIn('name', ['create role', 'read role', 'update role', 'delete role'])->get(),
+            'Permission' => Permission::whereIn('name', ['create permission', 'read permission', 'update permission', 'delete permission'])->get(),
+            'User' => Permission::whereIn('name', ['create user', 'read user', 'update user', 'delete user'])->get(),
+            'Website Settings' => Permission::whereIn('name', ['update website setting'])->get(),
         ];
         $permissions = Permission::get();
         return view('dashboard.roles.create',get_defined_vars());
@@ -127,9 +128,10 @@ class RoleController extends Controller
         $title = "Edit Data Role";
         $breadcrumb = "Edit Role";
         $permissionGroups = [
-            'Role' => Permission::whereIn('name', ['create-role', 'read-role', 'update-role', 'delete-role'])->get(),
-            'Permission' => Permission::whereIn('name', ['create-permission', 'read-permission', 'update-permission', 'delete-permission'])->get(),
-            'User' => Permission::whereIn('name', ['create-user', 'read-user', 'update-user', 'delete-user'])->get(),
+            'Role' => Permission::whereIn('name', ['create role', 'read role', 'update role', 'delete role'])->get(),
+            'Permission' => Permission::whereIn('name', ['create permission', 'read permission', 'update permission', 'delete permission'])->get(),
+            'User' => Permission::whereIn('name', ['create user', 'read user', 'update user', 'delete user'])->get(),
+            'Website Settings' => Permission::whereIn('name', ['update website setting'])->get(),
         ];
         $permissions = Permission::get();
         $rolePermissions = DB::table('role_has_permissions')
