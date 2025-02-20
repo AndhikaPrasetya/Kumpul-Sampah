@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Spatie\Permission\Models\Permission;
+
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
@@ -37,11 +38,11 @@ class PermissionController extends Controller
         ->addColumn('action', function ($data) {
             $buttons = '<div class="text-center">';
                     //Check permission for adding/editing permissions
-                    if (Gate::allows('update-permission')) {
+                    if (Gate::allows('update permission')) {
                         $buttons .= '<a href="' . route('permission.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Edit</span></a>';
                     }
                     // Check permission for deleting roles
-                    if (Gate::allows('delete-permission')) {
+                    if (Gate::allows('delete permission')) {
                         $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="permission">' .
                             ' Delete</button>';
                     }

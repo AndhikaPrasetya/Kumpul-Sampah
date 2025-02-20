@@ -53,12 +53,12 @@ class UserController extends Controller
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
                     //Check permission for adding/editing permissions
-                    if (Gate::allows('update-user')) {
+                    if (Gate::allows('update user')) {
                         $buttons .= '<a href="' . route('users.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Edit</span></a>';
                     }
 
                     // Check permission for deleting roles
-                    if (Gate::allows('delete-user')) {
+                    if (Gate::allows('delete user')) {
                         $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="users">' .
                             ' Delete</button>';
                     }

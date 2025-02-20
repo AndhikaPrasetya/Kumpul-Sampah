@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <?php
+  $settings = \App\Models\WebsiteSetting::first();  
+  ?>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>Kumpul Sampah | Dashboard</title>
-
+  <title>{{ $settings->website_name ?? 'Kumpul Sampah' }}</title>
+  <meta name="description" content="{{ $settings->website_description ?? 'Default Website Description' }}">
+  <link rel="icon" href="{{ $settings->favicon ? asset('storage/' . $settings->favicon) : asset('template/assets/3135715.png') }}"  type="image/x-icon">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
@@ -109,7 +113,16 @@
             </a>
           </li>
 
-          @if (auth()->user()->hasRole('admin'))
+          <li class="nav-item">
+            <a href="/website-settings" class="nav-link {{ Route::is('website-settings.*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-cog"></i>
+              <p>
+                Website Settings
+              </p>
+            </a>
+          </li>
+
+          @if (auth()->user()->hasRole('super admin'))
           <li class="nav-item {{ Route::is('users.*', 'roles.*', 'permission.*',) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('users.*', 'roles.*', 'permission.*',) ? 'active' : '' }}">
                   <i class="fas fa-users mr-2"></i>
