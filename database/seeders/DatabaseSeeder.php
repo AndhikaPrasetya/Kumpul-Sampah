@@ -35,7 +35,14 @@ class DatabaseSeeder extends Seeder
             'read user',
             'update user',
             'delete user',
+            'create kategori',
+            'read kategori',
+            'update kategori',
+            'delete kategori',
+            'create website setting',
+            'read website setting',
             'update website setting',
+            'delete website setting',
             
         ];
 

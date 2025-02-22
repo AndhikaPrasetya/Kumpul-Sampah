@@ -28,7 +28,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href={{asset('/template/dist/css/adminlte.min.css')}}>
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed" style="background-color: #f4f6f9;">
 <div class="wrapper">
 
 
@@ -152,6 +152,14 @@
               </ul>
           </li>
           @endif
+          <li class="nav-item">
+            <a href="{{route('kategori-sampah.index')}}" class="nav-link {{ Route::is('kategori-sampah.*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-cog"></i>
+              <p>
+                Kategori Sampah
+              </p>
+            </a>
+          </li>
       </ul>
       
       </nav>
@@ -162,8 +170,11 @@
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">   
+    <!-- Content Header (Page header) -->
+    <div>
     <!-- Main content -->
     @yield('content')
+    </div>
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">

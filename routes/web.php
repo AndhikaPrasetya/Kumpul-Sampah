@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategorySampahController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -51,6 +52,16 @@ Route::middleware(['auth', 'verified', 'role:super admin'])->group(function () {
 
     Route::get('/website-settings', [WebsiteSettingController::class, 'index'])->name('website-settings.index');
     Route::post('/website-settings/store', [WebsiteSettingController::class, 'store'])->name('website-settings.store');
+
+
+    Route::get('/kategori-sampah', [CategorySampahController::class, 'index'])->name('kategori-sampah.index');
+    Route::get('/kategori-sampah/create', [CategorySampahController::class, 'create'])->name('kategori-sampah.create');
+    Route::post('/kategori-sampah/store', [CategorySampahController::class, 'store'])->name('kategori-sampah.store');
+    Route::get('/kategori-sampah/edit/{id}', [CategorySampahController::class, 'edit'])->name('kategori-sampah.edit');
+    Route::put('/kategori-sampah/update/{id}', [CategorySampahController::class, 'update'])->name('kategori-sampah.update');
+    Route::delete('/kategori-sampah/delete/{id}', [CategorySampahController::class, 'destroy'])->name('kategori-sampah.destroy');
+    Route::get('/kategori-sampah/{id}', [CategorySampahController::class, 'show'])->name('kategori-sampah.show');
+
 });
 
 require __DIR__ . '/auth.php';

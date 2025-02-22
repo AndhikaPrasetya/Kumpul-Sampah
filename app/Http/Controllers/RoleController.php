@@ -81,6 +81,7 @@ class RoleController extends Controller
             'Permission' => Permission::whereIn('name', ['create permission', 'read permission', 'update permission', 'delete permission'])->get(),
             'User' => Permission::whereIn('name', ['create user', 'read user', 'update user', 'delete user'])->get(),
             'Website Settings' => Permission::whereIn('name', ['create website setting','read website setting','update website setting','delete website setting'])->get(),
+            'Kategori Sampah' => Permission::whereIn('name', ['create kategori', 'read kategori', 'update kategori', 'delete kategori'])->get(),
         ];
         $permissions = Permission::get();
         return view('dashboard.roles.create',get_defined_vars());
@@ -135,6 +136,7 @@ class RoleController extends Controller
             'Permission' => Permission::whereIn('name', ['create permission', 'read permission', 'update permission', 'delete permission'])->get(),
             'User' => Permission::whereIn('name', ['create user', 'read user', 'update user', 'delete user'])->get(),
             'Website Settings' => Permission::whereIn('name', ['create website setting','read website setting','update website setting','delete website setting'])->get(),
+            'Kategori Sampah' => Permission::whereIn('name', ['create kategori', 'read kategori', 'update kategori', 'delete kategori'])->get(),
         ];
         $permissions = Permission::get();
         $rolePermissions = DB::table('role_has_permissions')
