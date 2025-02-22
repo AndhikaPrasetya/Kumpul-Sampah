@@ -52,22 +52,31 @@ class UserController extends Controller
                 })
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
-                    //Check permission for adding/editing permissions
+
                     if (Gate::allows('update user')) {
-                        $buttons .= '<a href="' . route('users.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Edit</span></a>';
+                        $buttons .= '<a href="' . route('users.edit', $data->id) . '" class="btn btn-sm btn-primary mr-1">
+                                        <i class="fas fa-edit"></i> Edit
+                                     </a>';
                     }
-
-                    // Check permission for deleting roles
+                    
                     if (Gate::allows('delete user')) {
-                        $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="users">' .
-                            ' Delete</button>';
+                        $buttons .= '<button type="button" class="btn btn-sm btn-danger mr-1 delete-button" data-id="' . $data->id . '" data-section="users">'.
+                                    '<i class="fas fa-trash-alt"></i> Delete
+                                     </button>';
                     }
-
+                    
+                    if (Gate::allows('read user')) {
+                        $buttons .= '<a href="' . route('users.show', $data->id) . '" class="btn btn-sm btn-info btn-show-user">
+                    <i class="fas fa-eye"></i> View
+                 </a>';
+                    }
+                    
                     $buttons .= '</div>';
+                    
 
                     return $buttons;
                 })
-                ->rawColumns(['action','role'])
+                ->rawColumns(['action', 'role'])
                 ->make(true);
         }
         return view('dashboard.user.index', get_defined_vars());
@@ -136,7 +145,10 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return view('user::show');
+        $data = User::find($id);
+        $roles = Role::pluck('name', 'name')->all();
+        $userRole = $data->roles->pluck('name', 'name')->all();
+        return view('dashboard.user.view', get_defined_vars());
     }
 
     /**
@@ -144,8 +156,6 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $title = "Edit Data Users";
-        $breadcrumb = "Edit Users";
         $data = User::find($id);
         $roles = Role::pluck('name', 'name')->all();
         $userRole = $data->roles->pluck('name', 'name')->all();
@@ -192,7 +202,7 @@ class UserController extends Controller
                 $user->email = $request->email;
             }
 
-             // Update role
+            // Update role
             $user->syncRoles($request->roles);
             $user->save();
 

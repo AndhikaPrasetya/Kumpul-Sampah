@@ -49,12 +49,15 @@ class RoleController extends Controller
                     $buttons = '<div class="text-center">';
                     //Check permission for adding/editing permissions
                     if (Gate::allows('update role')) {
-                        $buttons .= '<a href="' . route('roles.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Add/Edit Permission & Role</span></a>';
+                        $buttons .= '<a href="' . route('roles.edit', $data->id) . '" class="btn btn-sm btn-primary mr-1">
+                        <i class="fas fa-edit"></i> Edit
+                     </a>';
                     }
                     // Check permission for deleting roles
                     if (Gate::allows('delete role')) {
-                        $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="roles">' .
-                            ' Delete</button>';
+                       $buttons .= '<button type="button" class="btn btn-sm btn-danger mr-1 delete-button" data-id="' . $data->id . '" data-section="roles">'.
+                                    '<i class="fas fa-trash-alt"></i> Delete
+                                     </button>';
                     }
                     $buttons .= '</div>';
 
@@ -77,7 +80,7 @@ class RoleController extends Controller
             'Role' => Permission::whereIn('name', ['create role', 'read role', 'update role', 'delete role'])->get(),
             'Permission' => Permission::whereIn('name', ['create permission', 'read permission', 'update permission', 'delete permission'])->get(),
             'User' => Permission::whereIn('name', ['create user', 'read user', 'update user', 'delete user'])->get(),
-            'Website Settings' => Permission::whereIn('name', ['update website setting'])->get(),
+            'Website Settings' => Permission::whereIn('name', ['create website setting','read website setting','update website setting','delete website setting'])->get(),
         ];
         $permissions = Permission::get();
         return view('dashboard.roles.create',get_defined_vars());
@@ -131,7 +134,7 @@ class RoleController extends Controller
             'Role' => Permission::whereIn('name', ['create role', 'read role', 'update role', 'delete role'])->get(),
             'Permission' => Permission::whereIn('name', ['create permission', 'read permission', 'update permission', 'delete permission'])->get(),
             'User' => Permission::whereIn('name', ['create user', 'read user', 'update user', 'delete user'])->get(),
-            'Website Settings' => Permission::whereIn('name', ['update website setting'])->get(),
+            'Website Settings' => Permission::whereIn('name', ['create website setting','read website setting','update website setting','delete website setting'])->get(),
         ];
         $permissions = Permission::get();
         $rolePermissions = DB::table('role_has_permissions')
@@ -167,17 +170,6 @@ class RoleController extends Controller
         ], 200);
     }
 
-    public function addPermission($roleId)
-    {
-        $title = "Edit Permission";
-        $breadcrumb = "Edit Permission";
-        $role = Role::find($roleId);
-        $permissions = Permission::get();
-        $rolePermissions = DB::table('role_has_permissions')
-            ->where('role_has_permissions.role_id', $role->id)
-            ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')->all();
-        return view('roles::addPermission', get_defined_vars());
-    }
 
     public function givePermissionToRole(Request $request, $roleId)
     {

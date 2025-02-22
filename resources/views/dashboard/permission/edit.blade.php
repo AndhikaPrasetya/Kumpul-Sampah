@@ -1,25 +1,11 @@
 @extends('layouts.layout')
 
 @section('content')
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1>{{$title}}</h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{route('permission.index')}}">Permission</a></li>
-                    <li class="breadcrumb-item">Edit</li>
-  
-                </ol>
-            </div>
-        </div>
-    </div>
-  </section>
-  <section class="content">
+  <section class="content m-5">
       <div class="card card-primary">
+        <div class="card-header bg-primary">
+            <h3 class="card-title text-white">Create New Role</h3>
+        </div>
           <form id="updateFormPermission" data-id="{{ $data->id }}">
               @csrf
               @method('PUT')
@@ -29,12 +15,18 @@
                       <input type="text" class="form-control" name="name" id="name" value="{{ $data->name }}" required>
                   </div>
               </div>
-              <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                  <button type="button" onclick="window.location.href='{{ route('permission.index') }}'" class="btn btn-warning">
-                      <span>Back</span>
-                  </button>
-              </div>
+              <div class="card-footer bg-light">
+                <div class="d-flex justify-content-start">
+                    <button type="submit" class="btn btn-primary px-4 mr-1">
+                        <i class="fas fa-save mr-1"></i> Submit
+                    </button>
+                    <button type="button" 
+                            onclick="window.location.href='{{ route('permission.index') }}'"
+                            class="btn btn-warning px-4">
+                        <i class="fas fa-arrow-left mr-1"></i> Back
+                    </button>
+                </div>
+            </div>
           </form>
       </div>
   </section>

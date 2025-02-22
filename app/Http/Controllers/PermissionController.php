@@ -39,12 +39,15 @@ class PermissionController extends Controller
             $buttons = '<div class="text-center">';
                     //Check permission for adding/editing permissions
                     if (Gate::allows('update permission')) {
-                        $buttons .= '<a href="' . route('permission.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Edit</span></a>';
+                        $buttons .= '<a href="' . route('permission.edit', $data->id) . '" class="btn btn-sm btn-primary mr-1">
+                        <i class="fas fa-edit"></i> Edit
+                     </a>';
                     }
-                    // Check permission for deleting roles
+                    // Check permission for deleting permissions
                     if (Gate::allows('delete permission')) {
-                        $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="permission">' .
-                            ' Delete</button>';
+                       $buttons .= '<button type="button" class="btn btn-sm btn-danger mr-1 delete-button" data-id="' . $data->id . '" data-section="permission">'.
+                                    '<i class="fas fa-trash-alt"></i> Delete
+                                     </button>';
                     }
                     $buttons .= '</div>';
                     return $buttons;

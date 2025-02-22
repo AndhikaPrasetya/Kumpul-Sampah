@@ -1,18 +1,21 @@
 @extends('layouts.layout')
 @section('content')
-    <section class="content">
+    <section class="content m-5">
         <div class="card card-primary">
+            <div class="card-header bg-primary">
+                <h3 class="card-title text-white">Create New User</h3>
+            </div>
             <form id="formSetting" action="{{ route('website-settings.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
                     <div class="form-group">
                         <label for="website_name">Website Name</label>
-                        <input type="text" name="website_name" id="website_name" class="form-control"
+                        <input type="text" name="website_name" id="website_name" class="form-control shadow-sm"
                             value="{{ $settings->website_name ?? '' }}">
                     </div>
                     <div class="form-group">
                         <label for="website_description">Website Description</label>
-                        <textarea name="website_description" id="website_description" class="form-control">{{ $settings->website_description ?? '' }}</textarea>
+                        <textarea name="website_description" id="website_description" class="form-control shadow-sm">{{ $settings->website_description ?? '' }}</textarea>
                     </div>
                     <div class="row">
                         <div class="col-6">
@@ -28,7 +31,7 @@
                                 </div>
                                 <div class="input-group">
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" name="logo"
+                                        <input type="file" class="custom-file-input shadow-sm" name="logo"
                                             id="exampleInputFile">
                                         <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                                     </div>
@@ -49,7 +52,7 @@
                                
                                 <div class="input-group">
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" name="favicon"
+                                        <input type="file" class="custom-file-input shadow-sm" name="favicon"
                                             id="exampleInputFile">
                                         <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                                     </div>
@@ -60,10 +63,12 @@
                     </div>
                 </div>
 
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <button type="button"onclick="window.location.href='{{ route('permission.index') }}'"
-                        class="btn btn-warning"><span>Back</span></button>
+                <div class="card-footer bg-light">
+                    <div class="d-flex justify-content-start">
+                        <button type="submit" class="btn btn-primary px-4 mr-1">
+                            <i class="fas fa-save mr-1"></i> Simpan
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>

@@ -1,8 +1,11 @@
 @extends('layouts.layout')
 @section('content')
     {{-- @include('layouts.breadcrumb') --}}
-    <section class="content">
+    <section class="content m-5">
         <div class="card card-primary">
+            <div class="card-header bg-primary">
+                <h3 class="card-title text-white">Create New User</h3>
+            </div>
             <form id="createFormUser" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
@@ -10,22 +13,19 @@
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="name">Name</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="nama"
-                                    required>
+                                <input type="text" class="form-control shadow-sm" name="name" id="name" placeholder="nama" required>
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
-                                <label for="email">email</label>
-                                <input type="email" class="form-control" name="email" id="email"
-                                    placeholder="E-mail" required>
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control shadow-sm" name="email" id="email" placeholder="E-mail" required>
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input type="text" class="form-control" name="password" id="password"
-                                    placeholder="Password" required>
+                                <input type="text" class="form-control shadow-sm" name="password" id="password" placeholder="Password" required>
                             </div>
                         </div>
                     </div>
@@ -33,15 +33,14 @@
                         <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label for="roles">Roles</label>
-                                <select class="allRole" name="roles[]" multiple="multiple" style="width: 100%;">
+                                <select class="allRole shadow-sm" name="roles[]" multiple="multiple" style="width: 100%;">
                                 </select>
                             </div>
                         </div>
                         <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label for="no_phone">Nomer Handphone</label>
-                                <input type="text" class="form-control" name="no_phone" id="no_phone"
-                                    placeholder="0812XXXXXX" required>
+                                <input type="text" class="form-control shadow-sm" name="no_phone" id="no_phone" placeholder="0812XXXXXX" required>
                             </div>
                         </div>
                         <div class="col-6">
@@ -49,34 +48,36 @@
                                 <label for="image">Foto</label>
                                 <div class="input-group">
                                     <div class="custom-file">
-                                      <input type="file" class="custom-file-input" name="photo" id="exampleInputFile">
+                                      <input type="file" class="custom-file-input shadow-sm" name="photo" id="exampleInputFile">
                                       <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                                    </div>
-                                    <div class="input-group-append">
-                                      <span class="input-group-text">Upload</span>
                                     </div>
                                   </div>
                             </div>
                         </div>
                         <div class="col-12">
                             <label for="alamat">Alamat</label>
-                            <textarea name="alamat" class="form-control" id="alamat"></textarea>
+                            <textarea name="alamat" class="form-control shadow-sm" id="alamat"></textarea>
                         </div>
                     </div>
                 </div>
 
-                <div class="card-footer">
+                <div class="card-footer bg-light">
                     <div class="d-flex justify-content-start">
-                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                        <button type="button"onclick="window.location.href='{{ route('users.index') }}'"
-                            class="btn btn-warning"><span>Back</span></button>
+                        <button type="submit" class="btn btn-primary px-4 mr-1">
+                            <i class="fas fa-save mr-1"></i> Submit
+                        </button>
+                        <button type="button" 
+                                onclick="window.location.href='{{ route('users.index') }}'"
+                                class="btn btn-warning px-4">
+                            <i class="fas fa-arrow-left mr-1"></i> Back
+                        </button>
                     </div>
                 </div>
             </form>
         </div>
-
     </section>
 @endsection
+
 @section('script')
     <script>
         $(document).ready(() => {

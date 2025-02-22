@@ -1,8 +1,11 @@
 @extends('layouts.layout')
 @section('content')
 {{-- @include('layouts.breadcrumb') --}}
-<section class="content">
+<section class="content m-5">
   <div class="card card-primary">
+    <div class="card-header bg-primary">
+        <h3 class="card-title text-white">Create New Role</h3>
+    </div>
       <form id="createFormPermission">
           @csrf
           <div class="card-body">
@@ -12,12 +15,18 @@
               </div>
           </div>
   
-          <div class="card-footer">
-              <button type="submit" class="btn btn-primary">Submit</button>
-              <button
-              type="button"onclick="window.location.href='{{ route('permission.index') }}'"
-              class="btn btn-warning"><span>Back</span></button>
-          </div>
+          <div class="card-footer bg-light">
+            <div class="d-flex justify-content-start">
+                <button type="submit" class="btn btn-primary px-4 mr-1">
+                    <i class="fas fa-save mr-1"></i> Submit
+                </button>
+                <button type="button" 
+                        onclick="window.location.href='{{ route('permission.index') }}'"
+                        class="btn btn-warning px-4">
+                    <i class="fas fa-arrow-left mr-1"></i> Back
+                </button>
+            </div>
+        </div>
       </form>
   </div>
 </section>

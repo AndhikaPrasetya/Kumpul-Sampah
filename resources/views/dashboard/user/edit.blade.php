@@ -1,23 +1,10 @@
 @extends('layouts.layout')
 @section('content')
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>{{ $title }}</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('users.index') }}">Users</a></li>
-                        <li class="breadcrumb-item">Edit</li>
-                    </ol>
-                </div>
-            </div>
-        </div><!-- /.container-fluid -->
-    </section>
-    <section class="content">
+    <section class="content m-5">
         <div class="card card-primary">
+            <div class="card-header bg-primary">
+                <h3 class="card-title text-white">Edit user</h3>
+            </div>
             <form id="updateFormUser" data-id="{{ $data->id }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -26,21 +13,21 @@
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="name">Name</label>
-                                <input type="text" class="form-control" name="name" id="name"
+                                <input type="text" class="form-control shadow-sm" name="name" id="name"
                                     value="{{ $data->name }}">
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control" name="email" id="email"
+                                <input type="email" class="form-control shadow-sm" name="email" id="email"
                                     value="{{ $data->email }}">
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="password">New password</label>
-                                <input type="text" class="form-control" name="password" id="password">
+                                <input type="text" class="form-control shadow-sm" name="password" id="password">
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
@@ -59,13 +46,13 @@
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="no_phone">Nomer Handphone</label>
-                                <input type="text" class="form-control" name="no_phone" id="no_phone"
+                                <input type="text" class="form-control shadow-sm" name="no_phone" id="no_phone"
                                     placeholder="0812XXXXXX" value="{{$data->no_phone}}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label for="alamat">Alamat</label>
-                            <input type="text" class="form-control" name="alamat" id="alamat"
+                            <input type="text" class="form-control shadow-sm" name="alamat" id="alamat"
                             placeholder="Jl.kayu" value="{{$data->alamat}}">
                         </div>
                     </div>
@@ -85,19 +72,21 @@
                                           <input type="file" class="custom-file-input" name="photo" id="exampleInputFile">
                                           <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                                         </div>
-                                        <div class="input-group-append">
-                                          <span class="input-group-text">Upload</span>
-                                        </div>
                                       </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
+                <div class="card-footer bg-light">
                     <div class="d-flex justify-content-start">
-                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                        <button type="button"
-                        onclick="window.location.href='{{ route('users.index') }}'" class="btn btn-warning"><span>Back</span></button>
+                        <button type="submit" class="btn btn-primary px-4 mr-1">
+                            <i class="fas fa-save mr-1"></i> Submit
+                        </button>
+                        <button type="button" 
+                                onclick="window.location.href='{{ route('users.index') }}'"
+                                class="btn btn-warning px-4">
+                            <i class="fas fa-arrow-left mr-1"></i> Back
+                        </button>
                     </div>
                 </div>
             </form>
