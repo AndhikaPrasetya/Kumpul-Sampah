@@ -145,6 +145,30 @@ $(document).ready(function() {
             },
         ]
     });
+    $('#table_kategori_sampah').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        stateSave: true,
+        ajax: {
+            url: "/kategori-sampah",
+            type: "GET"
+        },
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            {
+                data: 'nama',
+                name: 'nama',
+                orderable: false,
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
+        ]
+    });
      
 
 
