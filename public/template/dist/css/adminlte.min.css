@@ -58826,3 +58826,9 @@ a.text-muted:hover {
 .dropify-wrapper {
     height: 150px !important;  /* Atur tinggi sesuai kebutuhan */
 }
+
+label.required::after {
+  content: " *";
+  color: red;
+  font-weight: bold;
+}

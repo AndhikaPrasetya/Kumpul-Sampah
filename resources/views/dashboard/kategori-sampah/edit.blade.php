@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-  <div class="container mt-5">
+  <div class="container m-5">
       <div class="card card-primary">
         <div class="card-header bg-primary">
             <h3 class="card-title text-white">Edit Kategori</h3>
@@ -11,9 +11,19 @@
               @method('PUT')
               <div class="card-body">
                 <div class="card-body">
-                    <div class="form-group">
-                        <label for="nama">Nama Kategori</label>
-                        <input type="text" class="form-control shadow-sm" name="nama" id="nama" value="{{$data->nama}}">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="nama" class="required">Nama Kategori</label>
+                                <input type="text" class="form-control shadow-sm" name="nama" id="nama" value="{{$data->nama}}">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="deskripsi" class="required">Deskripsi</label>
+                                <input type="text" class="form-control shadow-sm" name="deskripsi" id="deskripsi"  value="{{$data->deskripsi}}">
+                            </div>
+                        </div>
                     </div>
                 </div>
               </div>

@@ -9,10 +9,20 @@
       <form id="createFormCategory">
           @csrf
           <div class="card-body">
-              <div class="form-group">
-                  <label for="nama">Nama Kategori</label>
-                  <input type="text" class="form-control shadow-sm" name="nama" id="nama" placeholder="contoh: Plastik" required>
-              </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="nama" class="required">Nama Kategori</label>
+                        <input type="text" class="form-control shadow-sm" name="nama" id="nama" placeholder="contoh: Plastik" required>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="deskripsi" class="required">Deskripsi</label>
+                        <input type="text" class="form-control shadow-sm" name="deskripsi" id="deskripsi" placeholder="contoh: sampah jenis plastik" required>
+                    </div>
+                </div>
+            </div>
           </div>
   
           <div class="card-footer bg-light">

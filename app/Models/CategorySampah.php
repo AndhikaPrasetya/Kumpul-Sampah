@@ -11,6 +11,11 @@ class CategorySampah extends Model
 
     protected $fillable = [
         'nama',
+        'deskripsi'
     ];
+
+    public function sampah(){
+        return $this->hasMany(Sampah::class);
+    }
 
 }

@@ -22,11 +22,11 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        @can('create kategori')
+                        @can('create sampah')
                         <div class="card-header bg-transparent border-bottom p-3">
                             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                                <a href="{{ route('kategori-sampah.create') }}" class="btn btn-primary btn-sm btn-kategori">
-                                    <i class="fas fa-plus"></i> Tambah Kategori
+                                <a href="{{ route('sampah.create') }}" class="btn btn-primary btn-sm btn-kategori">
+                                    <i class="fas fa-plus"></i> Tambah Sampah
                                 </a>
                             </div>
                         </div>
@@ -34,12 +34,13 @@
                         
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered  table-hover" id="table_kategori_sampah">
+                                <table class="table table-bordered  table-hover" id="table_sampah">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Name</th>
-                                            <th>Deskripsi</th>
+                                            <th>Nama sampah</th>
+                                            <th>Kategori</th>
+                                            <th>Harga per KG</th>
                                             <th class="text-center" style="width: 20%;">Action</th>
                                         </tr>
                                     </thead>
