@@ -89,9 +89,10 @@ class SampahController extends Controller
         }
         try {
             if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $image_name = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('sampah'), $image_name);
+                $file = $request->file('image');
+                $fileName = time() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('sampah', $fileName, 'public');
+                $fileData = 'storage/sampah/' . $fileName;
             } else {
                 throw new \Exception('Image file is required');
             }
@@ -100,7 +101,7 @@ class SampahController extends Controller
                 'nama' => $request->nama,
                 'category_id' => $request->category_id,
                 'harga' => $request->harga,
-                'image' => $image_name,
+                'image' => $fileData,
                 'deskripsi' => $request->deskripsi,
             ]);
 
