@@ -168,6 +168,14 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{route('transaction.index')}}" class="nav-link {{ Route::is('transaction.*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-money"></i>
+              <p>
+              Transaksi
+              </p>
+            </a>
+          </li>
       </ul>
       
       </nav>
