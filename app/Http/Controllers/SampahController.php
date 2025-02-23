@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Sampah;
 use Illuminate\Http\Request;
 use App\Models\CategorySampah;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -136,8 +137,8 @@ class SampahController extends Controller
         $validator = Validator::make($request->all(), [
             'nama'        => 'sometimes|required|string|max:255',
             'category_id' => 'sometimes|required|integer',
-            'harga'       => 'sometimes|required|numeric|min:0',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
+            'harga'       => 'sometimes|required',
+            'image'       => 'sometimes|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
             'deskripsi'   => 'sometimes|required|string',
         ]);
 
@@ -149,70 +150,62 @@ class SampahController extends Controller
             ], 422);
         }
 
-            try {
-                $data = Sampah::findOrFail($id);
-                if (!$data) {
-                    return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
-                }
-        
-                $updateData = [];
-        
-                if ($request->filled('nama')) {
-                    $updateData['nama'] = $request->nama;
-                }
-               
-        
-                if ($request->filled('category_id')) {
-                    $updateData['category_id'] = $request->category_id;
-                }
-               
-        
-                if ($request->filled('harga')) {
-                    $updateData['harga'] = $request->harga;
-                }
-               
-        
-                if ($request->filled('deskripsi')) {
-                    $updateData['deskripsi'] = $request->deskripsi;
-                }
-               
-        
-                $data->update($updateData);
-        
-                if ($request->hasFile('image')) {
-                    try {
-                        // Delete old image if exists
-                        if ($data->image && file_exists(public_path('sampah/' . $data->image))) {
-                            unlink(public_path('sampah/' . $data->image));
-                        }
+        try {
+            DB::beginTransaction();
     
-                        // Upload new image
-                        $image = $request->file('image');
-                        $image_name = time() . '.' . $image->getClientOriginalExtension();
-                        $image->move(public_path('sampah'), $image_name);
-    
-                        // Update image name in request data
-                        $request->merge(['image' => $image_name]);
-                    } catch (\Exception $e) {
-                        return response()->json([
-                            'status' => false,
-                            'message' => 'Image upload failed',
-                            'error' => $e->getMessage()
-                        ], 400);
-                    }
-                }
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Data Berhasil diperbarui',
-                    'data' => $data
-                ], 200);
-            } catch (\Exception $e) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Terjadi kesalahan saat memperbarui data.',
-                    'errors' => $e->getMessage()
-                ], 500);
+            $data = Sampah::find($id);
+            if (!$data) {
+                return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
             }
+    
+            $updateData = [];
+    
+            if ($request->filled('nama')) {
+                $updateData['nama'] = $request->nama;
+            }
+            if ($request->filled('category_id')) {
+                $updateData['category_id'] = $request->category_id;
+            }
+            if ($request->filled('harga')) {
+                $updateData['harga'] = (int) str_replace('.', '', $request->harga);
+            }
+            if ($request->filled('deskripsi')) {
+                $updateData['deskripsi'] = $request->deskripsi;
+            }
+
+         // Handle image upload
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($data->image && file_exists(public_path($data->image))) {
+                unlink(public_path($data->image));
+            }
+
+            // Simpan gambar baru
+            $file = $request->file('image');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('sampah', $fileName, 'public');
+            $fileData = 'storage/sampah/' . $fileName;
+
+            // Tambahkan path gambar ke array updateData
+            $updateData['image'] = $fileData;
+        }
+
+    
+            $data->update($updateData);
+            DB::commit();
+            return response()->json([
+                'status' => true,
+                'message' => 'Data Berhasil diperbarui',
+                'data' => $data
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'status' => false,
+                'message' => 'Terjadi kesalahan saat memperbarui data.',
+                'errors' => $e->getMessage()
+            ], 500);
+        }
     }
 
 

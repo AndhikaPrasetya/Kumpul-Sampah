@@ -31,13 +31,13 @@
                 <div class="col-12">
                     <div class="form-group">
                         <label for="harga" class="required">Harga per KG</label>
-                        <input type="text" class="form-control shadow-sm" name="harga" id="harga" value="{{'Rp ' . number_format($data->harga, 0, ',', '.')}}">
+                        <input type="text" class="form-control shadow-sm" name="harga" id="harga" value="{{number_format($data->harga, 0, ',', '.')}}" >
                     </div>
                 </div>
                 <div class="col-12">
                     <div class="form-group">
                         <label for="image" class="required">Gambar sampah</label>
-                        <input type="file" class="dropify" name="image"  data-default-file="{{ asset('sampah/' . $data->image) }}"/>
+                        <input type="file" class="dropify" name="image"  data-default-file="{{ asset($data->image) }}"/>
                     </div>
                 </div>
                 <div class="col-12">
@@ -91,11 +91,12 @@
                 e.preventDefault();
 
                 const formData = new FormData(this);
+                formData.append('_method', 'PUT');
                 const id = $(this).data('id');
 
                 $.ajax({
                     url: '/sampah/update/'+ id,
-                    type: 'PUT',
+                    type: 'POST',
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -105,7 +106,7 @@
                     success: function(response) {
                         showToast('success', response.message);
                         setTimeout(() => {
-                            window.location.reload();
+                            window.location.href='/list-sampah';
                         }, 2000);
                     },
                     error: (xhr) => {
