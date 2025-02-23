@@ -30,23 +30,26 @@ class CategorySampahController extends Controller
         ->addColumn('nama', function($data){
             return $data->nama;
         })
+        ->addColumn('deskripsi', function($data){
+            return $data->deskripsi;
+        })
         ->addColumn('action', function ($data) {
             $buttons = '<div class="text-center">';
                     //Check permission for adding/editing permissions
                     if (Gate::allows('update kategori')) {
                         $buttons .= '<a href="' . route('kategori-sampah.edit', $data->id) . '" class="btn btn-sm btn-primary mr-1">
-                        <i class="fas fa-edit"></i> Edit
+                        <i class="fas fa-edit"></i>
                      </a>';
                     }
                     // Check permission for deleting permissions
                     if (Gate::allows('delete kategori')) {
                        $buttons .= '<button type="button" class="btn btn-sm btn-danger mr-1 delete-button" data-id="' . $data->id . '" data-section="kategori-sampah">'.
-                                    '<i class="fas fa-trash-alt"></i> Delete
+                                    '<i class="fas fa-trash-alt"></i> 
                                      </button>';
                     }
                     if (Gate::allows('read kategori')) {
                         $buttons .= '<a href="' . route('kategori-sampah.show', $data->id) . '" class="btn btn-sm btn-info btn-show-user">
-                    <i class="fas fa-eye"></i> View
+                    <i class="fas fa-eye"></i>
                  </a>';
                     }
                     $buttons .= '</div>';
@@ -73,6 +76,7 @@ class CategorySampahController extends Controller
     {
         $validator = Validator::make($request->all(),  [
             'nama' => 'required',
+            'deskripsi' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -83,15 +87,13 @@ class CategorySampahController extends Controller
 
         $data = CategorySampah::create([
             'nama' => $request->nama,
+            'deskripsi' => $request->deskripsi,
         ]);
         return response()->json([
             'success' => true,
             'message' => 'Kategori berhasil dibuat',
             'kategori' => $data
         ], 200);
-    /**
-     * Display the specified resource.
-     */
     }
     public function show(string $id)
     {
@@ -127,6 +129,7 @@ class CategorySampahController extends Controller
     {
         $validator = Validator::make($request->all(),  [
             'nama' => 'required',
+            'deskripsi' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -138,8 +141,10 @@ class CategorySampahController extends Controller
         $data = CategorySampah::findOrFail($id);
         $data->update([
             'nama' => $request->nama,
-            ]);
-            return response()->json([
+            'deskripsi' => $request->deskripsi,
+        ]);
+        
+        return response()->json([
                 'success' => true,
                 'message' => 'Kategori berhasil diubah',
                 'kategori' => $data

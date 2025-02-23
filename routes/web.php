@@ -6,6 +6,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\SampahController;
 use App\Http\Controllers\WebsiteSettingController;
 
 
@@ -21,11 +22,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'verified', 'role:super admin'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:super admin|bsu'])->group(function () {
 
     Route::get('/dashboard', function () {
-    return view('dashboard.index');
-})->name('dashboard');
+    return view('dashboard.index');})->name('dashboard');
 
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
@@ -52,8 +52,15 @@ Route::middleware(['auth', 'verified', 'role:super admin'])->group(function () {
 
     Route::get('/website-settings', [WebsiteSettingController::class, 'index'])->name('website-settings.index');
     Route::post('/website-settings/store', [WebsiteSettingController::class, 'store'])->name('website-settings.store');
-
-
+    
+    Route::get('/list-sampah', [SampahController::class, 'index'])->name('sampah.index');
+    Route::get('/sampah/create', [SampahController::class, 'create'])->name('sampah.create');
+    Route::post('/sampah/store', [SampahController::class, 'store'])->name('sampah.store');
+    Route::get('/sampah/edit/{id}', [SampahController::class, 'edit'])->name('sampah.edit');
+    Route::put('/sampah/update/{id}', [SampahController::class, 'update'])->name('sampah.update');
+    Route::delete('/sampah/delete/{id}', [SampahController::class, 'destroy'])->name('sampah.destroy');
+    Route::get('/sampah/{id}', [SampahController::class, 'show'])->name('sampah.show');
+    
     Route::get('/kategori-sampah', [CategorySampahController::class, 'index'])->name('kategori-sampah.index');
     Route::get('/kategori-sampah/create', [CategorySampahController::class, 'create'])->name('kategori-sampah.create');
     Route::post('/kategori-sampah/store', [CategorySampahController::class, 'store'])->name('kategori-sampah.store');
@@ -61,6 +68,11 @@ Route::middleware(['auth', 'verified', 'role:super admin'])->group(function () {
     Route::put('/kategori-sampah/update/{id}', [CategorySampahController::class, 'update'])->name('kategori-sampah.update');
     Route::delete('/kategori-sampah/delete/{id}', [CategorySampahController::class, 'destroy'])->name('kategori-sampah.destroy');
     Route::get('/kategori-sampah/{id}', [CategorySampahController::class, 'show'])->name('kategori-sampah.show');
+
+
+
+
+    
 
 });
 

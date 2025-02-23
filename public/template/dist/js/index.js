@@ -4,15 +4,34 @@ $(document).on('click', '.delete-button', function(e) {
     let id = $(this).data('id');
     let section = $(this).data('section');
 
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "1000",          
+    };
+
+    const showToast = (icon, message) => {
+        if (icon === 'error') {
+            toastr.error(message);
+        } else if (icon === 'success') {
+            toastr.success(message); 
+        } else if (icon === 'info') {
+            toastr.info(message); 
+        } else {
+            toastr.warning(message); 
+        }
+    };
+
     let url = `/${section}/delete/${id}`;
     Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: "Anda yakin ingin menghapus?",
+        text: "Data akan hilang!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
+        confirmButtonText: "Delete"
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
@@ -23,15 +42,8 @@ $(document).on('click', '.delete-button', function(e) {
                     _token: $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-                    Swal.fire({
-                        text: response.message,
-                        icon: 'success',
-                        timer: 2000,
-                        showConfirmButton: false,
-                        timerProgressBar: true
-                    }).then(() => {
-                        location.reload();
-                    });
+                    showToast('success', response.message);
+                    location.reload();
                 },
                 error: function() {
                     Swal.fire("Error!", "There was a problem deleting the item.",
@@ -159,6 +171,45 @@ $(document).ready(function() {
             {
                 data: 'nama',
                 name: 'nama',
+            orderable: false,
+            },
+            {
+                data: 'deskripsi',
+                name: 'deskripsi',
+                orderable: false,
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
+        ]
+    });
+    $('#table_sampah').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        stateSave: true,
+        ajax: {
+            url: "/list-sampah",
+            type: "GET"
+        },
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            {
+                data: 'nama',
+                name: 'nama',
+                orderable: false,
+            },
+            {
+                data: 'category_id',
+                name: 'category_id',
+                orderable: false,
+            },
+            {
+                data: 'harga',
+                name: 'harga',
                 orderable: false,
             },
             {
@@ -197,6 +248,8 @@ $(document).ready(function() {
             cache: true
         }
     });
+
+    $('.dropify').dropify();
 });
 
 

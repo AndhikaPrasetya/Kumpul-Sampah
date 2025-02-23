@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="{{asset('/template/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
   <link rel="stylesheet" href="{{asset('/template/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
   <link rel="stylesheet" href="{{asset('/template/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css" integrity="sha512-EZSUkJWTjzDlspOoPSpUFR0o0Xy7jdzW//6qhUkoZ9c4StFkVsp9fbbd0O06p9ELS3H486m4wmrCELjza4JEog==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Theme style -->
   <link rel="stylesheet" href={{asset('/template/dist/css/adminlte.min.css')}}>
 </head>
@@ -154,9 +154,17 @@
           @endif
           <li class="nav-item">
             <a href="{{route('kategori-sampah.index')}}" class="nav-link {{ Route::is('kategori-sampah.*') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-cog"></i>
+              <i class="nav-icon fas fa-dumpster"></i>
               <p>
                 Kategori Sampah
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{route('sampah.index')}}" class="nav-link {{ Route::is('sampah.*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-recycle"></i>
+              <p>
+              Sampah
               </p>
             </a>
           </li>
@@ -171,10 +179,10 @@
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">   
     <!-- Content Header (Page header) -->
-    <div>
+    
     <!-- Main content -->
     @yield('content')
-    </div>
+    
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">
@@ -231,7 +239,7 @@
 <script src="{{asset('/template/dist/js/adminlte.js')}}"></script>
 <script src="{{asset('/template/plugins/select2/js/select2.full.min.js')}}"></script>
 <script src="{{asset('template/plugins/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js" integrity="sha512-8QFTrG0oeOiyWo/VM9Y8kgxdlCryqhIxVeRpWSezdRRAvarxVtwLnGroJgnVW9/XBRduxO/z1GblzPrMQoeuew==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
 <script>

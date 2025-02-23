@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\CategorySampah;
 use Exception;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -43,6 +44,10 @@ class DatabaseSeeder extends Seeder
             'read website setting',
             'update website setting',
             'delete website setting',
+            'create sampah',
+            'read sampah',
+            'update sampah',
+            'delete sampah',
             
         ];
 
@@ -57,7 +62,19 @@ class DatabaseSeeder extends Seeder
         DB::beginTransaction();
         try {
             $role = Role::create(['name' => 'super admin']);
+            $bsu = Role::create(['name' => 'bsu']);
+            Role::create(['name' => 'nasabah']);
            
+            $bsu->givePermissionTo([
+                'create kategori',
+                'read kategori',
+                'update kategori',
+                'delete kategori',
+                'create sampah',
+                'read sampah',
+                'update sampah',
+                'delete sampah',
+            ]);
             $role->givePermissionTo(Permission::all());
 
             DB::commit();
@@ -71,10 +88,16 @@ class DatabaseSeeder extends Seeder
         try {
             $admin = User::create([
                 'name' => 'admin',
-                'email' => 'admin@example.com',
+                'email' => 'admin@gmail.com',
+                'password' => bcrypt('password'),
+            ]);
+            $bsu = User::create([
+                'name' => 'bsu',
+                'email' => 'bsu@gmail.com',
                 'password' => bcrypt('password'),
             ]);
             $admin->assignRole('super admin');
+            $bsu->assignRole('bsu');
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -93,6 +116,22 @@ class DatabaseSeeder extends Seeder
 
         // Simpan data ke database
         WebsiteSetting::create($data);
+        DB::commit();
+
+        }catch(Exception $e){
+            DB::rollBack();
+        }
+
+        //DATA Kategori sampah
+        DB::beginTransaction();
+        try{
+        CategorySampah::create([
+            'nama' => 'Plastik',
+            'deskripsi' => 'sampah plastik',
+        ]);
+
+        // Simpan data ke database
+        
         DB::commit();
 
         }catch(Exception $e){
