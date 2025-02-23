@@ -48,6 +48,10 @@ class DatabaseSeeder extends Seeder
             'read sampah',
             'update sampah',
             'delete sampah',
+            'create saldo',
+            'read saldo',
+            'update saldo',
+            'delete saldo',
             
         ];
 
@@ -74,6 +78,10 @@ class DatabaseSeeder extends Seeder
                 'read sampah',
                 'update sampah',
                 'delete sampah',
+                'create saldo',
+                'read saldo',
+                'update saldo',
+                'delete saldo',
             ]);
             $role->givePermissionTo(Permission::all());
 
