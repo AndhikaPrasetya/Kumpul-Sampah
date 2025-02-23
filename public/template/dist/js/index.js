@@ -111,7 +111,7 @@ $(document).ready(function() {
             },
             {
                 data: 'guard_name',
-                name: 'Guard Name',
+                name: 'guard_name',
                 orderable: false,
             },
             {
@@ -210,6 +210,41 @@ $(document).ready(function() {
             {
                 data: 'harga',
                 name: 'harga',
+                orderable: false,
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
+        ]
+    });
+
+    $('#table_transaction').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        stateSave: true,
+        ajax: {
+            url: "/transaction",
+            type: "GET"
+        },
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            {
+                data: 'user_id',
+                name: 'user_id',
+                orderable: false,
+            },
+            {
+                data: 'tanggal',
+                name: 'tanggal',
+                orderable: false,
+            },
+            {
+                data: 'total_amount',
+                name: 'total_amount',
                 orderable: false,
             },
             {

@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\SampahController;
+use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\WebsiteSettingController;
 
 
@@ -69,7 +70,13 @@ Route::middleware(['auth', 'verified', 'role:super admin|bsu'])->group(function 
     Route::delete('/kategori-sampah/delete/{id}', [CategorySampahController::class, 'destroy'])->name('kategori-sampah.destroy');
     Route::get('/kategori-sampah/{id}', [CategorySampahController::class, 'show'])->name('kategori-sampah.show');
 
-
+    Route::get('/transaction', [TransactionsController::class, 'index'])->name('transaction.index');
+    Route::get('/transaction/create', [TransactionsController::class, 'create'])->name('transaction.create');
+    Route::post('/transaction/store', [TransactionsController::class, 'store'])->name('transaction.store');
+    Route::get('/transaction/edit/{id}', [TransactionsController::class, 'edit'])->name('transaction.edit');
+    Route::put('/transaction/update/{id}', [TransactionsController::class, 'update'])->name('transaction.update');
+    Route::delete('/transaction/delete/{id}', [TransactionsController::class, 'destroy'])->name('transaction.destroy');
+    Route::get('/transaction/{id}', [TransactionsController::class, 'show'])->name('transaction.show');
 
 
     

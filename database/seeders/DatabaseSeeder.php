@@ -52,6 +52,10 @@ class DatabaseSeeder extends Seeder
             'read saldo',
             'update saldo',
             'delete saldo',
+            'create transaction',
+            'read transaction',
+            'update transaction',
+            'delete transaction',
             
         ];
 
@@ -67,7 +71,7 @@ class DatabaseSeeder extends Seeder
         try {
             $role = Role::create(['name' => 'super admin']);
             $bsu = Role::create(['name' => 'bsu']);
-            Role::create(['name' => 'nasabah']);
+            $nasabah = Role::create(['name' => 'nasabah']);
            
             $bsu->givePermissionTo([
                 'create kategori',
@@ -82,6 +86,17 @@ class DatabaseSeeder extends Seeder
                 'read saldo',
                 'update saldo',
                 'delete saldo',
+                'create transaction',
+                'read transaction',
+                'update transaction',
+                'delete transaction',
+            ]);
+
+            $nasabah->givePermissionTo([
+                'create transaction',
+                'read transaction',
+                'update transaction',
+                'delete transaction',
             ]);
             $role->givePermissionTo(Permission::all());
 
@@ -104,7 +119,13 @@ class DatabaseSeeder extends Seeder
                 'email' => 'bsu@gmail.com',
                 'password' => bcrypt('password'),
             ]);
+            $nasabah = User::create([
+                'name' => 'nasabah',
+                'email' => 'nasabah@gmail.com',
+                'password' => bcrypt('password'),
+            ]);
             $admin->assignRole('super admin');
+            $nasabah->assignRole('nasabah');
             $bsu->assignRole('bsu');
             DB::commit();
         } catch (\Exception $e) {
