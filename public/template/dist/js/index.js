@@ -221,7 +221,10 @@ $(document).ready(function() {
         ]
     });
 
-    $('#table_transaction').DataTable({
+    let table = $('#table_transaction').DataTable({
+        responsive: true,
+        lengthChange: false,
+        autoWidth: false,
         processing: true,
         serverSide: true,
         searching: true,
@@ -232,30 +235,52 @@ $(document).ready(function() {
         },
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            {
-                data: 'user_id',
-                name: 'user_id',
-                orderable: false,
-            },
-            {
-                data: 'tanggal',
-                name: 'tanggal',
-                orderable: false,
-            },
-            {
-                data: 'total_amount',
-                name: 'total_amount',
-                orderable: false,
-            },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
-            },
-        ]
+            { data: 'user_id', name: 'user_id', orderable: true },
+            { data: 'tanggal', name: 'tanggal', orderable: true },
+            { data: 'total_amount', name: 'total_amount', orderable: true },
+            { data: 'action', name: 'action', orderable: false, searchable: false }
+        ],
+        order: [[2, 'desc']], // Default sorting berdasarkan tanggal terbaru
+
+        // Pastikan searching tetap ada dengan format dom yang benar
+        dom: "<'row'<'col-md-6'l><'col-md-6'f>>" + 
+             "<'row'<'col-md-12'B>>" + 
+             "<'row'<'col-md-12'tr>>" + 
+             "<'row'<'col-md-5'i><'col-md-7'p>>", 
+    
+             buttons: [
+                {
+                    extend: 'colvis',
+                    text: 'Pilih Kolom',
+                    className: 'btn btn-sm btn-secondary'
+                },
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fas fa-file-excel"></i> Export Excel',
+                    className: 'btn btn-sm btn-success',
+                    exportOptions: {
+                        columns: function (idx, data, node) {
+                            return $(node).css('display') !== 'none' ? true : false;
+                        }
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fas fa-file-pdf"></i> Export PDF',
+                    className: 'btn btn-sm btn-danger',
+                    orientation: 'landscape',
+                    pageSize: 'A4',
+                    exportOptions: {
+                        columns: function (idx, data, node) {
+                            return $(node).css('display') !== 'none' ? true : false;
+                        }
+                    }
+                }
+            ]
     });
-     
+
+    // Menampilkan tombol di tempat yang diinginkan
+    table.buttons().container().appendTo('#export-buttons');
 
 
     //getDataRoleInUser

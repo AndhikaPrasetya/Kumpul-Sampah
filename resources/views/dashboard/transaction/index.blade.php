@@ -23,15 +23,15 @@
                 <div class="col-12">
                     <div class="card">
                         @can('create transaction')
-                        <div class="card-header bg-transparent border-bottom p-3">
-                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <div class="d-flex justify-content-between border-bottom p-3">
+                            <div>
                                 <a href="{{ route('transaction.create') }}" class="btn btn-primary btn-sm btn-kategori">
                                     <i class="fas fa-plus"></i> Tambah Transaksi
                                 </a>
                             </div>
+                            <div id="export-buttons"></div>
                         </div>
                         @endcan
-                        
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered  table-hover" id="table_transaction">
