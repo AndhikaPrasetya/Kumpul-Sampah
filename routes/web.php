@@ -79,7 +79,7 @@ Route::middleware(['auth', 'verified', 'role:super admin|bsu'])->group(function 
     Route::get('/transaction/show/{id}', [TransactionsController::class, 'show'])->name('transaction.show');
     Route::delete('/delete-detail/{id}', [TransactionsController::class, 'deleteTransactionDetail'])->name('transaction.deleteTransactionDetail');
 
-
+    Route::get('/history-transaction', [TransactionsController::class, 'getTransactionDetail'])->name('history-transaction.index');
     
 
 });

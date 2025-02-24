@@ -67,6 +67,42 @@ class TransactionsController extends Controller
         return view('dashboard.transaction.index', get_defined_vars());
     }
 
+    public function getTransactionDetail(Request $request)  {
+        {
+            $title = "Data Transaksi";
+            $breadcrumb = "Transaksi";
+            if ($request->ajax()) {
+                $data = TransactionDetail::with(['transaction.users','sampah']);
+                if ($search = $request->input('search.value')) {
+                    $data->where(function ($data) use ($search) {
+                        $data->where('sampah_id', 'like', "%{$search}%");
+                    });
+                }
+    
+                return DataTables::eloquent($data)
+                    ->addIndexColumn()
+                    ->addColumn('transaction_id', function ($data) {
+                        return $data->transaction->users->name;
+                    })
+                    ->addColumn('sampah_id', function ($data) {
+                        return $data->sampah->nama;
+                    })
+                    ->addColumn('berat', function ($data) {
+                        return number_format($data->berat, 0, ',', '.').'KG ';
+                     
+                    })
+                    ->addColumn('subtotal', function ($data) {
+                        return 'Rp ' . number_format($data->subtotal, 0, ',', '.');
+                    })
+                    ->addColumn('created_at', function ($data) {
+                        return Carbon::parse($data->created_at)->format('d-m-Y');
+                    })
+                    ->make(true);
+            }
+            return view('dashboard.transaction.historyTransaksi', get_defined_vars());
+        }
+    }
+
     public function create()
     {
         $users = User::with('roles')

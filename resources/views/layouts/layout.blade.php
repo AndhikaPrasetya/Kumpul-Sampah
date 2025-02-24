@@ -176,6 +176,14 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{route('history-transaction.index')}}" class="nav-link {{ Route::is('history-transaction.index') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-money"></i>
+              <p>
+              Riwayat transaksi
+              </p>
+            </a>
+          </li>
       </ul>
       
       </nav>
