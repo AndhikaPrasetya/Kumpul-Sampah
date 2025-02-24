@@ -25,7 +25,7 @@
                
 
             <div id="dynamic-input-sampah">
-                <div class="row input-group-sampah">
+                <div class="row align-items-center input-group-sampah">
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="sampah_id" class="required">Sampah</label>
@@ -82,8 +82,6 @@
       </form>
   </div>
 </section>
-
-    </div>
 @endsection
 @section('script')
     <script>
@@ -148,13 +146,53 @@
     });
 
     // Tambah input baru
-    $('.add-row-sampah').on('click', function () {
-            const newInput = $('.input-group-sampah').first().clone();
-            newInput.find('input').val('');
-            newInput.find('select').val('');
-            $('#dynamic-input-sampah').append(newInput);
-        });
-        const hitungTotalAmount = () => {
+    $(document).on('click','.add-row-sampah', function(e) {
+                e.preventDefault();
+
+                if (e.target.classList.contains('add-row-sampah')) {
+                    const newRow = document.createElement('div');
+                    newRow.classList.add('row', 'align-items-center','input-group-sampah');
+                    newRow.innerHTML = `
+                <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="sampah_id" class="required">Sampah</label>
+                            <select name="sampah_id[]" class="form-control sampah-select">
+                                <option value="" disabled selected>Pilih sampah</option>
+                                @foreach($sampahs as $sampah)
+                                <option value="{{$sampah->id}}" data-harga="{{$sampah->harga}}">
+                                    {{$sampah->nama}} - Rp {{number_format($sampah->harga, 0, ',', '.')}}/kg
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-5">
+                        <div class="form-group">
+                            <label for="berat" class="required">Berat</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control berat-input" name="berat[]" placeholder="Contoh: 1" required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <div class="col-1">
+                    <button type="button" class="btn btn-danger remove-row"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+                    const container = document.getElementById('dynamic-input-sampah');
+                    container.appendChild(newRow);
+                }
+            });
+
+            $(document).on('click', '.remove-row', function(e) {
+                e.preventDefault();
+                $(this).closest('.row').remove();
+                hitungTotalAmount();
+            });
+    
+    const hitungTotalAmount = () => {
     let totalAmount = 0;
 
     $(".input-group-sampah").each(function () {

@@ -98,20 +98,134 @@ class TransactionsController extends Controller
 
     try {
         DB::beginTransaction();
-
+    
         // Simpan transaksi utama
         $transaction = Transactions::create([
             'user_id' => $request->user_id,
             'tanggal' => Carbon::now()->format('Y-m-d'),
             'total_amount' => 0, // Akan dihitung setelah menyimpan detail
+            'status' => 'pending'
         ]);
-
+    
         $totalAmount = 0;
         $transactionDetails = [];
+    
+        // Pre-fetch semua data sampah sekaligus
+        $sampahIds = $request->sampah_id;
+        $sampahItems = Sampah::whereIn('id', $sampahIds)->get()->keyBy('id');
+        
+        // Gunakan timestamp yang sama untuk semua record
+        $now = now();
+    
+        foreach ($request->sampah_id as $key => $sampahId) {
+            // Ambil harga sampah dari collection yang sudah di-cache
+            $sampah = $sampahItems[$sampahId];
+            $hargaPerKg = $sampah->harga;
+    
+            // Hitung subtotal
+            $berat = $request->berat[$key];
+            $subtotal = $berat * $hargaPerKg;
+    
+            // Simpan detail transaksi
+            $transactionDetails[] = [
+                'transaction_id' => $transaction->id,
+                'sampah_id' => $sampahId,
+                'berat' => $berat,
+                'subtotal' => $subtotal,
+                'created_at' => $now,
+                'updated_at' => $now
+            ];
+    
+            // Tambahkan subtotal ke total amount
+            $totalAmount += $subtotal;
+        }
+    
+        // Simpan semua transaction details sekaligus
+        TransactionDetail::insert($transactionDetails);
+    
+        // Update total_amount di transactions
+        $transaction->update(['total_amount' => $totalAmount]);
+    
+        DB::commit();
+    
+        return response()->json([
+            'success' => true,
+            'message' => 'Transaksi berhasil disimpan',
+            'data' => $transaction
+        ], 201);
+    } catch (Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Terjadi kesalahan saat menyimpan transaksi.',
+            'errors' => $e->getMessage()
+        ], 500);
+    }
+}
+
+public function edit($id){
+    $transaction = Transactions::find($id);
+  
+    if(!$transaction){
+        return response()->json([
+            'success' => false,
+            'message' => 'Transaksi tidak ditemukan',
+            ], 404);
+    }
+    //filter user
+    $users = User::with('roles')
+    ->whereHas('roles', function ($query) {
+        $query->where('name', 'nasabah');
+    })
+    ->get();
+
+    $sampahs = Sampah::all();
+    $transactionDetails = TransactionDetail::where('transaction_id',$id)->get();
+    $selectedUserIds = $transaction->user_id;
+    
+   return view('dashboard.transaction.edit', get_defined_vars());
+
+}
+
+public function update(Request $request, $id)
+{
+    $validator = Validator::make($request->all(), [
+        'sampah_id' => 'required|array',
+        'sampah_id.*' => 'required|exists:sampahs,id',
+        'berat' => 'required|array',
+        'berat.*' => 'required|numeric|min:0.1',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Validation failed',
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
+    try {
+        DB::beginTransaction();
+
+        // Cek apakah transaksi ada
+        $transaction = Transactions::findOrFail($id);
+        
+        // Hapus detail transaksi lama
+        TransactionDetail::where('transaction_id', $id)->delete();
+        
+        $totalAmount = 0;
+        $transactionDetails = [];
+        
+        // Pre-fetch semua data sampah sekaligus
+        $sampahIds = $request->sampah_id;
+        $sampahItems = Sampah::whereIn('id', $sampahIds)->get()->keyBy('id');
+        
+        // Gunakan timestamp yang sama untuk semua record
+        $now = now();
 
         foreach ($request->sampah_id as $key => $sampahId) {
-            // Ambil harga sampah dari database
-            $sampah = Sampah::find($sampahId);
+            // Ambil harga sampah dari collection yang sudah di-cache
+            $sampah = $sampahItems[$sampahId];
             $hargaPerKg = $sampah->harga;
 
             // Hitung subtotal
@@ -124,8 +238,8 @@ class TransactionsController extends Controller
                 'sampah_id' => $sampahId,
                 'berat' => $berat,
                 'subtotal' => $subtotal,
-                'created_at' => now(),
-                'updated_at' => now()
+                'created_at' => $now,
+                'updated_at' => $now
             ];
 
             // Tambahkan subtotal ke total amount
@@ -142,17 +256,51 @@ class TransactionsController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Transaksi berhasil disimpan',
+            'message' => 'Transaksi berhasil diperbarui',
             'data' => $transaction
-        ], 201);
+        ], 200);
     } catch (Exception $e) {
         DB::rollBack();
         return response()->json([
             'success' => false,
-            'message' => 'Terjadi kesalahan saat menyimpan transaksi.',
+            'message' => 'Terjadi kesalahan saat memperbarui transaksi.',
             'errors' => $e->getMessage()
         ], 500);
     }
+}
+
+public function deleteTransactionDetail($id){
+    $transaction =TransactionDetail::findOrFail($id);
+    if($transaction){
+        $transaction->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail transaksi berhasil dihapus',
+            'data' => $transaction
+            ], 200);
+            }else{
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Detail transaksi tidak ditemukan',
+                    'errors' => 'Detail transaksi tidak ditemukan'
+                    ], 404);
+    }
+}
+
+public function destroy($id){
+    $transaction = Transactions::find($id);
+    if (!$transaction) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Transaksi tidak ditemukan',
+            ], 404);
+    }
+    $transaction->delete();
+    return response()->json([
+        'success' => true,
+        'message' => 'Transaksi berhasil dihapus',
+        ], 200);
+        
 }
     
 }
