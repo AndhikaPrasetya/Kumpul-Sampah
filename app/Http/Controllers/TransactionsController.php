@@ -186,6 +186,29 @@ public function edit($id){
    return view('dashboard.transaction.edit', get_defined_vars());
 
 }
+public function show($id){
+    $transaction = Transactions::find($id);
+  
+    if(!$transaction){
+        return response()->json([
+            'success' => false,
+            'message' => 'Transaksi tidak ditemukan',
+            ], 404);
+    }
+    //filter user
+    $users = User::with('roles')
+    ->whereHas('roles', function ($query) {
+        $query->where('name', 'nasabah');
+    })
+    ->get();
+
+    $sampahs = Sampah::all();
+    $transactionDetails = TransactionDetail::where('transaction_id',$id)->get();
+    $selectedUserIds = $transaction->user_id;
+    
+   return view('dashboard.transaction.detail', get_defined_vars());
+
+}
 
 public function update(Request $request, $id)
 {

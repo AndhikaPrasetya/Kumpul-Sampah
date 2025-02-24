@@ -76,7 +76,7 @@ Route::middleware(['auth', 'verified', 'role:super admin|bsu'])->group(function 
     Route::get('/transaction/edit/{id}', [TransactionsController::class, 'edit'])->name('transaction.edit');
     Route::put('/transaction/update/{id}', [TransactionsController::class, 'update'])->name('transaction.update');
     Route::delete('/transaction/delete/{id}', [TransactionsController::class, 'destroy'])->name('transaction.destroy');
-    Route::get('/transaction/{id}', [TransactionsController::class, 'show'])->name('transaction.show');
+    Route::get('/transaction/show/{id}', [TransactionsController::class, 'show'])->name('transaction.show');
     Route::delete('/delete-detail/{id}', [TransactionsController::class, 'deleteTransactionDetail'])->name('transaction.deleteTransactionDetail');
 
 
