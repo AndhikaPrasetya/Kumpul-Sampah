@@ -221,6 +221,7 @@ $(document).ready(function() {
         ]
     });
 
+    //-------------------------> start table history transaction <-----------------------\\
     let table_history = $('#table_history_transaction').DataTable({
         responsive: true,
         lengthChange: false,
@@ -283,6 +284,9 @@ $(document).ready(function() {
     // Menampilkan tombol di tempat yang diinginkan
     table_history.buttons().container().appendTo('#export-buttons');
 
+        //-------------------------> end table history transaction <-----------------------\\
+
+    //-------------------------> start table transaction <-----------------------\\
     let table = $('#table_transaction').DataTable({
         responsive: true,
         lengthChange: false,
@@ -344,6 +348,48 @@ $(document).ready(function() {
     // Menampilkan tombol di tempat yang diinginkan
     table.buttons().container().appendTo('#export-buttons');
 
+//-------------------------> end table transaction <-----------------------\\
+
+$('#table_saldo').DataTable({
+    processing: true,
+    serverSide: true,
+    searching: true,
+    stateSave: true,
+    ajax: {
+        url: "/saldo",
+        type: "GET"
+    },
+    columns: [
+        { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+        {
+            data: 'user_id',
+            name: 'user_id',
+            orderable: false,
+        },
+        {
+            data: 'saldo_masuk',
+            name: 'saldo_masuk',
+            orderable: false,
+        },
+        {
+            data: 'saldo_keluar',
+            name: 'saldo_keluar',
+            orderable: false,
+        },
+        {
+            data: 'saldo_akhir',
+            name: 'saldo_akhir',
+            orderable: false,
+        },
+        {
+            data: 'action',
+            name: 'action',
+            orderable: false,
+            searchable: false
+        },
+    ]
+});
+
 
     //getDataRoleInUser
 
@@ -370,6 +416,8 @@ $(document).ready(function() {
             cache: true
         }
     });
+
+    
 
     $('.dropify').dropify();
 });

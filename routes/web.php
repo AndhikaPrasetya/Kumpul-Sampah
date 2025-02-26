@@ -6,6 +6,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\SaldoController;
 use App\Http\Controllers\SampahController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\WebsiteSettingController;
@@ -80,6 +81,14 @@ Route::middleware(['auth', 'verified', 'role:super admin|bsu'])->group(function 
     Route::delete('/delete-detail/{id}', [TransactionsController::class, 'deleteTransactionDetail'])->name('transaction.deleteTransactionDetail');
 
     Route::get('/history-transaction', [TransactionsController::class, 'getTransactionDetail'])->name('history-transaction.index');
+
+    Route::get('/saldo', [SaldoController::class, 'index'])->name('saldo.index');
+    Route::get('/saldo/create', [SaldoController::class, 'create'])->name('saldo.create');
+    Route::post('/saldo/store', [SaldoController::class, 'store'])->name('saldo.store');
+    Route::get('/saldo/edit/{id}', [SaldoController::class, 'edit'])->name('saldo.edit');
+    Route::put('/saldo/update/{id}', [SaldoController::class, 'update'])->name('saldo.update');
+    Route::delete('/saldo/delete/{id}', [SaldoController::class, 'destroy'])->name('saldo.destroy');
+    Route::get('/saldo/show/{id}', [SaldoController::class, 'show'])->name('saldo.show');
     
 
 });

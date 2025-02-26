@@ -184,6 +184,14 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{route('saldo.index')}}" class="nav-link {{ Route::is('saldo.index') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-money"></i>
+              <p>
+              Saldo 
+              </p>
+            </a>
+          </li>
       </ul>
       
       </nav>
