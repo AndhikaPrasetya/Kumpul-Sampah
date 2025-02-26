@@ -115,13 +115,18 @@
                 });
             });
 
+            
             function formatAngka(value) {
-        return value.replace(/[^0-9]/g, ''); // Hanya angka
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Format dengan titik sebagai pemisah ribuan
+    }
+
+    function hapusFormatAngka(value) {
+        return value.replace(/\./g, ''); 
     }
 
     function hitungSaldoAkhir() {
-        let saldoMasuk = parseFloat(formatAngka($('#saldo_masuk').val())) || 0;
-        let saldoKeluar = parseFloat(formatAngka($('#saldo_keluar').val())) || 0;
+        let saldoMasuk = parseFloat(hapusFormatAngka($('#saldo_masuk').val())) || 0;
+        let saldoKeluar = parseFloat(hapusFormatAngka($('#saldo_keluar').val())) || 0;
         let saldoAkhir = saldoMasuk - saldoKeluar;
 
         if (saldoMasuk > 0 && saldoKeluar === 0) {
@@ -132,12 +137,14 @@
     }
 
     $('#saldo_masuk, #saldo_keluar').on('input', function () {
-        $(this).val(formatAngka($(this).val()));
+        let value = $(this).val();
+        let unformattedValue = hapusFormatAngka(value);
+        $(this).val(formatAngka(unformattedValue));
         hitungSaldoAkhir();
     });
 
-    // Jalankan saat halaman dimuat
     hitungSaldoAkhir();
+
 
 
        });

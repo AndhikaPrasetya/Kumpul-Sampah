@@ -166,9 +166,10 @@ Log::info(
         }
     }
 
-    public function destroy(Saldo $saldo)
+    public function destroy($id)
     {
-        $saldo->delete();
+        $data = Saldo::findOrFail($id);
+        $data->delete();
         return response()->json([
             'success' => true,
             'message' => 'Data Saldo berhasil dihapus!',
