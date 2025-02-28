@@ -85,6 +85,7 @@ class RoleController extends Controller
             'Sampah' => Permission::whereIn('name', ['create sampah', 'read sampah', 'update sampah', 'delete sampah'])->get(),
             'Saldo' => Permission::whereIn('name', ['create saldo', 'read saldo', 'update saldo', 'delete saldo'])->get(),
             'Transaction' => Permission::whereIn('name', ['create transaction', 'read transaction', 'update transaction', 'delete transaction'])->get(),
+            'Penarikan' => Permission::whereIn('name', ['create withdraw', 'read withdraw', 'update withdraw', 'delete withdraw'])->get(),
         ];
         $permissions = Permission::get();
         return view('dashboard.roles.create',get_defined_vars());
@@ -143,6 +144,7 @@ class RoleController extends Controller
             'Sampah' => Permission::whereIn('name', ['create sampah', 'read sampah', 'update sampah', 'delete sampah'])->get(),
             'Saldo' => Permission::whereIn('name', ['create saldo', 'read saldo', 'update saldo', 'delete saldo'])->get(),
             'Transaction' => Permission::whereIn('name', ['create transaction', 'read transaction', 'update transaction', 'delete transaction'])->get(),
+            'Penarikan' => Permission::whereIn('name', ['create withdraw', 'read withdraw', 'update withdraw', 'delete withdraw'])->get(),
         ];
         $permissions = Permission::get();
         $rolePermissions = DB::table('role_has_permissions')

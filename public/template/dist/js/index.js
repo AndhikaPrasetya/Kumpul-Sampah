@@ -380,6 +380,46 @@ $('#table_saldo').DataTable({
     ]
 });
 
+$('#table_withdraw').DataTable({
+    processing: true,
+    serverSide: true,
+    searching: true,
+    stateSave: true,
+    ajax: {
+        url: "/withdraw",
+        type: "GET"
+    },
+    columns: [
+        { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+        {
+            data: 'user_id',
+            name: 'user_id',
+            orderable: false,
+        },
+        {
+            data: 'amount',
+            name: 'amount',
+            orderable: false,
+        },
+        {
+            data: 'status',
+            name: 'status',
+            orderable: false,
+        },
+        {
+            data: 'tanggal',
+            name: 'tanggal',
+            orderable: false,
+        },
+        {
+            data: 'action',
+            name: 'action',
+            orderable: false,
+            searchable: false
+        },
+    ]
+});
+
 
     //getDataRoleInUser
 
