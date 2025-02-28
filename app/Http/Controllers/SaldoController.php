@@ -16,8 +16,8 @@ class SaldoController extends Controller
 {
     public function index(Request $request)
     {
-        $title = "Data Transaksi";
-        $breadcrumb = "Transaksi";
+        $title = "Data Saldo";
+        $breadcrumb = "Saldo";
         if ($request->ajax()) {
             $data = Saldo::with('nasabah');
             if ($search = $request->input('search.value')) {
@@ -32,14 +32,8 @@ class SaldoController extends Controller
                     return $data->nasabah->name;
                 })
 
-                ->addColumn('saldo_masuk', function ($data) {
-                    return 'Rp ' . number_format($data->saldo_masuk, 0, ',', '.');
-                })
-                ->addColumn('saldo_keluar', function ($data) {
-                    return 'Rp ' . number_format($data->saldo_keluar, 0, ',', '.');
-                })
-                ->addColumn('saldo_akhir', function ($data) {
-                    return 'Rp ' . number_format($data->saldo_akhir, 0, ',', '.');
+                ->addColumn('balance', function ($data) {
+                    return 'Rp ' . number_format($data->balance, 0, ',', '.');
                 })
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
@@ -83,31 +77,27 @@ class SaldoController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'saldo_masuk' => 'nullable|numeric|min:0',
-            'saldo_keluar' => 'nullable|numeric|min:0',
+            'balance' => 'nullable|numeric|min:0',
         ]);
 
-        $saldoMasuk = (float) str_replace('.', '', $request->saldo_masuk ?? 0);
-        $saldoKeluar = (float) str_replace('.', '', $request->saldo_keluar ?? 0);
-
-
-        if ($saldoMasuk > 0 && $saldoKeluar == 0) {
-            $saldoAkhir = $saldoMasuk;
-        } else {
-            $saldoAkhir = $saldoMasuk - $saldoKeluar;
-        }
+        $saldoMasuk = (float) str_replace('.', '', $request->balance ?? 0);
 
         Saldo::create([
             'user_id' => $request->user_id,
-            'saldo_masuk' => $saldoMasuk,
-            'saldo_keluar' => $saldoKeluar,
-            'saldo_akhir' => $saldoAkhir,
+            'balance' => $saldoMasuk,
         ]);
 
         return response()->json([
             'success' => true,
             'message' => 'Data Saldo berhasil disimpan!',
         ], 200);
+    }
+
+    public function show($id)
+    {
+        $saldo = Saldo::findOrFail($id);
+        $nasabahs = User::all();
+        return view('dashboard.saldo.detail', get_defined_vars());
     }
 
     public function edit($id)
@@ -119,42 +109,28 @@ class SaldoController extends Controller
 
     public function update(Request $request, $id)
     {
-       
+
         $validator = Validator::make($request->all(), ([
-            'saldo_masuk' => 'nullable|numeric|min:0',
-            'saldo_keluar' => 'nullable|numeric|min:0',
+            'balance' => 'nullable|numeric|min:0',
         ]));
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 422);
         }
-        
+
         try {
-DB::beginTransaction();
-$saldo = Saldo::findOrFail($id);
-            $saldoMasuk = (float) str_replace('.', '', $request->saldo_masuk ?? 0);
-            $saldoKeluar = (float) str_replace('.', '', $request->saldo_keluar ?? 0);
-            $saldoAkhir = $saldoMasuk - $saldoKeluar;
+            DB::beginTransaction();
+            $saldo = Saldo::findOrFail($id);
+            $saldoMasuk = (float) str_replace('.', '', $request->balance ?? 0);
 
             $saldo->user_id = $request->user_id;
-            $saldo->saldo_masuk = $saldoMasuk;
-            $saldo->saldo_keluar = $saldoKeluar;
-            $saldo->saldo_akhir = $saldoAkhir;
+            $saldo->balance = $saldoMasuk;
             $saldo->save();
-Log::info(
-    'Saldo berhasil diupdate',
-    [
-        'id' => $saldo->id,
-        'user_id' => $saldo->user_id,
-        'saldo_masuk' => $saldo->saldo_masuk,
-        'saldo_keluar' => $saldo->saldo_keluar,
-        'saldo_akhir' => $saldo->saldo_akhir,
-        ]
-    );
-    DB::commit();
+
+            DB::commit();
             return response()->json([
                 'success' => true,
                 'message' => 'Data Saldo berhasil diupdate!',
-                'saldo' =>$saldo
+                'saldo' => $saldo
             ], 200);
         } catch (Exception $e) {
             DB::rollBack();

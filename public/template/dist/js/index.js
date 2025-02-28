@@ -367,18 +367,8 @@ $('#table_saldo').DataTable({
             orderable: false,
         },
         {
-            data: 'saldo_masuk',
-            name: 'saldo_masuk',
-            orderable: false,
-        },
-        {
-            data: 'saldo_keluar',
-            name: 'saldo_keluar',
-            orderable: false,
-        },
-        {
-            data: 'saldo_akhir',
-            name: 'saldo_akhir',
+            data: 'balance',
+            name: 'balance',
             orderable: false,
         },
         {

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Saldo extends Model
 {
-    protected $fillable = ['user_id', 'saldo_masuk', 'saldo_keluar', 'saldo_akhir'];
+    protected $fillable = ['user_id', 'balance'];
 
     public function nasabah(){
         return $this->belongsTo(User::class, 'user_id', 'id');

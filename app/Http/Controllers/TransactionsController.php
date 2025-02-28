@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Saldo;
 use Exception;
 use App\Models\User;
 use App\Models\Sampah;
@@ -134,7 +135,7 @@ class TransactionsController extends Controller
 
     try {
         DB::beginTransaction();
-    
+        $user = User::findOrFail($request->user_id);
         // Simpan transaksi utama
         $transaction = Transactions::create([
             'user_id' => $request->user_id,
@@ -181,6 +182,20 @@ class TransactionsController extends Controller
     
         // Update total_amount di transactions
         $transaction->update(['total_amount' => $totalAmount]);
+
+        // Get the latest saldo record for this user
+        $saldoNasabah = Saldo::where('user_id', $user->id)->first();
+
+        if($saldoNasabah){
+            $saldoNasabah->update([
+                'balance'=>$saldoNasabah->balance + $totalAmount,
+            ]);
+        } else{
+            $saldoNasabah = Saldo::create([
+                'user_id' => $user->id,
+                'balance' => $totalAmount,
+            ]);
+        }
     
         DB::commit();
     

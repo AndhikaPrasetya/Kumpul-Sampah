@@ -39,9 +39,7 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Nasabah</th>
-                                            <th>Saldo masuk</th>
-                                            <th>Saldo keluar</th>
-                                            <th>Saldo akhir</th>
+                                            <th>Balance</th>
                                             <th class="text-center" style="width: 20%;">Action</th>
                                         </tr>
                                     </thead>

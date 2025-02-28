@@ -4,13 +4,13 @@
 <section class="content m-5">
   <div class="card card-primary">
     <div class="card-header bg-primary">
-        <h3 class="card-title text-white">Buat data Sampah</h3>
+        <h3 class="card-title text-white">Buat Saldo</h3>
     </div>
       <form id="createFormSaldo" enctype="multipart/form-data">
           @csrf
           <div class="card-body">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 col-md-6">
                     <div class="form-group">
                         <label for="user_id" class="required">Nasabah</label>
                         <select class="form-control" name="user_id" id="user_id">
@@ -21,23 +21,11 @@
                         </select>
                     </div>
                 </div>
-               
+
                 <div class="col-12 col-md-6">
                     <div class="form-group">
-                        <label for="saldo_masuk" class="required">Saldo masuk</label>
-                        <input type="text" class="form-control shadow-sm" name="saldo_masuk" id="saldo_masuk" placeholder="5000" required>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6">
-                    <div class="form-group">
-                        <label for="saldo_keluar">Saldo keluar</label>
-                        <input type="text" class="form-control shadow-sm" name="saldo_keluar" id="saldo_keluar" placeholder="5000">
-                    </div>
-                </div>
-                <div class="col-12 col-md-6">
-                    <div class="form-group">
-                        <label for="saldo_akhir">Saldo akhir</label>
-                        <input type="text" class="form-control shadow-sm" name="saldo_akhir" id="saldo_akhir" readonly>
+                        <label for="balance" class="required">Balance</label>
+                        <input type="text" class="form-control shadow-sm" name="balance" id="balance" placeholder="5000" required>
                     </div>
                 </div>
                 
@@ -116,36 +104,22 @@
             });
 
             
-            function formatAngka(value) {
-        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Format dengan titik sebagai pemisah ribuan
+         // Format angka dengan titik sebagai pemisah ribuan
+    function formatAngka(value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }
 
+    // Hapus format angka sebelum dikirim ke server
     function hapusFormatAngka(value) {
-        return value.replace(/\./g, ''); 
+        return value.replace(/\./g, '');
     }
 
-    function hitungSaldoAkhir() {
-        let saldoMasuk = parseFloat(hapusFormatAngka($('#saldo_masuk').val())) || 0;
-        let saldoKeluar = parseFloat(hapusFormatAngka($('#saldo_keluar').val())) || 0;
-        let saldoAkhir = saldoMasuk - saldoKeluar;
-
-        if (saldoMasuk > 0 && saldoKeluar === 0) {
-            saldoAkhir = saldoMasuk;
-        }
-
-        $('#saldo_akhir').val(saldoAkhir);
-    }
-
-    $('#saldo_masuk, #saldo_keluar').on('input', function () {
+    // Event untuk input balance (format otomatis)
+    $('#balance').on('input', function () {
         let value = $(this).val();
         let unformattedValue = hapusFormatAngka(value);
         $(this).val(formatAngka(unformattedValue));
-        hitungSaldoAkhir();
     });
-
-    hitungSaldoAkhir();
-
-
 
        });
 

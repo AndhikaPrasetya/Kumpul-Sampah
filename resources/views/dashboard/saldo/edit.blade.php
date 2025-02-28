@@ -4,14 +4,14 @@
 <section class="content m-5">
   <div class="card card-primary">
     <div class="card-header bg-primary">
-        <h3 class="card-title text-white">Edit data Sampah</h3>
+        <h3 class="card-title text-white">Edit saldo</h3>
     </div>
       <form id="updateFormSaldo" data-id="{{ $saldo->id }}">
           @csrf
           @method('PUT')
           <div class="card-body">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 col-md-6">
                     <div class="form-group">
                         <label for="user_id" class="required">Nasabah</label>
                         <select class="form-control" name="user_id" id="user_id">
@@ -22,27 +22,16 @@
                         </select>
                     </div>
                 </div>
-               
+
                 <div class="col-12 col-md-6">
                     <div class="form-group">
-                        <label for="saldo_masuk" class="required">Saldo masuk</label>
-                        <input type="text" class="form-control shadow-sm" name="saldo_masuk" id="saldo_masuk" value="{{ number_format($saldo->saldo_masuk, 0, ',', '.');}}">
-                    </div>
-                </div>
-                <div class="col-12 col-md-6">
-                    <div class="form-group">
-                        <label for="saldo_keluar">Saldo keluar</label>
-                        <input type="text" class="form-control shadow-sm" name="saldo_keluar" id="saldo_keluar" value="{{ number_format($saldo->saldo_keluar, 0, ',', '.');}}">
-                    </div>
-                </div>
-                <div class="col-12 col-md-6">
-                    <div class="form-group">
-                        <label for="saldo_akhir">Saldo akhir</label>
-                        <input type="text" class="form-control shadow-sm" name="saldo_akhir" id="saldo_akhir" value="{{ number_format($saldo->saldo_akhir, 0, ',', '.');}}" readonly>
+                        <label for="balance" class="required">Balance</label>
+                        <input type="text" class="form-control shadow-sm" name="balance" id="balance" value="{{ number_format($saldo->balance, 0, ',', '.');}}">
                     </div>
                 </div>
                 
             </div>
+          
           </div>
   
           <div class="card-footer bg-light">
