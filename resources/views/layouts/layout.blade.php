@@ -192,6 +192,14 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{route('withdraw.index')}}" class="nav-link {{ Route::is('withdraw.index') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-money"></i>
+              <p>
+              Penarikan dana 
+              </p>
+            </a>
+          </li>
       </ul>
       
       </nav>

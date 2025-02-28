@@ -56,7 +56,15 @@ class DatabaseSeeder extends Seeder
             'read transaction',
             'update transaction',
             'delete transaction',
-            
+            'create histori transaction',
+            'read histori transaction',
+            'update histori transaction',
+            'delete histori transaction',
+            'create withdraw',
+            'read withdraw',
+            'update withdraw',
+            'delete withdraw',
+
         ];
 
         foreach ($permissions as $permission) {
@@ -72,7 +80,7 @@ class DatabaseSeeder extends Seeder
             $role = Role::create(['name' => 'super admin']);
             $bsu = Role::create(['name' => 'bsu']);
             $nasabah = Role::create(['name' => 'nasabah']);
-           
+
             $bsu->givePermissionTo([
                 'create kategori',
                 'read kategori',
@@ -90,6 +98,14 @@ class DatabaseSeeder extends Seeder
                 'read transaction',
                 'update transaction',
                 'delete transaction',
+                'create histori transaction',
+                'read histori transaction',
+                'update histori transaction',
+                'delete histori transaction',
+                'create withdraw',
+                'read withdraw',
+                'update withdraw',
+                'delete withdraw',
             ]);
 
             $nasabah->givePermissionTo([
@@ -97,6 +113,10 @@ class DatabaseSeeder extends Seeder
                 'read transaction',
                 'update transaction',
                 'delete transaction',
+                'create withdraw',
+                'read withdraw',
+                'update withdraw',
+                'delete withdraw',
             ]);
             $role->givePermissionTo(Permission::all());
 
@@ -135,37 +155,34 @@ class DatabaseSeeder extends Seeder
 
         //DATA SETTING WEBSITE
         DB::beginTransaction();
-        try{
-        $data = [
-            'website_name' => 'Kumpul Sampah',
-            'website_description' => 'Kumpul Sampah adalah sistem pengelolaan data.',
-            'logo' => 'logos/3135715.png',
-            'favicon' => 'favicons/3135715.png',
-        ];
+        try {
+            $data = [
+                'website_name' => 'Kumpul Sampah',
+                'website_description' => 'Kumpul Sampah adalah sistem pengelolaan data.',
+                'logo' => 'logos/3135715.png',
+                'favicon' => 'favicons/3135715.png',
+            ];
 
-        // Simpan data ke database
-        WebsiteSetting::create($data);
-        DB::commit();
-
-        }catch(Exception $e){
+            // Simpan data ke database
+            WebsiteSetting::create($data);
+            DB::commit();
+        } catch (Exception $e) {
             DB::rollBack();
         }
 
         //DATA Kategori sampah
         DB::beginTransaction();
-        try{
-        CategorySampah::create([
-            'nama' => 'Plastik',
-            'deskripsi' => 'sampah plastik',
-        ]);
+        try {
+            CategorySampah::create([
+                'nama' => 'Plastik',
+                'deskripsi' => 'sampah plastik',
+            ]);
 
-        // Simpan data ke database
-        
-        DB::commit();
+            // Simpan data ke database
 
-        }catch(Exception $e){
+            DB::commit();
+        } catch (Exception $e) {
             DB::rollBack();
         }
-      
     }
 }

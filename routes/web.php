@@ -10,7 +10,7 @@ use App\Http\Controllers\SaldoController;
 use App\Http\Controllers\SampahController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\WebsiteSettingController;
-
+use App\Http\Controllers\WithdrawController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -89,6 +89,14 @@ Route::middleware(['auth', 'verified', 'role:super admin|bsu'])->group(function 
     Route::put('/saldo/update/{id}', [SaldoController::class, 'update'])->name('saldo.update');
     Route::delete('/saldo/delete/{id}', [SaldoController::class, 'destroy'])->name('saldo.destroy');
     Route::get('/saldo/show/{id}', [SaldoController::class, 'show'])->name('saldo.show');
+
+    Route::get('/withdraw', [WithdrawController::class, 'index'])->name('withdraw.index');
+    Route::get('/withdraw/create', [WithdrawController::class, 'create'])->name('withdraw.create');
+    Route::post('/withdraw/store', [WithdrawController::class, 'store'])->name('withdraw.store');
+    Route::get('/withdraw/edit/{id}', [WithdrawController::class, 'edit'])->name('withdraw.edit');
+    Route::put('/withdraw/update/{id}', [WithdrawController::class, 'approveWithdraw'])->name('withdraw.approveWithdraw');
+    Route::delete('/withdraw/delete/{id}', [WithdrawController::class, 'destroy'])->name('withdraw.destroy');
+    Route::get('/withdraw/show/{id}', [WithdrawController::class, 'show'])->name('withdraw.show');
     
 
 });
