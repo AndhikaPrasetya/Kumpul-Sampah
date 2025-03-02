@@ -23,13 +23,13 @@
                 <div class="col-12">
                     <div class="card">
                         @can('create transaction')
-                        <div class="d-flex justify-content-between border-bottom p-3">
-                            <div>
+                        <div class="btn-wrapper d-flex flex-column flex-sm-row justify-content-sm-between border-bottom p-3">
+                            <div class="col-12 col-sm-6 mb-3 mb-sm-0">
                                 <a href="{{ route('transaction.create') }}" class="btn btn-primary btn-sm btn-kategori">
                                     <i class="fas fa-plus"></i> Tambah Transaksi
                                 </a>
                             </div>
-                            <div class="d-flex">
+                            <div class="col-12 col-sm-6 d-flex justify-content-sm-end">
                                 <div class="mr-1">
                                     <button type="button" class="btn btn-sm btn-success mb-3" data-toggle="modal" data-target="#exportDataTransactionModal">
                                         <i class="fas fa-file-export"></i> Export Data
@@ -59,8 +59,9 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Nasabah</th>
-                                            <th>Tanggal</th>
+                                            <th>Status</th>
                                             <th>Total</th>
+                                            <th>Tanggal</th>
                                             <th class="text-center" style="width: 20%;">Action</th>
                                         </tr>
                                     </thead>
