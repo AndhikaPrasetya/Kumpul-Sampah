@@ -66,7 +66,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        if($user && $user->hasRole('super admin')){
+        if($user && $user->hasRole(['super admin','bsu'])){
             return redirect('/admin/login');
         }
         
