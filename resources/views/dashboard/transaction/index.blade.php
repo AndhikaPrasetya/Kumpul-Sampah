@@ -42,13 +42,13 @@
                         </div>
                         @endcan
                         <div class="card-body">
-                            <div class="row">
+                            <div class="row mb-2">
                                 <div class="col-12">
                                     <div id="filterContainerTransaction" class="p-3 bg-light rounded" style="display: none;">
                                         <strong class="d-block mb-2">Hasil Filter:</strong> 
                                         <div class="d-flex flex-wrap mb-2">
-                                            <span id="selectedNasabahFilter" class="badge badge-pill badge-info p-2 mr-1"></span>
-                                            <span id="selectedRangeFilter" class="badge badge-pill badge-info p-2 mr-1"></span>
+                                            <span id="selectedNasabahTransactionFilter" class="badge badge-pill badge-info p-2 mr-1"></span>
+                                            <span id="selectedRangeTransactionFilter" class="badge badge-pill badge-info p-2 mr-1"></span>
                                         </div>
                                     </div>
                                 </div>

@@ -22,7 +22,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="d-flex border-bottom p-3">
+                        <div class="d-flex justify-content-end border-bottom p-3">
                             <div class="mr-2">
                                 <button type="button" class="btn btn-sm btn-success mb-3" data-toggle="modal" data-target="#exportDataModal">
                                     <i class="fas fa-file-export"></i> Export Data
@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="row">
+                            <div class="row mb-2">
                                 <div class="col-12">
                                     <div id="filterContainerHistory" class="p-3 bg-light rounded" style="display: none;">
                                         <strong class="d-block mb-2">Hasil Filter:</strong> 
