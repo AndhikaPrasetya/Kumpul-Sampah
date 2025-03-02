@@ -13,6 +13,6 @@ class TransactionDetail extends Model
         return $this->belongsTo(Transactions::class, 'transaction_id');
     }
     public function sampah(){
-        return $this->belongsTo(Sampah::class, 'sampah_id');
+        return $this->belongsTo(Sampah::class, 'sampah_id', 'id');
     }
 }

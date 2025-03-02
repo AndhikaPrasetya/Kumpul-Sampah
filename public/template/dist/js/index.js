@@ -1,3 +1,4 @@
+
 //delete button data
 $(document).on('click', '.delete-button', function(e) {
     e.preventDefault();
@@ -222,131 +223,321 @@ $(document).ready(function() {
     });
 
     //-------------------------> start table history transaction <-----------------------\\
-    let table_history = $('#table_history_transaction').DataTable({
-        responsive: true,
-        lengthChange: false,
-        autoWidth: false,
-        processing: true,
-        serverSide: true,
-        searching: true,
-        stateSave: true,
-        ajax: {
-            url: "/history-transaction",
-            type: "GET"
-        },
-        columns: [
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'transaction_id', name: 'transaction_id', orderable: true },
-            { data: 'sampah_id', name: 'sampah_id', orderable: true },
-            { data: 'berat', name: 'berat', orderable: true },
-            { data: 'subtotal', name: 'subtotal', orderable: true },
-            { data: 'created_at', name: 'created_at', orderable: true },
-        ],
-        order: [[2, 'desc']], // Default sorting berdasarkan tanggal terbaru
 
-        // Pastikan searching tetap ada dengan format dom yang benar
-        dom: "<'row'<'col-md-6'l><'col-md-6'f>>" + 
-             "<'row'<'col-md-12'B>>" + 
-             "<'row'<'col-md-12'tr>>" + 
-             "<'row'<'col-md-5'i><'col-md-7'p>>", 
+    $(".select2").select2({
+        dropdownParent: $("#filterModalHistory"),
+        placeholder: "Pilih Nasabah",
+        allowClear: true,
+      });
     
-             buttons: [
-                {
-                    extend: 'colvis',
-                    text: 'Pilih Kolom',
-                    className: 'btn btn-sm btn-secondary'
-                },
-                {
-                    extend: 'excelHtml5',
-                    text: '<i class="fas fa-file-excel"></i> Export Excel',
-                    className: 'btn btn-sm btn-success',
-                    exportOptions: {
-                        columns: function (idx, data, node) {
-                            return $(node).css('display') !== 'none' ? true : false;
-                        }
-                    }
-                },
-                {
-                    extend: 'pdfHtml5',
-                    text: '<i class="fas fa-file-pdf"></i> Export PDF',
-                    className: 'btn btn-sm btn-danger',
-                    orientation: 'landscape',
-                    pageSize: 'A4',
-                    exportOptions: {
-                        columns: function (idx, data, node) {
-                            return $(node).css('display') !== 'none' ? true : false;
-                        }
-                    }
-                }
-            ]
-    });
+    // Inisialisasi Daterangepicker
+  $("#daterange").daterangepicker({
+    autoUpdateInput: false,
+    locale: {
+      format: "DD-MM-YYYY",
+      separator: " s/d ",
+      applyLabel: "Pilih",
+      cancelLabel: "Batal",
+      fromLabel: "Dari",
+      toLabel: "Sampai",
+    },
+  });
 
-    // Menampilkan tombol di tempat yang diinginkan
-    table_history.buttons().container().appendTo('#export-buttons');
+  // Handle daterangepicker
+  $("#daterange").on("apply.daterangepicker", function (ev, picker) {
+    $(this).val(
+      picker.startDate.format("DD-MM-YYYY") +
+        " s/d " +
+        picker.endDate.format("DD-MM-YYYY")
+    );
+  });
+
+  $("#daterange").on("cancel.daterangepicker", function (ev, picker) {
+    $(this).val("");
+  });
+
+    // Function to get selected columns
+    function getSelectedColumns() {
+        return $('.checkbox-list input:checked').map(function() {
+            return parseInt($(this).data('column-index'));
+        }).get();
+    }
+
+// Handle Excel export
+$('#exportExcel').click(function() {
+    table_history.button('.buttons-excel').trigger();
+});
+
+// Handle PDF export
+$('#exportPDF').click(function() {
+    table_history.button('.buttons-pdf').trigger();
+});
+
+  let table_history =  $('#table_history_transaction').DataTable({
+    processing: true,
+    serverSide: true,
+    searching: true,
+    stateSave: true,
+    ajax: {
+        url: "/history-transaction",
+        type: "GET",
+        data: function(d){
+            d.nama_nasabah = $("#nama_nasabah_filter").val();
+            const daterange = $("#daterange").val();
+            if (daterange) {
+                const dates = daterange.split(" s/d ");
+                d.start_date = moment(dates[0], "DD-MM-YYYY").format("YYYY-MM-DD 00:00:00");
+                d.end_date = moment(dates[1], "DD-MM-YYYY").format("YYYY-MM-DD 23:59:59");
+            } 
+        }
+    },
+    columns: [
+        { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+        { data: 'transaction_id', name: 'transaction_id', orderable: false, searchable: true },
+        { data: 'sampah_id', name: 'sampah_id', orderable: false, searchable: true },
+        { data: 'berat', name: 'berat', orderable: false, searchable: true },
+        { data: 'subtotal', name: 'subtotal', orderable: false, searchable: true },
+        { data: 'created_at', name: 'created_at', orderable: false, searchable: true },
+    ],
+    dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+    "<'row'<'col-sm-12'tr>>" +
+    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+    buttons: [
+        {
+            extend: 'excelHtml5',
+            text: 'Excel',
+            title: 'Laporan Riwayat Transaksi',
+            exportOptions: {
+                columns: function(idx, data, node) {
+                    return getSelectedColumns().includes(idx);
+                }
+            }
+        },
+        {
+            extend: 'pdfHtml5',
+            text: 'PDF',
+            exportOptions: {
+                columns: function(idx, data, node) {
+                    return getSelectedColumns().includes(idx);
+                }
+            },
+            customize: function(doc) {
+                // Set page size to A4
+                doc.pageSize = 'A4';
+                doc.pageOrientation = 'portrait';
+
+                // Center the table
+                doc.content[1].table.widths = 
+                    Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+
+                // Adjust table styling
+                doc.styles.tableHeader.alignment = 'center';
+                doc.styles.tableBodyEven.alignment = 'center';
+                doc.styles.tableBodyOdd.alignment = 'center';
+
+                // Add margin to center the table vertically
+                doc.content[1].margin = [0, 10, 0, 0];
+
+                // Adjust font size if needed
+                doc.defaultStyle.fontSize = 10;
+
+                // Add title
+                doc.content.unshift({
+                    text: 'Laporan Riwayat Transaksi',
+                    style: 'title',
+                    alignment: 'center',
+                    margin: [0, 0, 0, 0]
+                });
+
+                // Define title style
+                doc.styles.title = {
+                    fontSize: 18,
+                    bold: true,
+                    alignment: 'center'
+                };
+            }
+        }
+    ]
+});
+
+
+
+    // Handle tombol apply filter
+    $("#apply_filter").click(function () {
+        const selectedNasabah = $("#nama_nasabah_filter").val(); 
+        const selectedRange = $("#daterange").val(); 
+        
+        if (selectedNasabah||selectedRange) {
+            $("#selectedNasabahFilter").text(selectedNasabah); 
+            $("#selectedRangeFilter").text(selectedRange); 
+            $("#filterContainerHistory").show(); // Tampilkan filter
+        } else {
+            $("#filterContainerHistory").hide();
+        }
+    
+        table_history.draw(); 
+        $("#filterModalHistory").modal("hide");
+    });
+    
+    
+      // Handle tombol reset
+      $("#reset_filter").click(function () {
+        // Reset select2 filter
+        $("#nama_nasabah_filter").val([]).trigger("change"); 
+    
+        // Reset Daterangepicker dengan event khusus
+        $("#daterange").val("").trigger("change"); 
+        $("#daterange").data("daterangepicker").setStartDate(moment()); 
+        $("#daterange").data("daterangepicker").setEndDate(moment()); 
+        $("#filterContainerHistory").hide(); 
+    
+        // Reset Datatable_historys dan pastikan pemanggilan ulang ke server
+        table_history.state.clear(); 
+        table_history.ajax.reload();
+    });
 
         //-------------------------> end table history transaction <-----------------------\\
 
     //-------------------------> start table transaction <-----------------------\\
-    let table = $('#table_transaction').DataTable({
-        responsive: true,
-        lengthChange: false,
-        autoWidth: false,
+    $(".select-transaction").select2({
+        dropdownParent: $("#filterModalTransaction"),
+        placeholder: "Pilih Nasabah",
+        allowClear: true,
+      }); 
+      
+// Handle Excel export
+$('#exportExcel').click(function() {
+    table_transaction.button('.buttons-excel').trigger();
+});
+
+// Handle PDF export
+$('#exportPDF').click(function() {
+    table_transaction.button('.buttons-pdf').trigger();
+});
+
+    let table_transaction = $('#table_transaction').DataTable({
         processing: true,
         serverSide: true,
         searching: true,
         stateSave: true,
         ajax: {
             url: "/transaction",
-            type: "GET"
+            type: "GET",
+            data:function(d){
+                d.nama_nasabah_transaksi = $("#nama_nasabah_transaksi_filter").val();
+                const daterange = $("#daterange").val();
+                if (daterange) {
+                    const dates = daterange.split(" s/d ");
+                    d.start_date = moment(dates[0], "DD-MM-YYYY").format("YYYY-MM-DD 00:00:00");
+                    d.end_date = moment(dates[1], "DD-MM-YYYY").format("YYYY-MM-DD 23:59:59");
+                }
+            }
         },
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'user_id', name: 'user_id', orderable: true },
-            { data: 'tanggal', name: 'tanggal', orderable: true },
-            { data: 'total_amount', name: 'total_amount', orderable: true },
+            { data: 'user_id', name: 'user_id', orderable: false, searchable: true },
+            { data: 'tanggal', name: 'tanggal', orderable: false, searchable: true },
+            { data: 'total_amount', name: 'total_amount', orderable: false, searchable: true },
             { data: 'action', name: 'action', orderable: false, searchable: false }
         ],
-        order: [[2, 'desc']], // Default sorting berdasarkan tanggal terbaru
-
-        // Pastikan searching tetap ada dengan format dom yang benar
-        dom: "<'row'<'col-md-6'l><'col-md-6'f>>" + 
-             "<'row'<'col-md-12'B>>" + 
-             "<'row'<'col-md-12'tr>>" + 
-             "<'row'<'col-md-5'i><'col-md-7'p>>", 
+        dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: 'Excel',
+                title: 'Laporan Transaksi',
+                exportOptions: {
+                    columns: function(idx, data, node) {
+                        return getSelectedColumns().includes(idx);
+                    }
+                },
+                //customize excel
+            },
+            {
+                extend: 'pdfHtml5',
+                text: 'PDF',
+                exportOptions: {
+                    columns: function(idx, data, node) {
+                        return getSelectedColumns().includes(idx);
+                    }
+                },
+                customize: function(doc) {
+                    // Set page size to A4
+                    doc.pageSize = 'A4';
+                    doc.pageOrientation = 'portrait';
     
-             buttons: [
-                {
-                    extend: 'colvis',
-                    text: 'Pilih Kolom',
-                    className: 'btn btn-sm btn-secondary'
-                },
-                {
-                    extend: 'excelHtml5',
-                    text: '<i class="fas fa-file-excel"></i> Export Excel',
-                    className: 'btn btn-sm btn-success',
-                    exportOptions: {
-                        columns: function (idx, data, node) {
-                            return $(node).css('display') !== 'none' ? true : false;
-                        }
-                    }
-                },
-                {
-                    extend: 'pdfHtml5',
-                    text: '<i class="fas fa-file-pdf"></i> Export PDF',
-                    className: 'btn btn-sm btn-danger',
-                    orientation: 'landscape',
-                    pageSize: 'A4',
-                    exportOptions: {
-                        columns: function (idx, data, node) {
-                            return $(node).css('display') !== 'none' ? true : false;
-                        }
-                    }
+                    // Center the table
+                    doc.content[1].table.widths = 
+                        Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+    
+                    // Adjust table styling
+                    doc.styles.tableHeader.alignment = 'center';
+                    doc.styles.tableBodyEven.alignment = 'center';
+                    doc.styles.tableBodyOdd.alignment = 'center';
+    
+                    // Add margin to center the table vertically
+                    doc.content[1].margin = [0, 10, 0, 0];
+    
+                    // Adjust font size if needed
+                    doc.defaultStyle.fontSize = 10;
+    
+                    // Add title
+                    doc.content.unshift({
+                        text: 'Laporan Transaksi',
+                        style: 'title',
+                        alignment: 'center',
+                        margin: [0, 0, 0, 0]
+                    });
+    
+                    // Define title style
+                    doc.styles.title = {
+                        fontSize: 18,
+                        bold: true,
+                        alignment: 'center'
+                    };
                 }
-            ]
+            }
+        ]
     });
 
-    // Menampilkan tombol di tempat yang diinginkan
-    table.buttons().container().appendTo('#export-buttons');
+    
+    // Handle tombol apply filter
+    $("#apply_filter_transaction").click(function () {
+        const selectedNasabahTransaction = $("#nama_nasabah_transaksi_filter").val(); 
+        const selectedRange = $("#daterange").val(); 
+        
+        if (selectedNasabahTransaction||selectedRange) {
+            $("#selectedNasabahTransactionFilter").text(selectedNasabahTransaction); 
+            $("#selectedRangeTransactionFilter").text(selectedRange); 
+            $("#filterContainerTransaction").show(); // Tampilkan filter
+        } else {
+            $("#filterContainerTransaction").hide();
+        }
+    
+        table_transaction.draw(); 
+        $("#filterModalTransaction").modal("hide");
+    });
+    
+    
+        // Handle tombol reset
+        $("#reset_filter_transaction").click(function () {
+            // Reset select2 filter
+            $("#nama_nasabah_transaksi_filter").val([]).trigger("change"); 
+        
+            // Reset Daterangepicker dengan event khusus
+            $("#daterange").val("").trigger("change"); 
+            $("#daterange").data("daterangepicker").setStartDate(moment()); 
+            $("#daterange").data("daterangepicker").setEndDate(moment()); 
+            $("#filterContainerTransaction").hide(); 
+        
+            // Reset Datatable_transactions dan pastikan pemanggilan ulang ke server
+            table_transaction.state.clear(); 
+            table_transaction.ajax.reload();
+        });
+
+    
 
 //-------------------------> end table transaction <-----------------------\\
 

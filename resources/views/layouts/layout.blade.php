@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.min.css"
         crossorigin="anonymous">
+        <link rel="stylesheet" href={{asset('/template/plugins/daterangepicker/daterangepicker.css')}}>
         <link rel="stylesheet" href="{{asset('template/plugins/toastr/toastr.min.css')}}">
   <link rel="stylesheet" href="{{asset('/template/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
   <link rel="stylesheet" href="{{asset('/template/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
@@ -242,7 +243,12 @@
 <script>
   $.widget.bridge('uibutton', $.ui.button)
 </script>
-
+<script>
+  $(function () {
+  bsCustomFileInput.init();
+});
+</script>
+<script src="{{asset('/template/plugins/bs-custom-file-input/bs-custom-file-input.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Bootstrap 4 -->
 <script src={{asset('/template/plugins/bootstrap/js/bootstrap.bundle.min.js')}}></script>
@@ -272,12 +278,6 @@
 <script src="{{asset('/template/plugins/select2/js/select2.full.min.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js" integrity="sha512-8QFTrG0oeOiyWo/VM9Y8kgxdlCryqhIxVeRpWSezdRRAvarxVtwLnGroJgnVW9/XBRduxO/z1GblzPrMQoeuew==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-
-<script>
-  $(function () {
-  bsCustomFileInput.init();
-});
-</script>
 @yield('script')
 </body>
 </html>

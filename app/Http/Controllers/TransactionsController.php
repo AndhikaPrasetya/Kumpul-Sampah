@@ -21,13 +21,31 @@ class TransactionsController extends Controller
     {
         $title = "Data Transaksi";
         $breadcrumb = "Transaksi";
+        $nasabahs = User::with('roles')
+    ->whereHas('roles', function ($query) {
+        $query->where('name', 'nasabah');
+    })
+    ->get();
         if ($request->ajax()) {
             $data = Transactions::with('users');
             if ($search = $request->input('search.value')) {
-                $data->where(function ($data) use ($search) {
-                    $data->where('user_id', 'like', "%{$search}%");
-                });
+                $data->whereHas('users', function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%");
+                })
+                ->orWhere('tanggal', 'like', "%{$search}%");
             }
+
+            $data->when($request->filled('nama_nasabah_transaksi'), function($query) use($request){
+                $query->whereHas('users', function ($subQuery) use ($request) {
+                    $subQuery->whereIn('name', $request->nama_nasabah_transaksi);
+                });
+            })
+            ->when($request->filled('start_date') && $request->filled('end_date'), function($query) use($request) {
+                $query->whereBetween('created_at', [
+                    Carbon::parse($request->start_date)->startOfDay(), 
+                    Carbon::parse($request->end_date)->endOfDay()
+                ]);
+            });
 
             return DataTables::eloquent($data)
                 ->addIndexColumn()
@@ -69,17 +87,40 @@ class TransactionsController extends Controller
     }
 
     public function getTransactionDetail(Request $request)  {
-        {
-            $title = "Data Transaksi";
-            $breadcrumb = "Transaksi";
+        
+            $title = "Data Riwayat Transaksi";
+            $breadcrumb = "Riwayat Transaksi";
+             //filter user
+    $nasabahs = User::with('roles')
+    ->whereHas('roles', function ($query) {
+        $query->where('name', 'nasabah');
+    })
+    ->get();
             if ($request->ajax()) {
                 $data = TransactionDetail::with(['transaction.users','sampah']);
+
                 if ($search = $request->input('search.value')) {
-                    $data->where(function ($data) use ($search) {
-                        $data->where('sampah_id', 'like', "%{$search}%");
-                    });
+                    $data->whereHas('sampah', function ($query) use ($search) {
+                        $query->where('nama', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('transaction.users', function ($query) use ($search) {
+                        $query->where('name', 'like', "%{$search}%");
+                    })
+                    ->orWhere('created_at', 'like', "%{$search}%");
                 }
-    
+
+                $data->when($request->filled('nama_nasabah'), function($query) use($request){
+                    $query->whereHas('transaction.users', function ($subQuery) use ($request) {
+                        $subQuery->whereIn('name', $request->nama_nasabah);
+                    });
+                })
+                ->when($request->filled('start_date') && $request->filled('end_date'), function($query) use($request) {
+                    $query->whereBetween('created_at', [
+                        Carbon::parse($request->start_date)->startOfDay(), 
+                        Carbon::parse($request->end_date)->endOfDay()
+                    ]);
+                });
+                
                 return DataTables::eloquent($data)
                     ->addIndexColumn()
                     ->addColumn('transaction_id', function ($data) {
@@ -101,7 +142,7 @@ class TransactionsController extends Controller
                     ->make(true);
             }
             return view('dashboard.transaction.historyTransaksi', get_defined_vars());
-        }
+        
     }
 
     public function create()

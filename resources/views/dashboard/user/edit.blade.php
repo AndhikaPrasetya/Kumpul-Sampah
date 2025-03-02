@@ -33,7 +33,7 @@
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="roles">Roles</label>
-                                <select @cannot('create-user') disabled @endcannot class="allRole" name="roles[]"
+                                <select @cannot('create user') disabled @endcannot class="allRole" name="roles[]"
                                     multiple="multiple" style="width: 100%;">
                                     @foreach ($roles as $role)
                                         <option value="{{ $role }}"
