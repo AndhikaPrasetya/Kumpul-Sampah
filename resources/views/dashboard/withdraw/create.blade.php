@@ -93,9 +93,9 @@
                     contentType: false,
                     success: function(response) {
                         showToast('success', response.message);
-                        // setTimeout(() => {
-                        //     window.location.href = '/withdraw';
-                        // }, 2000);
+                        setTimeout(() => {
+                            window.location.href = '/withdraw';
+                        }, 2000);
                     },
                     error: (xhr) => {
                         if (xhr.status === 422) {

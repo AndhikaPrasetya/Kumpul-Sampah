@@ -436,8 +436,9 @@ $('#exportPDF').click(function() {
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             { data: 'user_id', name: 'user_id', orderable: false, searchable: true },
-            { data: 'tanggal', name: 'tanggal', orderable: false, searchable: true },
+            { data: 'status', name: 'status', orderable: false, searchable: true },
             { data: 'total_amount', name: 'total_amount', orderable: false, searchable: true },
+            { data: 'tanggal', name: 'tanggal', orderable: false, searchable: true },
             { data: 'action', name: 'action', orderable: false, searchable: false }
         ],
         dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +

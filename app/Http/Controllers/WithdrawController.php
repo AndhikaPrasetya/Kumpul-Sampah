@@ -188,19 +188,26 @@ class WithdrawController extends Controller
     }
 
     // Update status menjadi approved
-    $withdraw->status = 'approved';
+    $withdraw->status = $request->status;
     $withdraw->save();
-
-    // Kurangi saldo user
-    $saldo = Saldo::where('user_id', $withdraw->user_id)->first();
-    if ($saldo && $saldo->balance >= $withdraw->amount) {
-        $saldo->balance -= $withdraw->amount;
-        $saldo->save();
-    } else {
-        return response()->json(['error' => 'Saldo tidak cukup'], 400);
+    if($request->status === 'approved') {
+        // Kurangi saldo user (karena ini adalah penarikan/withdraw)
+        $saldo = Saldo::where('user_id', $withdraw->user_id)->first();
+        if ($saldo && $saldo->balance >= $withdraw->amount) {
+            $saldo->balance -= $withdraw->amount;
+            $saldo->save();
+            return response()->json(['message' => 'Penarikan berhasil disetujui dan saldo dikurangi'], 200);
+        } else {
+            // Rollback jika saldo tidak cukup
+            $withdraw->status = 'rejected';
+            $withdraw->save();
+            return response()->json(['error' => 'Saldo tidak cukup'], 400);
+        }
+    } else if($request->status === 'rejected') {
+        return response()->json(['message' => 'Penarikan ditolak'], 200);
     }
 
-    return response()->json(['message' => 'Penarikan berhasil disetujui dan bukti transfer diunggah'], 200);
+    return response()->json(['message' => 'Status penarikan berhasil diperbarui'], 200);
 }
     /**
      * Remove the specified resource from storage.

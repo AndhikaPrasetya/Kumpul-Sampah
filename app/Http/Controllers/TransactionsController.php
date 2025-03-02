@@ -52,11 +52,22 @@ class TransactionsController extends Controller
                 ->addColumn('user_id', function ($data) {
                     return $data->users->name;
                 })
-                ->addColumn('tanggal', function ($data) {
-                    return Carbon::parse($data->tanggal)->format('d-m-Y');
+                ->addColumn('status', function ($data) {
+                    if ($data->status === 'approved') {
+                        return '<span class="badge badge-primary">' . $data->status . '</span>';
+                    } elseif ($data->status === 'rejected') {
+                        return '<span class="badge badge-danger">' . $data->status . '</span>';
+                    } elseif ($data->status === 'pending') {
+                        return '<span class="badge badge-warning">' . $data->status . '</span>';
+                    } else {
+                        return '<span class="badge badge-secondary">' . $data->status . '</span>';
+                    }
                 })
                 ->addColumn('total_amount', function ($data) {
                     return 'Rp ' . number_format($data->total_amount, 0, ',', '.');
+                })
+                ->addColumn('tanggal', function ($data) {
+                    return Carbon::parse($data->tanggal)->format('d-m-Y');
                 })
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
@@ -80,7 +91,7 @@ class TransactionsController extends Controller
                     $buttons .= '</div>';
                     return $buttons;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action','status'])
                 ->make(true);
         }
         return view('dashboard.transaction.index', get_defined_vars());
@@ -224,19 +235,19 @@ class TransactionsController extends Controller
         // Update total_amount di transactions
         $transaction->update(['total_amount' => $totalAmount]);
 
-        // Get the latest saldo record for this user
-        $saldoNasabah = Saldo::where('user_id', $user->id)->first();
+        // // Get the latest saldo record for this user
+        // $saldoNasabah = Saldo::where('user_id', $user->id)->first();
 
-        if($saldoNasabah){
-            $saldoNasabah->update([
-                'balance'=>$saldoNasabah->balance + $totalAmount,
-            ]);
-        } else{
-            $saldoNasabah = Saldo::create([
-                'user_id' => $user->id,
-                'balance' => $totalAmount,
-            ]);
-        }
+        // if($saldoNasabah){
+        //     $saldoNasabah->update([
+        //         'balance'=>$saldoNasabah->balance + $totalAmount,
+        //     ]);
+        // } else{
+        //     $saldoNasabah = Saldo::create([
+        //         'user_id' => $user->id,
+        //         'balance' => $totalAmount,
+        //     ]);
+        // }
     
         DB::commit();
     
@@ -304,6 +315,11 @@ public function show($id){
 
 public function update(Request $request, $id)
 {
+    // Check if this is an approval request
+    if ($request->has('status')) {
+        return $this->handleApproval($request, $id);
+    }
+
     $validator = Validator::make($request->all(), [
         'sampah_id' => 'required|array',
         'sampah_id.*' => 'required|exists:sampahs,id',
@@ -384,6 +400,52 @@ public function update(Request $request, $id)
     }
 }
 
+// Private method to handle the approval functionality
+private function handleApproval(Request $request, $id)
+{
+    $transaction = Transactions::find($id);
+    if (!$transaction) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Transaksi tidak ditemukan',
+        ], 404);
+    }
+
+    if ($transaction->status !== 'pending') {
+        return response()->json([
+            'success' => false,
+            'message' => 'Transaksi sudah disetujui',
+        ], 400);
+    }
+    
+    $transaction->update(['status' => $request->status]);
+
+    if ($request->status === 'approved') {
+        // Get the user and total amount
+        $user = User::find($transaction->user_id);
+        $totalAmount = $transaction->total_amount;
+
+        // Get the latest saldo record for this user
+        $saldoNasabah = Saldo::where('user_id', $user->id)->first();
+
+        if ($saldoNasabah) {
+            $saldoNasabah->update([
+                'balance' => $saldoNasabah->balance + $totalAmount,
+            ]);
+        } else {
+            $saldoNasabah = Saldo::create([
+                'user_id' => $user->id,
+                'balance' => $totalAmount,
+            ]);
+        }
+    }
+    
+    return response()->json([
+        'success' => true,
+        'message' => 'Status transaksi berhasil diubah',
+        'data' => $transaction
+    ], 200);
+}
 public function deleteTransactionDetail($id){
     $transaction =TransactionDetail::findOrFail($id);
     if($transaction){
@@ -417,5 +479,8 @@ public function destroy($id){
         ], 200);
         
 }
+
+
+
     
 }
