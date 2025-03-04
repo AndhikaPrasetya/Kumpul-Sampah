@@ -171,7 +171,7 @@
           </li>
           <li class="nav-item">
             <a href="{{route('transaction.index')}}" class="nav-link {{ Route::is('transaction.*') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-money"></i>
+              <i class="nav-icon fas fa-exchange-alt"></i>
               <p>
               Transaksi
               </p>
@@ -179,7 +179,7 @@
           </li>
           <li class="nav-item">
             <a href="{{route('history-transaction.index')}}" class="nav-link {{ Route::is('history-transaction.index') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-money"></i>
+              <i class="nav-icon fas fa-history"></i>
               <p>
               Riwayat transaksi
               </p>
@@ -187,9 +187,9 @@
           </li>
           <li class="nav-item">
             <a href="{{route('saldo.index')}}" class="nav-link {{ Route::is('saldo.index') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-money"></i>
+              <i class="nav-icon fas fa-wallet"></i>
               <p>
-              Saldo 
+              Saldo & Points
               </p>
             </a>
           </li>
@@ -198,6 +198,22 @@
               <i class="nav-icon fas fa-money"></i>
               <p>
               Penarikan dana 
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{route('rewards.index')}}" class="nav-link {{ Route::is('rewards.index') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-gift"></i>
+              <p>
+              Rewards 
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{route('penukaran-points.index')}}" class="nav-link {{ Route::is('penukaran-points.index') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-ticket-alt"></i>
+              <p>
+              Penukaran Poin 
               </p>
             </a>
           </li>

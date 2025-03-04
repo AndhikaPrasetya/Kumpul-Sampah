@@ -35,6 +35,9 @@ class SaldoController extends Controller
                 ->addColumn('balance', function ($data) {
                     return 'Rp ' . number_format($data->balance, 0, ',', '.');
                 })
+                ->addColumn('points', function ($data) {
+                    return number_format($data->nasabah->points, 0, ',', '.');
+                })
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
                     //Check permission for adding/editing permissions

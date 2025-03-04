@@ -297,6 +297,7 @@ $('#exportPDF').click(function() {
         { data: 'sampah_id', name: 'sampah_id', orderable: false, searchable: true },
         { data: 'berat', name: 'berat', orderable: false, searchable: true },
         { data: 'subtotal', name: 'subtotal', orderable: false, searchable: true },
+        { data: 'points', name: 'points', orderable: false, searchable: true },
         { data: 'created_at', name: 'created_at', orderable: false, searchable: true },
     ],
     dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
@@ -438,6 +439,7 @@ $('#exportPDF').click(function() {
             { data: 'user_id', name: 'user_id', orderable: false, searchable: true },
             { data: 'status', name: 'status', orderable: false, searchable: true },
             { data: 'total_amount', name: 'total_amount', orderable: false, searchable: true },
+            { data: 'total_points', name: 'total_points', orderable: false, searchable: true },
             { data: 'tanggal', name: 'tanggal', orderable: false, searchable: true },
             { data: 'action', name: 'action', orderable: false, searchable: false }
         ],
@@ -564,6 +566,11 @@ $('#table_saldo').DataTable({
             orderable: false,
         },
         {
+            data: 'points',
+            name: 'points',
+            orderable: false,
+        },
+        {
             data: 'action',
             name: 'action',
             orderable: false,
@@ -601,6 +608,70 @@ $('#table_withdraw').DataTable({
         {
             data: 'tanggal',
             name: 'tanggal',
+            orderable: false,
+        },
+        {
+            data: 'action',
+            name: 'action',
+            orderable: false,
+            searchable: false
+        },
+    ]
+});
+
+$('#table_rewards').DataTable({
+    processing: true,
+    serverSide: true,
+    searching: true,
+    stateSave: true,
+    ajax: {
+        url: "/rewards",
+        type: "GET"
+    },
+    columns: [
+        { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+        {
+            data: 'name',
+            name: 'name',
+            orderable: false,
+        },
+        {
+            data: 'points',
+            name: 'points',
+            orderable: false,
+        },
+        {
+            data: 'action',
+            name: 'action',
+            orderable: false,
+            searchable: false
+        },
+    ]
+});
+$('#table_penukaran_points').DataTable({
+    processing: true,
+    serverSide: true,
+    searching: true,
+    stateSave: true,
+    ajax: {
+        url: "/penukaran-points",
+        type: "GET"
+    },
+    columns: [
+        { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+        {
+            data: 'user_id',
+            name: 'user_id',
+            orderable: false,
+        },
+        {
+            data: 'reward_id',
+            name: 'reward_id',
+            orderable: false,
+        },
+        {
+            data: 'status',
+            name: 'status',
             orderable: false,
         },
         {

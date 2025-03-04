@@ -61,6 +61,7 @@
                                             <th>Nasabah</th>
                                             <th>Status</th>
                                             <th>Total</th>
+                                            <th>Points</th>
                                             <th>Tanggal</th>
                                             <th class="text-center" style="width: 20%;">Action</th>
                                         </tr>

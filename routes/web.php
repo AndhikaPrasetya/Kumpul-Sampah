@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\CategorySampahController;
+use App\Http\Controllers\PenukaranPoinController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RewardsController;
 use App\Http\Controllers\SaldoController;
 use App\Http\Controllers\SampahController;
 use App\Http\Controllers\TransactionsController;
@@ -98,7 +100,21 @@ Route::middleware(['auth', 'verified', 'role:super admin|bsu|nasabah'])->group(f
     Route::delete('/withdraw/delete/{id}', [WithdrawController::class, 'destroy'])->name('withdraw.destroy');
     Route::get('/withdraw/show/{id}', [WithdrawController::class, 'show'])->name('withdraw.show');
     
+    Route::get('/rewards', [RewardsController::class, 'index'])->name('rewards.index');
+    Route::get('/rewards/create', [RewardsController::class, 'create'])->name('rewards.create');
+    Route::post('/rewards/store', [RewardsController::class, 'store'])->name('rewards.store');
+    Route::get('/rewards/edit/{id}', [RewardsController::class, 'edit'])->name('rewards.edit');
+    Route::put('/rewards/update/{id}', [RewardsController::class, 'update'])->name('rewards.update');
+    Route::delete('/rewards/delete/{id}', [RewardsController::class, 'destroy'])->name('rewards.destroy');
+    Route::get('/rewards/show/{id}', [RewardsController::class, 'show'])->name('rewards.show');
 
+    Route::get('/penukaran-points', [PenukaranPoinController::class, 'index'])->name('penukaran-points.index');
+    Route::get('/penukaran-points/create', [PenukaranPoinController::class, 'create'])->name('penukaran-points.create');
+    Route::post('/penukaran-points/store', [PenukaranPoinController::class, 'store'])->name('penukaran-points.store');
+    Route::get('/penukaran-points/edit/{id}', [PenukaranPoinController::class, 'edit'])->name('penukaran-points.edit');
+    Route::put('/penukaran-points/update/{id}', [PenukaranPoinController::class, 'update'])->name('penukaran-points.update');
+    Route::delete('/penukaran-points/delete/{id}', [PenukaranPoinController::class, 'destroy'])->name('penukaran-points.destroy');
+    Route::get('/penukaran-points/show/{id}', [PenukaranPoinController::class, 'show'])->name('penukaran-points.show');
 });
 
 require __DIR__ . '/auth.php';

@@ -13,6 +13,7 @@ class Sampah extends Model
         'image',
         'harga',
         'category_id',
+        'points'
     ];
 
     public function categories ()
