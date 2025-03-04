@@ -36,7 +36,7 @@ class SaldoController extends Controller
                     return 'Rp ' . number_format($data->balance, 0, ',', '.');
                 })
                 ->addColumn('points', function ($data) {
-                    return number_format($data->nasabah->points, 0, ',', '.');
+                    return number_format($data->points, 0, ',', '.');
                 })
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
@@ -81,13 +81,16 @@ class SaldoController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'balance' => 'nullable|numeric|min:0',
+            'points' => 'nullable|numeric|min:0',
         ]);
 
         $saldoMasuk = (float) str_replace('.', '', $request->balance ?? 0);
+        $saldoPoints = (float) str_replace('.', '', $request->points ?? 0);
 
         Saldo::create([
             'user_id' => $request->user_id,
             'balance' => $saldoMasuk,
+            'points' => $saldoPoints,
         ]);
 
         return response()->json([
@@ -115,6 +118,7 @@ class SaldoController extends Controller
 
         $validator = Validator::make($request->all(), ([
             'balance' => 'nullable|numeric|min:0',
+            'points' => 'nullable|numeric|min:0',
         ]));
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 422);
@@ -124,9 +128,11 @@ class SaldoController extends Controller
             DB::beginTransaction();
             $saldo = Saldo::findOrFail($id);
             $saldoMasuk = (float) str_replace('.', '', $request->balance ?? 0);
+            $saldoPoints = (float) str_replace('.', '', $request->points ?? 0);
 
             $saldo->user_id = $request->user_id;
             $saldo->balance = $saldoMasuk;
+            $saldo->points = $saldoPoints;
             $saldo->save();
 
             DB::commit();

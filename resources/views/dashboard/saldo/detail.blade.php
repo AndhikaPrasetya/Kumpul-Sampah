@@ -11,7 +11,7 @@
           @method('PUT')
           <div class="card-body">
             <div class="row">
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-4">
                     <div class="form-group">
                         <label for="user_id" class="required">Nasabah</label>
                         <select class="form-control" name="user_id" id="user_id" disabled>
@@ -23,10 +23,16 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-4">
                     <div class="form-group">
                         <label for="balance" class="required">Balance</label>
                         <input type="text" class="form-control shadow-sm" name="balance" id="balance" value="{{ number_format($saldo->balance, 0, ',', '.');}}" readonly>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="form-group">
+                        <label for="points" class="required">Points</label>
+                        <input type="text" class="form-control shadow-sm" name="points" id="points" value="{{ number_format($saldo->points, 0, ',', '.');}}" readonly>
                     </div>
                 </div>
                 

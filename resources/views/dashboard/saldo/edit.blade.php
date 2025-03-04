@@ -29,6 +29,13 @@
                         <input type="text" class="form-control shadow-sm" name="balance" id="balance" value="{{ number_format($saldo->balance, 0, ',', '.');}}">
                     </div>
                 </div>
+                <div class="col-12 col-md-4">
+                    <div class="form-group">
+                        <label for="points" class="required">Points</label>
+                        <input type="text" class="form-control shadow-sm" name="points" id="points" value="{{ number_format($saldo->points, 0, ',', '.');}}">
+                    </div>
+                </div>
+                
                 
             </div>
           

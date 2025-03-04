@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Rewards;
 use Illuminate\Http\Request;
 use App\Models\PenukaranPoints;
+use App\Models\Saldo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -17,8 +18,8 @@ class PenukaranPoinController extends Controller
 {
     public function index(Request $request)
     {
-        $title = "Data Transaksi";
-        $breadcrumb = "Transaksi";
+        $title = "Data Penukaran points";
+        $breadcrumb = "Penukaran points";
         $nasabahs = User::with('roles')
             ->whereHas('roles', function ($query) {
                 $query->where('name', 'nasabah');
@@ -57,20 +58,14 @@ class PenukaranPoinController extends Controller
 
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
-                    //Check permission for adding/editing permissions
-                    if (Gate::allows('update rewards')) {
-                        $buttons .= '<a href="' . route('rewards.edit', $data->id) . '" class="btn btn-sm btn-primary mr-1">
-                        <i class="fas fa-edit"></i>
-                     </a>';
-                    }
                     // Check permission for deleting permissions
-                    if (Gate::allows('delete rewards')) {
-                        $buttons .= '<button type="button" class="btn btn-sm btn-danger mr-1 delete-button" data-id="' . $data->id . '" data-section="rewards">' .
+                    if (Gate::allows('delete penukaran points')) {
+                        $buttons .= '<button type="button" class="btn btn-sm btn-danger mr-1 delete-button" data-id="' . $data->id . '" data-section="penukaran-points">' .
                             '<i class="fas fa-trash-alt"></i> 
                                      </button>';
                     }
-                    if (Gate::allows('read rewards')) {
-                        $buttons .= '<a href="' . route('rewards.show', $data->id) . '" class="btn btn-sm btn-info btn-show-user">
+                    if (Gate::allows('read penukaran points')) {
+                        $buttons .= '<a href="' . route('penukaran-points.show', $data->id) . '" class="btn btn-sm btn-info btn-show-user">
                     <i class="fas fa-eye"></i>
                  </a>';
                     }
@@ -113,15 +108,18 @@ class PenukaranPoinController extends Controller
         try {
             DB::beginTransaction();
             $reward = Rewards::findOrFail($request->reward_id);
-            if ($user->points < $reward->points) {
+
+            //ambil points di saldo user 
+            $saldo = Saldo::where('user_id', $user->id)->first();
+            if (!$saldo || $saldo->points < $reward->points) {
                 return response()->json([
                     'success' => false,
                     'error' => 'Saldo poin anda tidak cukup'
                 ], 400);
             }
         
-            $user->points -= $reward->points;
-            $user->save(); 
+            $saldo->points -= $reward->points;
+            $saldo->save(); 
         
             PenukaranPoints::create([
                 'user_id' => $user->id,
@@ -142,5 +140,30 @@ class PenukaranPoinController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function show($id){
+        $penukaranPoint = PenukaranPoints::findOrFail($id);
+        $nasabahs = User::with('roles')
+            ->whereHas('roles', function ($query) {
+                $query->where('name', 'nasabah');
+            })
+            ->get();
+
+        $rewards = Rewards::all();
+        return view('dashboard.penukaranPoints.detail', get_defined_vars());
+    }
+    public function destroy($id){
+        $penukaranPoint = PenukaranPoints::findOrFail($id);
+        if ($penukaranPoint->delete()) {
+            return response()->json([
+               'success' => true,
+               'message' => 'Data berhasil dihapus'
+            ], 200);
+        }
+        return response()->json([
+           'success' => false,
+           'message' => 'Data gagal dihapus'
+        ], 500);
     }
 }
