@@ -9,9 +9,8 @@
               <!-- small box -->
               <div class="small-box bg-info">
                 <div class="inner">
-                  <h3>150</h3>
-    
-                  <p>Akta Perusahaan</p>
+                  <h3>{{ number_format($totalSampah, 0, ',', '.'). 'KG'}}</h3>
+                  <p>Total sampah terkumpul</p>
                 </div>
                 <div class="icon">
                   <i class="ion ion-folder"></i>
@@ -24,8 +23,8 @@
               <!-- small box -->
               <div class="small-box bg-success">
                 <div class="inner">
-                  <h3>53</h3>
-                  <p>Sewa menyewa</p>
+                  <h3>{{'RP'. number_format($totalSaldo, 0, ',', '.')}}</h3>
+                  <p>Total saldo</p>
                 </div>
                 <div class="icon">
                   <i class="ion ion-folder"></i>
@@ -33,37 +32,38 @@
                 <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-              <!-- small box -->
-              <div class="small-box bg-warning">
-                <div class="inner">
-                  <h3>44</h3>
-    
-                  <p>Jenis Dokumen</p>
-                </div>
-                <div class="icon">
-                  <i class="ion ion-folder"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-              </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-              <!-- small box -->
-              <div class="small-box bg-danger">
-                <div class="inner">
-                  <h3>65</h3>
-    
-                  <p>Lokasi</p>
-                </div>
-                <div class="icon">
-                  <i class="ion ion-folder"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-              </div>
-            </div>
-            <!-- ./col -->
+            <div class="col-lg-12">
+              <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Transaction ID</th>
+                        <th>Nama</th>
+                        <th>Sampah</th>
+                        <th class="w-25 text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  @foreach ($transactions as $key => $transaction)
+                  <tr>
+                      <td>{{ $key + 1 }}</td>
+                      <td>{{ $transaction->id }}</td>
+                      <td>{{ $transaction->users->name ?? '-' }}</td>
+                      <td>
+                          @foreach ($transaction->details as $detail)
+                              {{ $detail->sampah->nama ?? '-' }} ({{ $detail->berat }} kg) <br>
+                          @endforeach
+                      </td>
+                      <td class="text-center">
+                          <button class="btn btn-sm btn-primary">Edit</button>
+                          <button class="btn btn-sm btn-danger">Hapus</button>
+                      </td>
+                  </tr>
+              @endforeach
+              
+                </tbody>
+            </table>
+            
           </div>
         
         </div><!-- /.container-fluid -->

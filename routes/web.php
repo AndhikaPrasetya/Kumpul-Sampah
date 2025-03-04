@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategorySampahController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NasabahController;
 use App\Http\Controllers\PenukaranPoinController;
 use Illuminate\Support\Facades\Route;
@@ -29,8 +30,8 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'verified', 'role:super admin|bsu|nasabah'])->group(function () {
 
-    Route::get('/dashboard', function () {
-    return view('dashboard.index');})->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class,'total']);
+
 
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
