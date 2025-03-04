@@ -72,6 +72,10 @@ class DatabaseSeeder extends Seeder
             'read penukaran points',
             'update penukaran points',
             'delete penukaran points',
+            'create nasabah',
+            'read nasabah',
+            'update nasabah',
+            'delete nasabah',
 
         ];
 
@@ -122,6 +126,10 @@ class DatabaseSeeder extends Seeder
                 'read penukaran points',
                 'update penukaran points',
                 'delete penukaran points',
+                'create nasabah',
+                'read nasabah',
+                'update nasabah',
+                'delete nasabah',
             ]);
 
             $nasabah->givePermissionTo([

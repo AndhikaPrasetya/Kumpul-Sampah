@@ -6,25 +6,21 @@ use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Spatie\Permission\Models\Role;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
-class UserController extends Controller
+class NasabahController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        $title = "Data Users";
-        $breadcrumb = "Users";
+        $title = "Data Nasabah";
+        $breadcrumb = "Nasabah";
         if ($request->ajax()) {
-            $data = User::query();
+            $data = User::role('nasabah');
             if ($search = $request->input('search.value')) {
                 $data->where(function ($data) use ($search) {
                     $data->where('name', 'like', "%{$search}%")
@@ -40,34 +36,27 @@ class UserController extends Controller
                 ->addColumn('email', function ($data) {
                     return $data->email;
                 })
-                ->addColumn('role', function ($data) {
-                    $roles = $data->getRoleNames();
-                    $rolesList = '';
-
-                    foreach ($roles as $role) {
-                        $rolesList .= '<span class="badge badge-primary">' . $role . '</span> ';
-                    }
-
-                    return $rolesList;
+                ->addColumn('no_phone', function ($data) {
+                    return $data->no_phone;
                 })
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
 
-                    if (Gate::allows('update user')) {
-                        $buttons .= '<a href="' . route('users.edit', $data->id) . '" class="btn btn-sm btn-primary mr-1">
-                                        <i class="fas fa-edit"></i> Edit
+                    if (Gate::allows('update nasabah')) {
+                        $buttons .= '<a href="' . route('nasabah.edit', $data->id) . '" class="btn btn-sm btn-primary mr-1">
+                                        <i class="fas fa-edit"></i>
                                      </a>';
                     }
                     
-                    if (Gate::allows('delete user')) {
-                        $buttons .= '<button type="button" class="btn btn-sm btn-danger mr-1 delete-button" data-id="' . $data->id . '" data-section="users">'.
-                                    '<i class="fas fa-trash-alt"></i> Delete
+                    if (Gate::allows('delete nasabah')) {
+                        $buttons .= '<button type="button" class="btn btn-sm btn-danger mr-1 delete-button" data-id="' . $data->id . '" data-section="nasabah">'.
+                                    '<i class="fas fa-trash-alt"></i>
                                      </button>';
                     }
                     
-                    if (Gate::allows('read user')) {
-                        $buttons .= '<a href="' . route('users.show', $data->id) . '" class="btn btn-sm btn-info btn-show-user">
-                    <i class="fas fa-eye"></i> View
+                    if (Gate::allows('read nasabah')) {
+                        $buttons .= '<a href="' . route('nasabah.show', $data->id) . '" class="btn btn-sm btn-info btn-show-user">
+                    <i class="fas fa-eye"></i>
                  </a>';
                     }
                     
@@ -76,37 +65,25 @@ class UserController extends Controller
 
                     return $buttons;
                 })
-                ->rawColumns(['action', 'role'])
+                ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('dashboard.user.index', get_defined_vars());
-    }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $title = "Create Data Users";
-        $breadcrumb = "Create Users";
-        $roles = Role::pluck('name', 'name')->all();
-        return view('dashboard.user.create', get_defined_vars());
+        return view('dashboard.nasabah.index', get_defined_vars());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email|max:255',
-            'no_phone' => 'nullable|string|max:255',
-            'photo' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+    public function create(){
+        return view('dashboard.nasabah.create');
+    }
+
+    public function store(Request $request){
+        $validator = Validator::make($request->all(),[
+            'name' =>'required|string|max:255',
+            'email' =>'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'alamat' => 'nullable|string',
+            'no_phone' =>'required|string|max:15',
+            'alamat' =>'required|string|max:255',
+            'photo' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
         ]);
-
-        //check if validation fails
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
@@ -126,45 +103,25 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
             'photo' => 'storage/foto-profile/' . $fileName,
         ]);
-
-        if (!empty($request->roles)) {
-            $data->syncRoles($request->roles);
-        }
+        //assign role nasabah
+        $data->assignRole('nasabah');
 
         return response()->json([
-            'success' => true,
-            'message' => 'User created successfully',
-            'userId' => $data->id,
-
+           'status' => true,
+           'message' => 'Data berhasil disimpan',
+            'data' => $data
         ], 200);
+
     }
-
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
-    {
+    public function show($id){
         $data = User::find($id);
-        $roles = Role::pluck('name', 'name')->all();
-        $userRole = $data->roles->pluck('name', 'name')->all();
-        return view('dashboard.user.view', get_defined_vars());
+        return view('dashboard.nasabah.view', compact('data'));
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
+    public function edit($id){
         $data = User::find($id);
-        $roles = Role::pluck('name', 'name')->all();
-        $userRole = $data->roles->pluck('name', 'name')->all();
-        return view('dashboard.user.edit', get_defined_vars());
+        return view('dashboard.nasabah.edit', compact('data'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -202,10 +159,6 @@ class UserController extends Controller
                 $user->email = $request->email;
             }
 
-            // Update role
-            $user->syncRoles($request->roles);
-            $user->save();
-
             return response()->json([
                 'success' => true,
                 'message' => 'User updated successfully',
@@ -220,26 +173,30 @@ class UserController extends Controller
             ], 500);
         }
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        $user = User::find($id);
-
-        if (!$user) {
+    public function destroy($id){
+        try {
+            DB::beginTransaction();
+        
+            $nasabah = User::findOrFail($id);
+            $nasabah->roles()->detach(); // Hapus relasi roles
+            $nasabah->delete(); 
+        
+            DB::commit();
+        
+            return response()->json([
+                'success' => true,
+                'message' => 'Nasabah berhasil dihapus'
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+        
             return response()->json([
                 'success' => false,
-                'message' => 'User not found',
-            ], 404);
+                'message' => 'Gagal menghapus user',
+                'error' => $e->getMessage()
+            ], 500);
         }
-        $user->roles()->detach();
-        $user->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'User deleted successfully',
-        ], 200);
+        
     }
+
 }

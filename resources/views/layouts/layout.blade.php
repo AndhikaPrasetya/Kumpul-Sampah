@@ -154,6 +154,20 @@
           </li>
           @endif
           <li class="nav-item">
+            <a href="{{ route('nasabah.index') }}" class="nav-link {{ Route::is('nasabah.*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-user"></i>
+                <p>Data nasabah</p>
+            </a>
+        </li>
+          <li class="nav-item">
+            <a href="{{route('sampah.index')}}" class="nav-link {{ Route::is('sampah.*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-recycle"></i>
+              <p>
+              Data sampah
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="{{route('kategori-sampah.index')}}" class="nav-link {{ Route::is('kategori-sampah.*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-dumpster"></i>
               <p>
@@ -162,18 +176,10 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{route('sampah.index')}}" class="nav-link {{ Route::is('sampah.*') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-recycle"></i>
-              <p>
-              Sampah
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
             <a href="{{route('transaction.index')}}" class="nav-link {{ Route::is('transaction.*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-exchange-alt"></i>
               <p>
-              Transaksi
+              Data transaksi
               </p>
             </a>
           </li>
@@ -205,7 +211,7 @@
             <a href="{{route('rewards.index')}}" class="nav-link {{ Route::is('rewards.index') ? 'active' : '' }}">
               <i class="nav-icon fas fa-gift"></i>
               <p>
-              Rewards 
+              Data rewards 
               </p>
             </a>
           </li>

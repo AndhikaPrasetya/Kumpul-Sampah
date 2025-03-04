@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategorySampahController;
+use App\Http\Controllers\NasabahController;
 use App\Http\Controllers\PenukaranPoinController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
@@ -38,6 +39,14 @@ Route::middleware(['auth', 'verified', 'role:super admin|bsu|nasabah'])->group(f
     Route::put('/users/update/{id}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/delete/{id}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
+
+    Route::get('/nasabah', [NasabahController::class, 'index'])->name('nasabah.index');
+    Route::get('/nasabah/create', [NasabahController::class, 'create'])->name('nasabah.create');
+    Route::post('/nasabah/store', [NasabahController::class, 'store'])->name('nasabah.store');
+    Route::get('/nasabah/edit/{id}', [NasabahController::class, 'edit'])->name('nasabah.edit');
+    Route::put('/nasabah/update/{id}', [NasabahController::class, 'update'])->name('nasabah.update');
+    Route::delete('/nasabah/delete/{id}', [NasabahController::class, 'destroy'])->name('nasabah.destroy');
+    Route::get('/nasabah/view/{id}', [NasabahController::class, 'show'])->name('nasabah.show');
 
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
     Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create')->middleware(['permission:create role']);
