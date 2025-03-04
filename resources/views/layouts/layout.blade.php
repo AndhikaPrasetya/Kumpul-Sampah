@@ -158,70 +158,105 @@
                 <i class="nav-icon fas fa-user"></i>
                 <p>Data nasabah</p>
             </a>
-        </li>
-          <li class="nav-item">
-            <a href="{{route('sampah.index')}}" class="nav-link {{ Route::is('sampah.*') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-recycle"></i>
-              <p>
-              Data sampah
-              </p>
-            </a>
           </li>
-          <li class="nav-item">
-            <a href="{{route('kategori-sampah.index')}}" class="nav-link {{ Route::is('kategori-sampah.*') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-dumpster"></i>
-              <p>
-                Kategori Sampah
-              </p>
-            </a>
+
+          <li class="nav-item {{ Route::is('sampah.*','kategori-sampah.*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('sampah.*','kategori-sampah.*') ? 'active' : '' }}">
+                  <i class="fas fa-dumpster mr-2"></i>
+                  <p>
+                      Pengelolaan sampah
+                      <i class="right fas fa-angle-left"></i>
+                  </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{route('sampah.index')}}" class="nav-link {{ Route::is('sampah.*') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-recycle"></i>
+                    <p>
+                    Data sampah
+                    </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{route('kategori-sampah.index')}}" class="nav-link {{ Route::is('kategori-sampah.*') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-trash"></i>
+                    <p>
+                      Kategori Sampah
+                    </p>
+                  </a>
+                </li>
+              </ul>
           </li>
-          <li class="nav-item">
-            <a href="{{route('transaction.index')}}" class="nav-link {{ Route::is('transaction.*') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-exchange-alt"></i>
-              <p>
-              Data transaksi
-              </p>
-            </a>
+
+          <li class="nav-item {{ Route::is('transaction.*','history-transacation.*','saldo.*','withdraw.*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('transaction.*','history-transacation.*','saldo.*','withdraw.*') ? 'active' : '' }}">
+                  <i class="fas fa-receipt mr-2"></i>
+                  <p>
+                       Transaksi & Saldo
+                      <i class="right fas fa-angle-left"></i>
+                  </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{route('transaction.index')}}" class="nav-link {{ Route::is('transaction.*') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-exchange-alt"></i>
+                    <p>
+                    Data transaksi
+                    </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{route('history-transaction.index')}}" class="nav-link {{ Route::is('history-transaction.index') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-history"></i>
+                    <p>
+                    Riwayat transaksi
+                    </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{route('saldo.index')}}" class="nav-link {{ Route::is('saldo.index') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-wallet"></i>
+                    <p>
+                    Saldo & Points
+                    </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{route('withdraw.index')}}" class="nav-link {{ Route::is('withdraw.index') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-history"></i>
+                    <p>
+                    Penarikan dana 
+                    </p>
+                  </a>
+                </li>
+              </ul>
           </li>
-          <li class="nav-item">
-            <a href="{{route('history-transaction.index')}}" class="nav-link {{ Route::is('history-transaction.index') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-history"></i>
-              <p>
-              Riwayat transaksi
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{route('saldo.index')}}" class="nav-link {{ Route::is('saldo.index') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-wallet"></i>
-              <p>
-              Saldo & Points
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{route('withdraw.index')}}" class="nav-link {{ Route::is('withdraw.index') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-money"></i>
-              <p>
-              Penarikan dana 
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{route('rewards.index')}}" class="nav-link {{ Route::is('rewards.index') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-gift"></i>
-              <p>
-              Data rewards 
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{route('penukaran-points.index')}}" class="nav-link {{ Route::is('penukaran-points.index') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-ticket-alt"></i>
-              <p>
-              Penukaran Poin 
-              </p>
-            </a>
+          <li class="nav-item {{ Route::is('rewards.*','penukaran_points.*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('rewards.*','penukaran_points.*') ? 'active' : '' }}">
+                  <i class="fas fa-gifts mr-2"></i>
+                  <p>
+                      Manajemen Rewards
+                      <i class="right fas fa-angle-left"></i>
+                  </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{route('rewards.index')}}" class="nav-link {{ Route::is('rewards.index') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-gift"></i>
+                    <p>
+                    Data rewards 
+                    </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{route('penukaran-points.index')}}" class="nav-link {{ Route::is('penukaran-points.index') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-ticket-alt"></i>
+                    <p>
+                    Penukaran Poin 
+                    </p>
+                  </a>
+                </li>
+              </ul>
           </li>
       </ul>
       
