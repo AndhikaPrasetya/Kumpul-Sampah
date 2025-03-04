@@ -22,11 +22,11 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        @can('create saldo')
+                        @can('create rewards')
                         <div class="card-header bg-transparent border-bottom p-3">
                             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                                <a href="{{ route('saldo.create') }}" class="btn btn-primary btn-sm btn-kategori">
-                                    <i class="fas fa-plus"></i> Tambah Saldo
+                                <a href="{{ route('rewards.create') }}" class="btn btn-primary btn-sm btn-kategori">
+                                    <i class="fas fa-plus"></i> Tambah rewards
                                 </a>
                             </div>
                         </div>
@@ -34,13 +34,12 @@
                         
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered  table-hover" id="table_saldo">
+                                <table class="table table-bordered  table-hover" id="table_rewards">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Nasabah</th>
-                                            <th>Balance</th>
-                                            <th>Points</th>
+                                            <th>Nama barang</th>
+                                            <th>Jumlah poin</th>
                                             <th class="text-center" style="width: 20%;">Action</th>
                                         </tr>
                                     </thead>

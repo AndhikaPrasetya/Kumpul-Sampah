@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->string('password');
             $table->text('alamat')->nullable();
+            $table->integer('points')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

@@ -55,6 +55,7 @@
                                             <th>Sampah</th>
                                             <th>Berat</th>
                                             <th>Total Harga</th>
+                                            <th>Total Points</th>
                                             <th>Tanggal</th>
                                         </tr>
                                     </thead>

@@ -64,6 +64,14 @@ class DatabaseSeeder extends Seeder
             'read withdraw',
             'update withdraw',
             'delete withdraw',
+            'create rewards',
+            'read rewards',
+            'update rewards',
+            'delete rewards',
+            'create penukaran points',
+            'read penukaran points',
+            'update penukaran points',
+            'delete penukaran points',
 
         ];
 
@@ -106,6 +114,14 @@ class DatabaseSeeder extends Seeder
                 'read withdraw',
                 'update withdraw',
                 'delete withdraw',
+                'create rewards',
+                'read rewards',
+                'update rewards',
+                'delete rewards',
+                'create penukaran points',
+                'read penukaran points',
+                'update penukaran points',
+                'delete penukaran points',
             ]);
 
             $nasabah->givePermissionTo([

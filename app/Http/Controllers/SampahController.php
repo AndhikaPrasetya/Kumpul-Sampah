@@ -74,6 +74,7 @@ class SampahController extends Controller
         $validator = Validator::make($request->all(), [
             'nama'        => 'required|string|max:255',
             'category_id' => 'required|integer',
+            'points' => 'nullable|integer',
             'harga'       => 'required|numeric|min:0',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
             'deskripsi'   => 'required|string',
@@ -101,6 +102,7 @@ class SampahController extends Controller
                 'nama' => $request->nama,
                 'category_id' => $request->category_id,
                 'harga' => $request->harga,
+                'points' => $request->points,
                 'image' => $fileData,
                 'deskripsi' => $request->deskripsi,
             ]);
@@ -138,6 +140,7 @@ class SampahController extends Controller
         $validator = Validator::make($request->all(), [
             'nama'        => 'sometimes|required|string|max:255',
             'category_id' => 'sometimes|required|integer',
+            'points' => 'sometimes|required|integer',
             'harga'       => 'sometimes|required',
             'image'       => 'sometimes|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
             'deskripsi'   => 'sometimes|required|string',
@@ -172,6 +175,9 @@ class SampahController extends Controller
             }
             if ($request->filled('deskripsi')) {
                 $updateData['deskripsi'] = $request->deskripsi;
+            }
+            if ($request->filled('points')) {
+                $updateData['points'] = $request->points;
             }
 
          // Handle image upload
@@ -220,7 +226,7 @@ public function destroy($id){
     }
 
     if($data->image){
-        $image_path = 'sampah/'. $data->image;
+        $image_path =$data->image;
         if(file_exists($image_path)){
             unlink($image_path);
             }

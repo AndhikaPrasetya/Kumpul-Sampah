@@ -4,53 +4,32 @@
 <section class="content m-5">
   <div class="card card-primary">
     <div class="card-header bg-primary">
-        <h3 class="card-title text-white">Buat data Sampah</h3>
+        <h3 class="card-title text-white">Buat Reward</h3>
     </div>
-      <form id="createFormSampah" enctype="multipart/form-data">
+      <form id="createFormRewards" enctype="multipart/form-data">
           @csrf
           <div class="card-body">
             <div class="row">
-                <div class="col-12">
-                    <div class="form-group">
-                        <label for="nama" class="required">Nama sampah</label>
-                        <input type="text" class="form-control shadow-sm" name="nama" id="nama" placeholder="contoh: Plastik" required>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label for="category_id" class="required">Kategori sampah</label>
-                       <select class="form-control" name="category_id" id="category_id">
-                           <option value="" disabled selected>Pilih Kategori</option>
-                        @foreach ($categories as $kategori)
-                        <option value="{{$kategori->id}}">{{$kategori->nama}}</option>
-                        @endforeach
-                       </select>
-                    </div>
-                </div>
                 <div class="col-12 col-md-6">
                     <div class="form-group">
-                        <label for="harga" class="required">Harga per KG</label>
-                        <input type="text" class="form-control shadow-sm" name="harga" id="harga" placeholder="5000" required>
+                        <label for="name" class="required">Nama barang</label>
+                        <input type="text" class="form-control shadow-sm" name="name" id="name">
                     </div>
                 </div>
+
                 <div class="col-12 col-md-6">
                     <div class="form-group">
-                        <label for="points">Points per KG</label>
-                        <input type="text" class="form-control" name="points" />
+                        <label for="points" class="required">Jumlah poin</label>
+                        <input type="text" class="form-control shadow-sm" name="points" id="points" placeholder="5000" required>
                     </div>
                 </div>
                 <div class="col-12">
                     <div class="form-group">
-                        <label for="image" class="required">Gambar sampah</label>
-                        <input type="file" class="dropify" name="image" />
+                        <label for="image" class="required">Gambar barang</label>
+                        <input type="file" class="dropify shadow-sm" name="image" id="image">
                     </div>
                 </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label for="deskripsi">Deskripsi</label>
-                      <textarea name="deskripsi" class="form-control" id="deskripsi"></textarea>
-                    </div>
-                </div>
+                
             </div>
           </div>
   
@@ -60,7 +39,7 @@
                     <i class="fas fa-save mr-1"></i> Submit
                 </button>
                 <button type="button" 
-                        onclick="window.location.href='{{ route('sampah.index') }}'"
+                        onclick="window.location.href='{{ route('rewards.index') }}'"
                         class="btn btn-warning px-4">
                     <i class="fas fa-arrow-left mr-1"></i> Back
                 </button>
@@ -93,13 +72,13 @@
                 toastr.warning(message); 
             }
         };
-        $('#createFormSampah').on('submit', function(e) {
+        $('#createFormRewards').on('submit', function(e) {
                 e.preventDefault();
 
                 const formData = new FormData(this);
 
                 $.ajax({
-                    url: '/sampah/store',
+                    url: '/rewards/store',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -107,7 +86,7 @@
                     success: function(response) {
                         showToast('success', response.message);
                         setTimeout(() => {
-                            window.location.href = '/list-sampah';
+                            window.location.href = '/rewards';
                         }, 2000);
                     },
                     error: (xhr) => {
@@ -125,6 +104,23 @@
                 });
             });
 
+            
+         // Format angka dengan titik sebagai pemisah ribuan
+    function formatAngka(value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    // Hapus format angka sebelum dikirim ke server
+    function hapusFormatAngka(value) {
+        return value.replace(/\./g, '');
+    }
+
+    // Event untuk input balance (format otomatis)
+    $('#points').on('input', function () {
+        let value = $(this).val();
+        let unformattedValue = hapusFormatAngka(value);
+        $(this).val(formatAngka(unformattedValue));
+    });
 
        });
 

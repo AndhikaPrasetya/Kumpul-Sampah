@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('sampah_id')->constrained('sampahs')->onDelete('cascade'); 
             $table->decimal('berat', 8, 2); // Berat dalam KG
             $table->decimal('subtotal', 10, 2); // berat * harga_per_kg
+            $table->integer('points')->default(0);
             $table->timestamps();
         });
         

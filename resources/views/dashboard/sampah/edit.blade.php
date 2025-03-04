@@ -11,13 +11,13 @@
           @method('PUT')
           <div class="card-body">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 col-md-6">
                     <div class="form-group">
                         <label for="nama" class="required">Nama sampah</label>
                         <input type="text" class="form-control shadow-sm" name="nama" id="nama" value="{{$data->nama}}">
                     </div>
                 </div>
-                <div class="col-12">
+                <div class="col-12 col-md-6">
                     <div class="form-group">
                         <label for="category_id" class="required">Kategori sampah</label>
                        <select class="form-control" name="category_id" id="category_id">
@@ -28,10 +28,16 @@
                        </select>
                     </div>
                 </div>
-                <div class="col-12">
+                <div class="col-12 col-md-6">
                     <div class="form-group">
                         <label for="harga" class="required">Harga per KG</label>
                         <input type="text" class="form-control shadow-sm" name="harga" id="harga" value="{{number_format($data->harga, 0, ',', '.')}}" >
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label for="points">Points per KG</label>
+                        <input type="text" class="form-control shadow-sm" name="points" id="points" value="{{$data->points}}" >
                     </div>
                 </div>
                 <div class="col-12">
