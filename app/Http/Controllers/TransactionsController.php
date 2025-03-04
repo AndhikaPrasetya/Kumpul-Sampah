@@ -442,6 +442,7 @@ class TransactionsController extends Controller
             if ($saldoNasabah) {
                 $saldoNasabah->update([
                     'balance' => $saldoNasabah->balance + $totalAmount,
+                    'points' => $saldoNasabah->points + $totalPoints,
                 ]);
             } else {
                 $saldoNasabah = Saldo::create([
@@ -449,11 +450,6 @@ class TransactionsController extends Controller
                     'balance' => $totalAmount,
                 ]);
             }
-
-            //update user points
-            $user->update([
-                'points' => $user->points + $totalPoints,
-            ]);
         }
 
         return response()->json([
