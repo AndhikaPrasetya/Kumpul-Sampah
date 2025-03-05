@@ -15,7 +15,7 @@
     <link rel="icon" type="image/png" href="assets/img/favicon.png" sizes="32x32">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <link rel="stylesheet" href="{{asset('template-fe/assets/css/style.css')}}">
-    <link rel="manifest" href="{{asset('template-fe/__manifest.json')}}">
+    {{-- <link rel="manifest" href="{{asset('template-fe/__manifest.json')}}"> --}}
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
 </head>
 

@@ -12,7 +12,6 @@
     <!-- Swiper.js -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" href="{{ asset('template-fe/assets/css/style.css') }}">
-    <link rel="manifest" href="{{ asset('template-fe/__manifest.json') }}">
 
     <style>
         body {
