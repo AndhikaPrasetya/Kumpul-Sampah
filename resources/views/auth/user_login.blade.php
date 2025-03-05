@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,19 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport"
-    content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+        content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
     <title>Login</title>
     <!-- Swiper.js -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" href="{{ asset('template-fe/assets/css/style.css') }}">
 
     <style>
-        body, html {
+        body,
+        html {
             height: 100%;
             margin: 0;
             font-family: 'Arial', sans-serif;
             background-color: #f0f4f8;
         }
+
         .onboarding-container {
             max-width: 400px;
             height: 100vh;
@@ -30,6 +30,7 @@
             position: relative;
             overflow: hidden;
         }
+
         .illustration-container {
             position: relative;
             height: 80%;
@@ -39,12 +40,14 @@
             align-items: center;
             overflow: hidden;
         }
+
         .illustration-container img {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
             z-index: 10;
         }
+
         .content-container {
             margin-top: 1em;
             padding: 20px;
@@ -54,28 +57,24 @@
             flex-direction: column;
             justify-content: space-between;
         }
+
         .get-started-btn {
-            background-color: #2e7d32;
+            background-color: #2e8B57;
             color: white;
             border: none;
             padding: 12px;
             border-radius: 8px;
             position: absolute;
-    bottom: 40px; 
-    left: 50%;
-    transform: translateX(-50%);
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
         }
-      
-      
 
-        #appCapsule{
+        #appCapsule {
+            
             display: none;
             padding: 20px;
         }
-
-    
-
-      
     </style>
 </head>
 
@@ -87,109 +86,111 @@
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
                     <div class="illustration-container">
-                        <img src="{{ asset('template-fe/assets/img/bank.svg') }}"
-                        alt="Announcement"
-                        style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
+                        <img src="{{ asset('template-fe/assets/img/bank.svg') }}" alt="Announcement"
+                            style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
                     </div>
-                        <div class="content-container">
-                            <div>
-                                <h2>Selamat Datang di Bank Imam!</h2>
-                    <p>Mulai langkah kecil Anda untuk menjaga lingkungan dengan cara yang mudah dan modern. Daur
-                        ulang sampah jadi lebih praktis dan transparan.</p>
-                            </div>
-                           
+                    <div class="content-container">
+                        <div>
+                            <h2>Selamat Datang di Bank Imam!</h2>
+                            <p>Mulai langkah kecil Anda untuk menjaga lingkungan dengan cara yang mudah dan modern. Daur
+                                ulang sampah jadi lebih praktis dan transparan.</p>
                         </div>
+
+                    </div>
                 </div>
                 <div class="swiper-slide">
                     <div class="illustration-container">
-                        <img src="{{ asset('template-fe/assets/img/bank.svg') }}"
-                        alt="Announcement"
-                        style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
+                        <img src="{{ asset('template-fe/assets/img/bank.svg') }}" alt="Announcement"
+                            style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
                     </div>
-                        <div class="content-container">
-                            <div>
-                                <h2>Tukar Sampah <br>
-                                    Dapatkan Manfaat!</h2>
-                                <p>Setiap sampah yang Anda kumpulkan memiliki nilai. Tukarkan sampah anorganik Anda menjadi poin atau saldo yang bisa digunakan untuk berbagai keperluan sehari-hari.</p>
-                            </div>
-                           
+                    <div class="content-container">
+                        <div>
+                            <h2>Tukar Sampah <br>
+                                Dapatkan Manfaat!</h2>
+                            <p>Setiap sampah yang Anda kumpulkan memiliki nilai. Tukarkan sampah anorganik Anda menjadi
+                                poin atau saldo yang bisa digunakan untuk berbagai keperluan sehari-hari.</p>
                         </div>
+
+                    </div>
                 </div>
                 <div class="swiper-slide">
                     <div class="illustration-container">
-                        <img src="{{ asset('template-fe/assets/img/bank.svg') }}"
-                        alt="Announcement"
-                        style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
+                        <img src="{{ asset('template-fe/assets/img/bank.svg') }}" alt="Announcement"
+                            style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
                     </div>
-                        <div class="content-container">
-                            <div>
-                                <h2>Langkah Mudah, Dampak Besar!</h2>
-                                <p>Dengan 3 langkah sederhana: Pilah, Kumpulkan, dan Setor, Anda sudah berkontribusi untuk lingkungan yang lebih bersih dan hijau. Ayo mulai sekarang!</p>
-                            </div>
-                           
+                    <div class="content-container">
+                        <div>
+                            <h2>Langkah Mudah, Dampak Besar!</h2>
+                            <p>Dengan 3 langkah sederhana: Pilah, Kumpulkan, dan Setor, Anda sudah berkontribusi untuk
+                                lingkungan yang lebih bersih dan hijau. Ayo mulai sekarang!</p>
                         </div>
+
+                    </div>
                 </div>
             </div>
-            <div class="swiper-pagination"></div>
+            <div class="swiper-pagination" style="display:none;"></div>
             <div class="d-flex justify-content-center">
 
                 <button class="btn get-started-btn w-50" id="skip-intro">Skip</button>
             </div>
-          
+
         </div>
-        
+
     </div>
 
     <!-- Form Login -->
     <div id="appCapsule" style="max-width: 400px;  margin: 0 auto;">
-      <img src="{{ asset('template-fe/assets/img/bank.svg') }}"
-      alt="Announcement"
-      style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
+        <img src="{{ asset('template-fe/assets/img/bank.svg') }}" alt="Announcement"
+            style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
 
-      <div class="section mb-5 p-2">
+        <div class="section mb-5 p-2">
 
-        <form method="POST" action="{{ route('login') }}">
-          @csrf
-              <div>
-                  <div>
-                   
-                      <div class="form-group boxed">
-                        <div class="input-wrapper">
-                          <label class="label" for="email1">E-mail</label>
-                          <input type="email" id="email" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}" required autofocus>
-                            <i class="clear-input">
-                                <ion-icon name="close-circle" role="img" class="md hydrated" aria-label="close circle"></ion-icon>
-                            </i>
-                        </div>
-                    </div>
-                      <div class="form-group boxed">
-                        <div class="input-wrapper">
-                          <label class="label" for="password">Password</label>
-                          <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
-                            <i class="clear-input">
-                                <ion-icon name="close-circle" role="img" class="md hydrated" aria-label="close circle"></ion-icon>
-                            </i>
-                        </div>
-                    </div>
-                  </div>
-                  <div class=" transparent">
-                    <button type="submit" class="btn btn-primary btn-block btn-lg mb-1">Log in</button>
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+                <div>
                     <div>
-                      <p >Belum punya akun? <a href="{{ route('register') }}">Daftar</a> </p>
+
+                        <div class="form-group boxed">
+                            <div class="input-wrapper">
+                                <label class="label" for="email1">E-mail</label>
+                                <input type="email" id="email" name="email" class="form-control"
+                                    placeholder="Email" value="{{ old('email') }}" required autofocus>
+                                <i class="clear-input">
+                                    <ion-icon name="close-circle" role="img" class="md hydrated"
+                                        aria-label="close circle"></ion-icon>
+                                </i>
+                            </div>
+                        </div>
+                        <div class="form-group boxed">
+                            <div class="input-wrapper">
+                                <label class="label" for="password">Password</label>
+                                <input type="password" id="password" name="password" class="form-control"
+                                    placeholder="Password" required>
+                                <i class="clear-input">
+                                    <ion-icon name="close-circle" role="img" class="md hydrated"
+                                        aria-label="close circle"></ion-icon>
+                                </i>
+                            </div>
+                        </div>
                     </div>
-                    {{-- <div> 
+                    <div class=" transparent">
+                        <button type="submit" class="btn btn-primary btn-block btn-lg mb-1">Log in</button>
+                        <div>
+                            <p>Belum punya akun? <a href="{{ route('register') }}">Daftar</a> </p>
+                        </div>
+                        {{-- <div> 
                     @if (Route::has('password.request'))
                       <a href="{{ route('password.request') }}">Forgot your password?</a>
                     @endif
                   </div> --}}
+                    </div>
                 </div>
-              </div>
-             
 
-          </form>
-      </div>
 
-  </div>
+            </form>
+        </div>
+
+    </div>
 
     <script src={{ asset('/template/plugins/jquery/jquery.min.js') }}></script>
     <!-- ========= JS Files =========  -->

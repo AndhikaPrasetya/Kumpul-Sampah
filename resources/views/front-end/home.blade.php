@@ -9,9 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#000000">
     <title>Bank Imam</title>
-    <meta name="description" content="Finapp HTML Mobile Template">
-    <meta name="keywords"
-        content="bootstrap, wallet, banking, fintech mobile template, cordova, phonegap, mobile, html, responsive" />
+    <meta name="description" content="Bank imam">
     <link rel="icon" type="image/png" href="assets/img/favicon.png" sizes="32x32">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <link rel="stylesheet" href="{{asset('template-fe/assets/css/style.css')}}">
@@ -111,14 +109,14 @@
     <div class="appBottomMenu">
         <a href="index.html" class="item active">
             <div class="col">
-                <ion-icon name="pie-chart-outline"></ion-icon>
-                <strong>Overview</strong>
+                <ion-icon name="home-outline"></ion-icon>
+                <strong>Home</strong>
             </div>
         </a>
         <a href="app-pages.html" class="item">
             <div class="col">
                 <ion-icon name="document-text-outline"></ion-icon>
-                <strong>Pages</strong>
+                <strong>Orders</strong>
             </div>
         </a>
         <a href="app-components.html" class="item">
