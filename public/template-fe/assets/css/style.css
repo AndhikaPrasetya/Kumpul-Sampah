@@ -9,12 +9,14 @@ body {
   line-height: 1.6rem;
   letter-spacing: 0.004em;
   color: #958d9e;
-  background: #EDEDF5;
+  background: #f0f4f8;
   width: 100%;
   height: 100%;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  max-width: 400px;
+  margin:0 auto;
 }
 
 a {
@@ -34,6 +36,8 @@ a:hover, a:active, a:focus {
 }
 
 .appHeader {
+  margin:0 auto;
+  max-width: 400px;
   height: 56px;
   display: flex;
   justify-content: center;
@@ -195,6 +199,8 @@ a:hover, a:active, a:focus {
 }
 
 .appBottomMenu {
+  margin:0 auto;
+  max-width: 400px;
   min-height: 56px;
   position: fixed;
   z-index: 999;

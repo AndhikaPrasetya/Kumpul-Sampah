@@ -14,100 +14,135 @@
     <link rel="stylesheet" href="{{ asset('template-fe/assets/css/style.css') }}">
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
+        body, html {
+            height: 100%;
             margin: 0;
-            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
         }
-
-        #onboarding-screen {
-            position: fixed;
-            width: 100%;
+        .onboarding-container {
+            max-width: 400px;
             height: 100vh;
-            background: #f9f9f9;
+            margin: 0 auto;
             display: flex;
-            align-items: center;
-            justify-content: center;
             flex-direction: column;
-            z-index: 1000;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
         }
+        .illustration-container {
+            position: relative;
+            height: 80%;
+            background: linear-gradient(to bottom, #a1d9ff 0%, #f0f4f8 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .illustration-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            z-index: 10;
+        }
+        .content-container {
+            margin-top: 1em;
+            padding: 20px;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .get-started-btn {
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            position: absolute;
+    bottom: 40px; 
+    left: 50%;
+    transform: translateX(-50%);
+        }
+      
+      
 
-        #login-form {
+        #appCapsule{
             display: none;
             padding: 20px;
         }
 
-        .swiper-container {
-            width: 90%;
-            height: 70vh;
-        }
+    
 
-        button {
-            padding: 10px 20px;
-            background: #5dc664;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
+      
     </style>
 </head>
 
 <body class="bg-white">
 
     <!-- Onboarding Screen -->
-    <div id="onboarding-screen" class="bg-white">
+    <div class="onboarding-container" class="bg-white">
         <div class="swiper-container">
             <div class="swiper-wrapper">
-                <div class="swiper-slide p-3">
-                    <div class="svg-wrapper mb-3">
-                        <img src="{{ asset('template-fe/assets/img/plant.png') }}"
-                            alt="Announcement"
-                            style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
-
+                <div class="swiper-slide">
+                    <div class="illustration-container">
+                        <img src="{{ asset('template-fe/assets/img/bank.svg') }}"
+                        alt="Announcement"
+                        style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
                     </div>
-
-                    <h2>Selamat Datang di Bank Imam!</h2>
+                        <div class="content-container">
+                            <div>
+                                <h2>Selamat Datang di Bank Imam!</h2>
                     <p>Mulai langkah kecil Anda untuk menjaga lingkungan dengan cara yang mudah dan modern. Daur
                         ulang sampah jadi lebih praktis dan transparan.</p>
+                            </div>
+                           
+                        </div>
                 </div>
-                <div class="swiper-slide p-2">
-                  <div class="svg-wrapper mb-3">
-                    <img src="{{ asset('template-fe/assets/img/plant.png') }}"
+                <div class="swiper-slide">
+                    <div class="illustration-container">
+                        <img src="{{ asset('template-fe/assets/img/bank.svg') }}"
                         alt="Announcement"
                         style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
-
+                    </div>
+                        <div class="content-container">
+                            <div>
+                                <h2>Tukar Sampah <br>
+                                    Dapatkan Manfaat!</h2>
+                                <p>Setiap sampah yang Anda kumpulkan memiliki nilai. Tukarkan sampah anorganik Anda menjadi poin atau saldo yang bisa digunakan untuk berbagai keperluan sehari-hari.</p>
+                            </div>
+                           
+                        </div>
                 </div>
-                    <h2>Tukar Sampah <br>
-                        Dapatkan Manfaat!</h2>
-                    <p>Setiap sampah yang Anda kumpulkan memiliki nilai. Tukarkan sampah anorganik Anda menjadi poin atau saldo yang bisa digunakan untuk berbagai keperluan sehari-hari.</p>
-                  
-                </div>
-                <div class="swiper-slide p-2">
-                  <div class="svg-wrapper mb-3">
-                    <img src="{{ asset('template-fe/assets/img/plant.png') }}"
+                <div class="swiper-slide">
+                    <div class="illustration-container">
+                        <img src="{{ asset('template-fe/assets/img/bank.svg') }}"
                         alt="Announcement"
                         style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
-
-                </div>
-                  <h2>Langkah Mudah, Dampak Besar!</h2>
-                  <p>Dengan 3 langkah sederhana: Pilah, Kumpulkan, dan Setor, Anda sudah berkontribusi untuk lingkungan yang lebih bersih dan hijau. Ayo mulai sekarang!</p>
-                  
+                    </div>
+                        <div class="content-container">
+                            <div>
+                                <h2>Langkah Mudah, Dampak Besar!</h2>
+                                <p>Dengan 3 langkah sederhana: Pilah, Kumpulkan, dan Setor, Anda sudah berkontribusi untuk lingkungan yang lebih bersih dan hijau. Ayo mulai sekarang!</p>
+                            </div>
+                           
+                        </div>
                 </div>
             </div>
             <div class="swiper-pagination"></div>
+            <div class="d-flex justify-content-center">
+
+                <button class="btn get-started-btn w-50" id="skip-intro">Skip</button>
+            </div>
           
-            <button type="button" id="skip-intro" class="btn btn-outline-success shadowed me-1 mb-1">Lewati</button>
-           
         </div>
         
     </div>
 
     <!-- Form Login -->
-    <div id="appCapsule">
-      <img src="{{ asset('template-fe/assets/img/plant.png') }}"
+    <div id="appCapsule" style="max-width: 400px;  margin: 0 auto;">
+      <img src="{{ asset('template-fe/assets/img/bank.svg') }}"
       alt="Announcement"
       style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
 
@@ -179,15 +214,15 @@
 
             // Cek jika user sudah melihat intro sebelumnya
             if (localStorage.getItem("introSeen")) {
-                $("#onboarding-screen").hide();
-                $("#login-form").show();
+                $(".onboarding-container").hide();
+                $("#appCapsule").show();
             }
 
             // Saat tombol "Lewati" ditekan
             $("#skip-intro").click(function() {
                 localStorage.setItem("introSeen", "true");
-                $("#onboarding-screen").fadeOut(500, function() {
-                    $("#login-form").fadeIn(500);
+                $(".onboarding-container").fadeOut(500, function() {
+                    $("#appCapsule").fadeIn(500);
                 });
             });
         });
@@ -196,4 +231,3 @@
 </body>
 
 </html>
-
