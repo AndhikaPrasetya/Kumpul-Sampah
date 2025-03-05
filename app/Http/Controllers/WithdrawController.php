@@ -23,7 +23,7 @@ class WithdrawController extends Controller
         $title = "Data Penarikan";
         $breadcrumb = "Penarikan";
         if ($request->ajax()) {
-            $data = Withdraw::with('user');
+            $data = Withdraw::with('user')->orderBy('created_at', 'desc');
             if ($search = $request->input('search.value')) {
                 $data->where(function ($data) use ($search) {
                     $data->where('user_id', 'like', "%{$search}%");

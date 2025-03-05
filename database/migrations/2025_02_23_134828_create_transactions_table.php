@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->string('transaction_code')->unique();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); 
             $table->dateTime('tanggal');
             $table->enum('status',['pending','approved','rejected']);

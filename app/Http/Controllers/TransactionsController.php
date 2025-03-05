@@ -27,7 +27,8 @@ class TransactionsController extends Controller
             })
             ->get();
         if ($request->ajax()) {
-            $data = Transactions::with('users');
+            //cara agar ascending
+            $data = Transactions::with('users')->orderBy('created_at', 'desc');
             if ($search = $request->input('search.value')) {
                 $data->whereHas('users', function ($query) use ($search) {
                     $query->where('name', 'like', "%{$search}%");
@@ -424,7 +425,7 @@ class TransactionsController extends Controller
         if ($transaction->status !== 'pending') {
             return response()->json([
                 'success' => false,
-                'message' => 'Transaksi sudah disetujui',
+                'error' => 'Transaksi sudah disetujui',
             ], 400);
         }
 

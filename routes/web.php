@@ -16,9 +16,9 @@ use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\WebsiteSettingController;
 use App\Http\Controllers\WithdrawController;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome')->middleware(['auth', 'verified','role:nasabah']);
+Route::get('/home', function () {
+    return view('front-end.home');
+})->name('home')->middleware(['auth', 'verified','role:nasabah']);
 
 
 
@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'verified', 'role:super admin|bsu|nasabah'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:super admin|bsu'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class,'total']);
 
@@ -126,5 +126,8 @@ Route::middleware(['auth', 'verified', 'role:super admin|bsu|nasabah'])->group(f
     Route::delete('/penukaran-points/delete/{id}', [PenukaranPoinController::class, 'destroy'])->name('penukaran-points.destroy');
     Route::get('/penukaran-points/show/{id}', [PenukaranPoinController::class, 'show'])->name('penukaran-points.show');
 });
+
+
+
 
 require __DIR__ . '/auth.php';

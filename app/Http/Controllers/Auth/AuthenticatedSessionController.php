@@ -43,10 +43,10 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        if(Auth::user()->hasRole('super admin')){
+        if(Auth::user()->hasRole(['super admin','bsu'])){
             return redirect()->to('dashboard');
-        }elseif(Auth::user()->hasRole(['bsu','nasabah'])){
-            return redirect()->to('dashboard');
+        }elseif(Auth::user()->hasRole('nasabah')){
+            return redirect()->to('/home');
         }
 
         return redirect()->intended(route('welcome'));

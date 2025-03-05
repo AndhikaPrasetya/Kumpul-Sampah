@@ -47,7 +47,7 @@
                   @foreach ($transactions as $key => $transaction)
                   <tr>
                       <td>{{ $key + 1 }}</td>
-                      <td>{{ $transaction->id }}</td>
+                      <td>{{ $transaction->transaction_code }}</td>
                       <td>{{ $transaction->users->name ?? '-' }}</td>
                       <td>
                           @foreach ($transaction->details as $detail)
