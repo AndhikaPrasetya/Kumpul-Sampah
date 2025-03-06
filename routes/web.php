@@ -17,7 +17,7 @@ use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\WebsiteSettingController;
 use App\Http\Controllers\WithdrawController;
 
-Route::get('/home', function () {
+Route::get('/', function () {
     return view('front-end.home');
 })->name('home')->middleware(['auth', 'verified','role:nasabah']);
 

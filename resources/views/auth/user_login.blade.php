@@ -12,13 +12,6 @@
     <link rel="stylesheet" href="{{ asset('template-fe/assets/css/style.css') }}">
 
     <style>
-        body,
-        html {
-            height: 100%;
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f4f8;
-        }
 
         .onboarding-container {
             max-width: 400px;
@@ -58,7 +51,7 @@
         }
 
         .get-started-btn {
-            background-color: #2e8B57;
+            background-color: #26d077;
             color: white;
             border: none;
             padding: 12px;
@@ -99,7 +92,7 @@
                 </div>
                 <div class="swiper-slide">
                     <div class="illustration-container">
-                        <img src="{{ asset('template-fe/assets/img/tukar_sampah.svg') }}" alt="Announcement"
+                        <img src="{{ asset('template-fe/assets/img/tukar.svg') }}" alt="Announcement"
                             style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
                     </div>
                     <div class="content-container">
@@ -163,7 +156,7 @@
                         <div class="form-group boxed">
                             <div class="input-wrapper">
                                <label for="email">Email</label>
-                                <input type="email" id="email" name="email" class="form-control"
+                                <input type="email" id="email" name="email" class="form-control shadow-sm"
                                     placeholder="Email" value="{{ old('email') }}" required autofocus>
                                 <i class="clear-input">
                                     <ion-icon name="close-circle" role="img" class="md hydrated"
@@ -174,7 +167,7 @@
                         <div class="form-group boxed">
                             <div class="input-wrapper">
                               <label for="Password">Password</label>
-                                <input type="password" id="password" name="password" class="form-control"
+                                <input type="password" id="password" name="password" class="form-control shadow-sm"
                                     placeholder="Password" required>
                                 <i class="clear-input">
                                     <ion-icon name="close-circle" role="img" class="md hydrated"

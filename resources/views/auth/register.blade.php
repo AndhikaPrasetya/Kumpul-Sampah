@@ -94,7 +94,7 @@
 <body>
 
     <!-- App Capsule -->
-    <div id="appCapsule">
+    <div id="appCapsule" style="max-width: 400px; margin:0 auto;">
         <img src="{{ asset('template-fe/assets/img/protection.png') }}" alt="Announcement"
         style="width: 50%; max-width: 110px; height: auto; display: block; margin: 0 auto;">
 
@@ -111,7 +111,7 @@
                             <div class="input-wrapper">
                                 <label for="name" >Nama</label>
                                 <input type="name" id="name" name="name" class="form-control shadow-sm"
-                                    placeholder="name" required style="height:55px;" value="{{old('name')}}">
+                                    placeholder="name" required value="{{old('name')}}">
                                 <i class="clear-input">
                                     <ion-icon name="close-circle" role="img" class="md hydrated"
                                         aria-label="close circle"></ion-icon>
@@ -123,7 +123,7 @@
                             <div class="input-wrapper">
                                <label for="email" :value="__('Email')" >Email</label>
                                 <input type="email" id="email" name="email" class="form-control  shadow-sm"
-                                    placeholder="Email" required style="height:55px;" value="{{old('email')}}">
+                                    placeholder="Email" required value="{{old('email')}}">
                                 <i class="clear-input">
                                     <ion-icon name="close-circle" role="img" class="md hydrated"
                                         aria-label="close circle"></ion-icon>
@@ -168,17 +168,6 @@
 
     </div>
     <!-- * App Capsule -->
-
-
-    <!-- ========= JS Files =========  -->
-    <!-- Bootstrap -->
-    <script src="assets/js/lib/bootstrap.bundle.min.js"></script>
-    <!-- Ionicons -->
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <!-- Splide -->
-    <script src="assets/js/plugins/splide/splide.min.js"></script>
-    <!-- Base Js File -->
-    <script src="assets/js/base.js"></script>
 
 
 </body>
