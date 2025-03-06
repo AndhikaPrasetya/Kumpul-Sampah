@@ -78,7 +78,7 @@
     </style>
 </head>
 
-<body class="bg-white">
+<body>
 
     <!-- Onboarding Screen -->
     <div class="onboarding-container" class="bg-white">
@@ -100,7 +100,7 @@
                 </div>
                 <div class="swiper-slide">
                     <div class="illustration-container">
-                        <img src="{{ asset('template-fe/assets/img/bank.svg') }}" alt="Announcement"
+                        <img src="{{ asset('template-fe/assets/img/tukar_sampah.svg') }}" alt="Announcement"
                             style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
                     </div>
                     <div class="content-container">
@@ -115,7 +115,7 @@
                 </div>
                 <div class="swiper-slide">
                     <div class="illustration-container">
-                        <img src="{{ asset('template-fe/assets/img/bank.svg') }}" alt="Announcement"
+                        <img src="{{ asset('template-fe/assets/img/langkah_mudah.svg') }}" alt="Announcement"
                             style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
                     </div>
                     <div class="content-container">
@@ -128,31 +128,42 @@
                     </div>
                 </div>
             </div>
-            <div class="swiper-pagination" style="display:none;"></div>
-            <div class="d-flex justify-content-center">
+            <div class="swiper-pagination" style="margin-bottom: 5em;"></div>
 
-                <button class="btn get-started-btn w-50" id="skip-intro">Skip</button>
+        </div>
+        <div class="carousel-button-footer" style="max-width: 400px; margin:0 auto;">
+            <div class="row">
+                <div class="col-6">
+                    <a href="{{route('register')}}" class="btn btn-outline-secondary btn-lg btn-block skip-intro">Register</a>
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-primary btn-lg btn-block skip-intro ">Login</button>
+                </div>
             </div>
-
         </div>
 
     </div>
 
+    
+
     <!-- Form Login -->
     <div id="appCapsule" style="max-width: 400px;  margin: 0 auto;">
-        <img src="{{ asset('template-fe/assets/img/bank.svg') }}" alt="Announcement"
-            style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
+        
+            <img src="{{ asset('template-fe/assets/img/login.svg') }}" alt="Announcement"
+                style="width: 78%; max-width: 300px; height: 350px; display: block; margin: 0 auto;">
 
-        <div class="section mb-5 p-2">
+
+        <div class="section p-2">
 
             <form method="POST" action="{{ route('login') }}">
                 @csrf
                 <div>
+                    <h2>Selamat datang kembali!</h2>
                     <div>
 
                         <div class="form-group boxed">
                             <div class="input-wrapper">
-                                <label class="label" for="email1">E-mail</label>
+                               <label for="email">Email</label>
                                 <input type="email" id="email" name="email" class="form-control"
                                     placeholder="Email" value="{{ old('email') }}" required autofocus>
                                 <i class="clear-input">
@@ -163,7 +174,7 @@
                         </div>
                         <div class="form-group boxed">
                             <div class="input-wrapper">
-                                <label class="label" for="password">Password</label>
+                              <label for="Password">Password</label>
                                 <input type="password" id="password" name="password" class="form-control"
                                     placeholder="Password" required>
                                 <i class="clear-input">
@@ -173,8 +184,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class=" transparent">
-                        <button type="submit" class="btn btn-primary btn-block btn-lg mb-1">Log in</button>
+                    <div class=" transparent text-center" style="margin-top: 2em;">
+                        <button type="submit" class="btn btn-primary btn-block btn-lg mb-1 fw-bold">Log in</button>
                         <div>
                             <p>Belum punya akun? <a href="{{ route('register') }}">Daftar</a> </p>
                         </div>
@@ -220,7 +231,7 @@
             }
 
             // Saat tombol "Lewati" ditekan
-            $("#skip-intro").click(function() {
+            $(".skip-intro").click(function() {
                 localStorage.setItem("introSeen", "true");
                 $(".onboarding-container").fadeOut(500, function() {
                     $("#appCapsule").fadeIn(500);
