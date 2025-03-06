@@ -34,7 +34,6 @@
         .illustration-container {
             position: relative;
             height: 80%;
-            background: linear-gradient(to bottom, #a1d9ff 0%, #f0f4f8 100%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -86,8 +85,8 @@
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
                     <div class="illustration-container">
-                        <img src="{{ asset('template-fe/assets/img/bank.svg') }}" alt="Announcement"
-                            style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
+                        <img src="{{ asset('template-fe/assets/img/tukar_sampah.svg') }}" alt="Announcement"
+                        style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
                     </div>
                     <div class="content-container">
                         <div>

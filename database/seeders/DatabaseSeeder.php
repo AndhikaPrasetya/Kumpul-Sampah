@@ -76,6 +76,10 @@ class DatabaseSeeder extends Seeder
             'read nasabah',
             'update nasabah',
             'delete nasabah',
+            'create article',
+            'read article',
+            'update article',
+            'delete article',
 
         ];
 
@@ -130,6 +134,10 @@ class DatabaseSeeder extends Seeder
                 'read nasabah',
                 'update nasabah',
                 'delete nasabah',
+                'create article',
+                'read article',
+                'update article',
+                'delete article',
             ]);
 
             $nasabah->givePermissionTo([

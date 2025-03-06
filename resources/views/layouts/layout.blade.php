@@ -257,7 +257,18 @@
                   </a>
                 </li>
               </ul>
+              
           </li>
+          @if (auth()->user()->hasRole('super admin'))
+          <li class="nav-item">
+            <a href="{{route('article.index')}}" class="nav-link {{ Route::is('article.*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+              Article 
+              </p>
+            </a>
+          </li>
+          @endif
       </ul>
       
       </nav>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategorySampahController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NasabahController;
@@ -125,6 +126,13 @@ Route::middleware(['auth', 'verified', 'role:super admin|bsu'])->group(function 
     Route::put('/penukaran-points/update/{id}', [PenukaranPoinController::class, 'update'])->name('penukaran-points.update');
     Route::delete('/penukaran-points/delete/{id}', [PenukaranPoinController::class, 'destroy'])->name('penukaran-points.destroy');
     Route::get('/penukaran-points/show/{id}', [PenukaranPoinController::class, 'show'])->name('penukaran-points.show');
+
+    Route::get('/article', [ArticleController::class, 'index'])->name('article.index');
+    Route::get('/article/create', [ArticleController::class, 'create'])->name('article.create');
+    Route::post('/article/store', [ArticleController::class, 'store'])->name('article.store');
+    Route::get('/article/edit/{id}', [ArticleController::class, 'edit'])->name('article.edit');
+    Route::put('/article/update/{id}', [ArticleController::class, 'update'])->name('article.update');
+    Route::delete('/article/delete/{id}', [ArticleController::class, 'destroy'])->name('article.destroy');
 });
 
 

@@ -89,6 +89,7 @@ class RoleController extends Controller
             'Penarikan' => Permission::whereIn('name', ['create withdraw', 'read withdraw', 'update withdraw', 'delete withdraw'])->get(),
             'Rewards' => Permission::whereIn('name', ['create rewards', 'read rewards', 'update rewards', 'delete rewards'])->get(),
             'Penukaran points' => Permission::whereIn('name', ['create penukaran points', 'read penukaran points', 'update penukaran points', 'delete penukaran points'])->get(),
+            'Artikel' => Permission::whereIn('name', ['create article', 'read article', 'update article', 'delete article'])->get(),
         ];
         $permissions = Permission::get();
         return view('dashboard.roles.create',get_defined_vars());
@@ -151,6 +152,7 @@ class RoleController extends Controller
             'Penarikan' => Permission::whereIn('name', ['create withdraw', 'read withdraw', 'update withdraw', 'delete withdraw'])->get(),
             'Rewards' => Permission::whereIn('name', ['create rewards', 'read rewards', 'update rewards', 'delete rewards'])->get(),
             'Penukaran points' => Permission::whereIn('name', ['create penukaran points', 'read penukaran points', 'update penukaran points', 'delete penukaran points'])->get(),
+            'Artikel' => Permission::whereIn('name', ['create article', 'read article', 'update article', 'delete article'])->get(),
         ];
         $permissions = Permission::get();
         $rolePermissions = DB::table('role_has_permissions')
