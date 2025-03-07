@@ -82,7 +82,7 @@
                 const formData = new FormData(this);
 
                 $.ajax({
-                    url: '/article/store',
+                    url: '/admin/article/store',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -90,7 +90,7 @@
                     success: function(response) {
                         showToast('success', response.message);
                         setTimeout(() => {
-                            window.location.href = '/article';
+                            window.location.href = '/admin/article';
                         }, 2000);
                     },
                     error: (xhr) => {

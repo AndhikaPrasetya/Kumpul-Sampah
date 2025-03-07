@@ -118,14 +118,14 @@
     const handleCreateForm = (formId) => {
         const form = $(`#${formId}`);
         $.ajax({
-            url: '/transaction/store',
+            url: '/admin/transaction/store',
             type: 'POST',
             data: form.serialize(),
             success: function(response) {
                 if (response.success) {
                     showToast('success', response.message);
                     setTimeout(() => {
-                        window.location.href = '/transaction';
+                        window.location.href = '/admin/transaction';
                     }, 1000);
                 } else {
                     showToast('error', response.message);

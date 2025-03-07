@@ -86,7 +86,7 @@
                 const formData = new FormData(this);
 
                 $.ajax({
-                    url: '/withdraw/store',
+                    url: '/admin/withdraw/store',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -94,7 +94,7 @@
                     success: function(response) {
                         showToast('success', response.message);
                         setTimeout(() => {
-                            window.location.href = '/withdraw';
+                            window.location.href = '/admin/withdraw';
                         }, 2000);
                     },
                     error: (xhr) => {

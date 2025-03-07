@@ -103,7 +103,7 @@
                 const id = $(this).data('id');
 
                 $.ajax({
-                    url: '/withdraw/update/'+ id,
+                    url: '/admin/withdraw/update/'+ id,
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -114,7 +114,7 @@
                     success: function(response) {
                         showToast('success', response.message);
                         setTimeout(() => {
-                            window.location.href='/withdraw';
+                            window.location.href='/admin/withdraw';
                         }, 2000);
                     },
                     error: (xhr) => {

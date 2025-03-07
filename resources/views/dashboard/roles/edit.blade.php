@@ -115,7 +115,7 @@
                 const id = form.data('id');
 
                 $.ajax({
-                    url: `/roles/update/${id}`,
+                    url: `/admin/roles/update/${id}`,
                     type: 'PUT',
                     data: form.serialize(),
                     success: (response) => {

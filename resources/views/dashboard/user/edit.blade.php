@@ -126,7 +126,7 @@
                 formData.append('_method', 'PUT');
 
                 $.ajax({
-                    url: `/users/update/${id}`,
+                    url: `/admin/users/update/${id}`,
                     type: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

@@ -92,7 +92,7 @@ class PenukaranPoinController extends Controller
 
     public function store(Request $request)
     {
-        $user = Auth::user();
+        $user = User::findOrFail($request->user_id);;
         $validator = Validator::make($request->all(), [
             'reward_id' => 'required|exists:rewards,id'
         ]);
@@ -126,6 +126,8 @@ class PenukaranPoinController extends Controller
                 'reward_id' => $request->reward_id,
                 'total_points' => $reward->points,
             ]);
+
+           
             DB::commit();
             return response()->json([
                 'success' => true,

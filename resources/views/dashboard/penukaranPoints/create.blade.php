@@ -89,7 +89,7 @@
                 const formData = new FormData(this);
 
                 $.ajax({
-                    url: '/penukaran-points/store',
+                    url: '/admin/penukaran-points/store',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -97,7 +97,7 @@
                     success: function(response) {
                         showToast('success', response.message);
                         setTimeout(() => {
-                            window.location.href = '/penukaran-points';
+                            window.location.href = '/admin/penukaran-points';
                         }, 2000);
                     },
                     error: (xhr) => {
@@ -115,6 +115,7 @@
                 });
             });
 
+            //buatkan format angka  untuk total points 
             $("#reward_id").change(function() {
             let points = $(this).find(":selected").data("points");
             $("#total_points").val(points);

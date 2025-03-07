@@ -24,7 +24,7 @@ $(document).on('click', '.delete-button', function(e) {
         }
     };
 
-    let url = `/${section}/delete/${id}`;
+    let url = `/admin/${section}/delete/${id}`;
     Swal.fire({
         title: "Anda yakin ingin menghapus?",
         text: "Data akan hilang!",
@@ -64,7 +64,7 @@ $(document).ready(function() {
         searching: true,
         stateSave: true,
         ajax: {
-            url: "/users",
+            url: "/admin/users",
             type: "GET"
         },
         columns: [
@@ -99,7 +99,7 @@ $(document).ready(function() {
         searching: true,
         stateSave: true,
         ajax: {
-            url: "/nasabah",
+            url: "/admin/nasabah",
             type: "GET"
         },
         columns: [
@@ -135,7 +135,7 @@ $(document).ready(function() {
         searching: true,
         stateSave: true,
         ajax: {
-            url: "/roles",
+            url: "/admin/roles",
             type: "GET"
         },
         columns: [
@@ -170,7 +170,7 @@ $(document).ready(function() {
         searching: true,
         stateSave: true,
         ajax: {
-            url: "/permission",
+            url: "/admin/permission",
             type: "GET"
         },
         columns: [
@@ -199,7 +199,7 @@ $(document).ready(function() {
         searching: true,
         stateSave: true,
         ajax: {
-            url: "/kategori-sampah",
+            url: "/admin/kategori-sampah",
             type: "GET"
         },
         columns: [
@@ -228,7 +228,7 @@ $(document).ready(function() {
         searching: true,
         stateSave: true,
         ajax: {
-            url: "/list-sampah",
+            url: "/admin/list-sampah",
             type: "GET"
         },
         columns: [
@@ -314,7 +314,7 @@ $('#exportPDF').click(function() {
     searching: true,
     stateSave: true,
     ajax: {
-        url: "/history-transaction",
+        url: "/admin/history-transaction",
         type: "GET",
         data: function(d){
             d.nama_nasabah = $("#nama_nasabah_filter").val();
@@ -457,7 +457,7 @@ $('#exportPDF').click(function() {
         searching: true,
         stateSave: true,
         ajax: {
-            url: "/transaction",
+            url: "/admin/transaction",
             type: "GET",
             data:function(d){
                 d.nama_nasabah_transaksi = $("#nama_nasabah_transaksi_filter").val();
@@ -585,7 +585,7 @@ $('#table_saldo').DataTable({
     searching: true,
     stateSave: true,
     ajax: {
-        url: "/saldo",
+        url: "/admin/saldo",
         type: "GET"
     },
     columns: [
@@ -620,7 +620,7 @@ $('#table_withdraw').DataTable({
     searching: true,
     stateSave: true,
     ajax: {
-        url: "/withdraw",
+        url: "/admin/withdraw",
         type: "GET"
     },
     columns: [
@@ -660,7 +660,7 @@ $('#table_rewards').DataTable({
     searching: true,
     stateSave: true,
     ajax: {
-        url: "/rewards",
+        url: "/admin/rewards",
         type: "GET"
     },
     columns: [
@@ -689,7 +689,7 @@ $('#table_penukaran_points').DataTable({
     searching: true,
     stateSave: true,
     ajax: {
-        url: "/penukaran-points",
+        url: "/admin/penukaran-points",
         type: "GET"
     },
     columns: [
@@ -724,7 +724,7 @@ $('#table_article').DataTable({
     searching: true,
     stateSave: true,
     ajax: {
-        url: "/article",
+        url: "/admin/article",
         type: "GET"
     },
     columns: [
@@ -764,7 +764,7 @@ $('#table_article').DataTable({
 
     $('.allRole').select2({
         ajax: {
-            url: '/roles/getDataRole', 
+            url: '/admin/roles/getDataRole', 
             dataType: 'json',
             delay: 250,
             data: function (params) {

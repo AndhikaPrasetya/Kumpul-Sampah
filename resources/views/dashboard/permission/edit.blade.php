@@ -62,14 +62,14 @@
             const id = form.data('id');
 
             $.ajax({
-                url: `/permission/update/${id}`,
+                url: `/admin/permission/update/${id}`,
                 type: 'PUT',
                 data: form.serialize(),
                 success: (response) => {
                     if (response.status) {
                       showToast('success', response.message);
                       setTimeout(() => {
-                        window.location.href = '/permission';
+                        window.location.href = '/admin/permission';
                             }, 2000);
                     } else {
                         showToast('error', response.message);

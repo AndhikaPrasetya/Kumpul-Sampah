@@ -101,7 +101,7 @@
                 const id = $(this).data('id');
 
                 $.ajax({
-                    url: '/sampah/update/'+ id,
+                    url: '/admin/sampah/update/'+ id,
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -112,7 +112,7 @@
                     success: function(response) {
                         showToast('success', response.message);
                         setTimeout(() => {
-                            window.location.href='/list-sampah';
+                            window.location.href='/admin/list-sampah';
                         }, 2000);
                     },
                     error: (xhr) => {

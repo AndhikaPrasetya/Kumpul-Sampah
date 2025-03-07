@@ -48,9 +48,6 @@
     
             <div class="card-footer bg-light">
               <div class="d-flex justify-content-start">
-                  <button type="submit" class="btn btn-primary px-4 mr-1">
-                      <i class="fas fa-save mr-1"></i> Submit
-                  </button>
                   <button type="button" 
                           onclick="window.location.href='{{ route('sampah.index') }}'"
                           class="btn btn-warning px-4">

@@ -103,7 +103,7 @@
                 const formData = new FormData(this);
 
                 $.ajax({
-                    url: '/website-settings/store',
+                    url: '/admin/website-settings/store',
                     type: 'POST',
                     data: formData,
                     processData: false,

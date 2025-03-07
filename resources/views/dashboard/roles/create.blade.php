@@ -107,7 +107,7 @@
             const handleCreateForm = (formId) => {
                 const form = $(`#${formId}`);
                 $.ajax({
-                    url: '/roles/store',
+                    url: '/admin/roles/store',
                     type: 'POST',
                     data: form.serialize(),
                     success: function(response) {
@@ -115,7 +115,7 @@
                             showToast('success', response.message)
                             //move page after 1000
                             setTimeout(() => {
-                                window.location.href = '/roles/edit/' + response.role_id;
+                                window.location.href = '/admin/roles/edit/' + response.role_id;
                             }, 1000);
                         } else {
                             showToast('error', response.message)

@@ -100,7 +100,7 @@
                 const formData = new FormData(this);
 
                 $.ajax({
-                    url: '/nasabah/store',
+                    url: '/admin/nasabah/store',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -108,7 +108,7 @@
                     success: function(response) {
                         showToast('success', response.message);
                         setTimeout(() => {
-                            window.location.href = '/nasabah';
+                            window.location.href = '/admin/nasabah';
                         }, 2000);
                     },
                     error: (xhr) => {

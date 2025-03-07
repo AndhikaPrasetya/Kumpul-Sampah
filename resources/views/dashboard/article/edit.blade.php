@@ -95,7 +95,7 @@
                 const id = $(this).data('id');
 
                 $.ajax({
-                    url: '/article/update/'+ id,
+                    url: '/admin/article/update/'+ id,
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -106,7 +106,7 @@
                     success: function(response) {
                         showToast('success', response.message);
                         setTimeout(() => {
-                            window.location.href='/article';
+                            window.location.href='/admin/article';
                         }, 2000);
                     },
                     error: (xhr) => {

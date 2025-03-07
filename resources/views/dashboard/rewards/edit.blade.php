@@ -21,7 +21,7 @@
                 <div class="col-12 col-md-6">
                     <div class="form-group">
                         <label for="points" class="required">Jumlah poin</label>
-                        <input type="text" class="form-control shadow-sm" name="points" id="points" value="{{$rewards->points}}">
+                        <input type="text" class="form-control shadow-sm" name="points" id="points" value="{{ number_format($rewards->points, 0, ',', '.');}}">
                     </div>
                 </div>
                 <div class="col-12">
@@ -82,7 +82,7 @@
                 const id = $(this).data('id');
 
                 $.ajax({
-                    url: '/rewards/update/'+ id,
+                    url: '/admin/rewards/update/'+ id,
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -93,7 +93,7 @@
                     success: function(response) {
                         showToast('success', response.message);
                         setTimeout(() => {
-                            window.location.href='/rewards';
+                            window.location.href='/admin/rewards';
                         }, 2000);
                     },
                     error: (xhr) => {

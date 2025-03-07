@@ -148,14 +148,14 @@
                 const id = form.data('id');
 
                 $.ajax({
-                    url: `/transaction/update/${id}`,
+                    url: `/admin/transaction/update/${id}`,
                     type: 'PUT',
                     data: form.serialize(),
                     success: (response) => {
                         if (response.success) {
                             showToast('success', response.message);
                             setTimeout(() => {
-                                window.location.href = '/transaction';
+                                window.location.href = '/admin/transaction';
                             }, 2000);
                         } else {
                             showToast('error', response.message);

@@ -74,14 +74,14 @@
             const id = form.data('id');
 
             $.ajax({
-                url: `/kategori-sampah/update/${id}`,
+                url: `/admin/kategori-sampah/update/${id}`,
                 type: 'PUT',
                 data: form.serialize(),
                 success: (response) => {
                     if (response.success) {
                       showToast('success', response.message);
                       setTimeout(() => {
-                        window.location.href = '/kategori-sampah';
+                        window.location.href = '/admin/kategori-sampah';
                             }, 2000);
                     } else {
                         showToast('error', response.message);

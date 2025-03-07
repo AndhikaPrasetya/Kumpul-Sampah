@@ -107,7 +107,7 @@
                 const formData = new FormData(this);
 
                 $.ajax({
-                    url: '/users/store',
+                    url: '/admin/users/store',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -115,7 +115,7 @@
                     success: function(response) {
                         showToast('success', response.message);
                         setTimeout(() => {
-                            window.location.href = '/users/edit/'+ response.userId;
+                            window.location.href = '/admin/users/edit/'+ response.userId;
                         }, 2000);
                     },
                     error: (xhr) => {

@@ -32,8 +32,8 @@ class RewardsController extends Controller
                 ->addColumn('name', function ($data) {
                     return $data->name;
                 })
-                ->addColumn('total_points', function ($data) {
-                    return number_format($data->total_points, 0, ',', '.');
+                ->addColumn('points', function ($data) {
+                    return  number_format($data->points, 0, ',', '.');
                 })
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
@@ -169,7 +169,7 @@ class RewardsController extends Controller
                 $updateData['name'] = $request->name;
             }
             if ($request->filled('points')) {
-                $updateData['points'] = $request->points;
+                $updateData['points'] = str_replace('.', '', $request->points ?? 0);
             }
             
              // Handle image upload

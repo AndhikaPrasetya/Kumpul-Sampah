@@ -99,7 +99,7 @@
                 const formData = new FormData(this);
 
                 $.ajax({
-                    url: '/sampah/store',
+                    url: '/admin/sampah/store',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -107,7 +107,7 @@
                     success: function(response) {
                         showToast('success', response.message);
                         setTimeout(() => {
-                            window.location.href = '/list-sampah';
+                            window.location.href = '/admin/list-sampah';
                         }, 2000);
                     },
                     error: (xhr) => {

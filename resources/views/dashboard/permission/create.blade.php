@@ -57,14 +57,14 @@
         const handleCreateForm = (formId) =>{
           const form = $(`#${formId}`);
           $.ajax({
-            url:'/permission/store',
+            url:'/admin/permission/store',
             type:'POST',
             data:form.serialize(),
             success:function(response){
               if (response.status) {
                   showToast('success',response.message)
                  setTimeout(() => {
-                       window.location.href = '/permission';
+                       window.location.href = '/admin/permission';
                  }, 1000);
               } else {
                   showToast('error',response.message)

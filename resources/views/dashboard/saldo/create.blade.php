@@ -83,7 +83,7 @@
                 const formData = new FormData(this);
 
                 $.ajax({
-                    url: '/saldo/store',
+                    url: '/admin/saldo/store',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -91,7 +91,7 @@
                     success: function(response) {
                         showToast('success', response.message);
                         setTimeout(() => {
-                            window.location.href = '/saldo';
+                            window.location.href = '/admin/saldo';
                         }, 2000);
                     },
                     error: (xhr) => {

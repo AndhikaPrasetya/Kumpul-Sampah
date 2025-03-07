@@ -67,14 +67,14 @@
         const handleCreateForm = (formId) =>{
           const form = $(`#${formId}`);
           $.ajax({
-            url:'/kategori-sampah/store',
+            url:'/admin/kategori-sampah/store',
             type:'POST',
             data:form.serialize(),
             success:function(response){
               if (response.success) {
                   showToast('success',response.message)
                  setTimeout(() => {
-                       window.location.href = '/kategori-sampah';
+                       window.location.href = '/admin/kategori-sampah';
                  }, 1000);
               } else {
                   showToast('error',response.message)

@@ -78,7 +78,7 @@
                 const formData = new FormData(this);
 
                 $.ajax({
-                    url: '/rewards/store',
+                    url: '/admin/rewards/store',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -86,7 +86,7 @@
                     success: function(response) {
                         showToast('success', response.message);
                         setTimeout(() => {
-                            window.location.href = '/rewards';
+                            window.location.href = '/admin/rewards';
                         }, 2000);
                     },
                     error: (xhr) => {

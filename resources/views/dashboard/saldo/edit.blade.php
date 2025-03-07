@@ -88,7 +88,7 @@
                 const id = $(this).data('id');
 
                 $.ajax({
-                    url: '/saldo/update/'+ id,
+                    url: '/admin/saldo/update/'+ id,
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -99,7 +99,7 @@
                     success: function(response) {
                         showToast('success', response.message);
                         setTimeout(() => {
-                            window.location.href='/saldo';
+                            window.location.href='/admin/saldo';
                         }, 2000);
                     },
                     error: (xhr) => {

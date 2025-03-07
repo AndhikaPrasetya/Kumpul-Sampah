@@ -112,7 +112,7 @@
                 formData.append('_method', 'PUT');
 
                 $.ajax({
-                    url: `/nasabah/update/${id}`,
+                    url: `/admin/nasabah/update/${id}`,
                     type: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
