@@ -5133,7 +5133,7 @@ textarea,
 }
 
 .section-heading .link {
-  color: rgba(98, 54, 255, 0.5);
+  color: #51D991;
   font-size: 13px;
   font-weight: 500;
 }
@@ -6727,3 +6727,13 @@ body.rtl-mode .form-group.boxed .form-control.custom-select {
   background-position: left 12px center !important;
 }
 
+.image-wrapper {
+  height: 120px; /* Fixed height for all image containers */
+  overflow: hidden;
+}
+
+.image-wrapper img {
+  width: 86px; /* Keep your w86 size */
+  height: auto;
+  object-fit: contain; /* This will maintain aspect ratio */
+}

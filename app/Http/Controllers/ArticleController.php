@@ -67,11 +67,6 @@ class ArticleController extends Controller
                             '<i class="fas fa-trash-alt"></i> 
                                      </button>';
                     }
-                    if (Gate::allows('read article')) {
-                        $buttons .= '<a href="' . route('article.show', $data->id) . '" class="btn btn-sm btn-info btn-show-user">
-                    <i class="fas fa-eye"></i>
-                 </a>';
-                    }
                     $buttons .= '</div>';
                     return $buttons;
                 })

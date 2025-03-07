@@ -33,7 +33,7 @@ class RewardsController extends Controller
                     return $data->name;
                 })
                 ->addColumn('total_points', function ($data) {
-                    return $data->total_points;
+                    return number_format($data->total_points, 0, ',', '.');
                 })
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
@@ -79,7 +79,7 @@ class RewardsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name'        => 'required|string|max:255',
-            'points' => 'required|integer',
+            'points' => 'required',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
         ]);
 
@@ -103,7 +103,7 @@ class RewardsController extends Controller
 
             $data = Rewards::create([
                 'name' => $request->name,
-                'points' => $request->points,
+                'points' => str_replace('.', '', $request->points ?? 0),
                 'image' => $fileData,
             ]);
 

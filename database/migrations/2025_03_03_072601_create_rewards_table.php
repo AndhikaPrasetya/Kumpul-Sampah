@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('image')->nullable();
-            $table->integer('points')->default(0);
+            $table->decimal('points',10, 2)->default(0);
             $table->timestamps();
         });
     }

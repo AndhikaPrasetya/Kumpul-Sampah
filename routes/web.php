@@ -3,6 +3,7 @@
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategorySampahController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\NasabahController;
 use App\Http\Controllers\PenukaranPoinController;
 use Illuminate\Support\Facades\Route;
@@ -17,10 +18,10 @@ use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\WebsiteSettingController;
 use App\Http\Controllers\WithdrawController;
 
-Route::get('/', function () {
-    return view('front-end.home');
-})->name('home')->middleware(['auth', 'verified','role:nasabah']);
+Route::middleware(['auth','verified','role:nasabah'])->group(function(){
 
+    Route::get('/', [HomeController::class,'index'])->name('home');
+});
 
 
 Route::middleware('auth')->group(function () {
