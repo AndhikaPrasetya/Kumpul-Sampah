@@ -44,9 +44,9 @@ class PenukaranPoinController extends Controller
                     return $data->reward->name;
                 })
                 ->addColumn('status', function ($data) {
-                    if ($data->status === 'berhasil') {
+                    if ($data->status === 'approved') {
                         return '<span class="badge badge-primary">' . $data->status . '</span>';
-                    } elseif ($data->status === 'gagal') {
+                    } elseif ($data->status === 'rejected') {
                         return '<span class="badge badge-danger">' . $data->status . '</span>';
                     } elseif ($data->status === 'pending') {
                         return '<span class="badge badge-warning">' . $data->status . '</span>';

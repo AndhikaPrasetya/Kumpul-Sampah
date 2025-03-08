@@ -99,7 +99,7 @@ a:hover, a:active, a:focus {
   align-items: center;
   justify-content: center;
   padding: 10px;
-  color: #6236FF;
+  color: black;
   position: relative;
 }
 
@@ -126,6 +126,7 @@ a:hover, a:active, a:focus {
 }
 
 .appHeader .pageTitle {
+  color:#0A0A0A;
   font-size: 17px;
   font-weight: 500;
   padding: 0 10px;
@@ -6737,3 +6738,15 @@ body.rtl-mode .form-group.boxed .form-control.custom-select {
   height: auto;
   object-fit: contain; /* This will maintain aspect ratio */
 }
+
+.image-wrapper-blog {
+  height: 200px;
+  overflow: hidden;
+}
+
+.image-wrapper-blog img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+

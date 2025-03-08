@@ -25,19 +25,19 @@
     </div>
     <!-- * loader -->
 
-    <!-- App Header -->
-    <div class="appHeader bg-primary text-light">
-        {{-- <div class="pageTitle">
-            <img src="assets/img/logo.png" alt="logo" class="logo">
-        </div> --}}
-        <div class="right">
-            <a href="app-notifications.html" class="headerButton">
-                <ion-icon class="icon" name="notifications-outline"></ion-icon>
-                <span class="badge badge-danger">4</span>
-            </a>
+  
+        <!-- App Header -->
+        <div class="appHeader">
+            <div class="left">
+                <a href="{{ route(View::yieldContent('route', 'home')) }}" class="headerButton">
+                    <ion-icon name="arrow-back-outline"></ion-icon>
+                </a>
+                
+            </div>
+            <div class="pageTitle">@yield('title', 'Default Title')</div>
+           
         </div>
-    </div>
-    <!-- * App Header -->
+        <!-- * App Header -->
 
 
   @yield('content')
@@ -128,7 +128,7 @@
     </div>
 
     <!-- ========= JS Files =========  -->
-    <!-- Bootstrap -->
+    <script src={{asset('/template/plugins/jquery/jquery.min.js')}}></script>
     <script src="{{asset('template-fe/assets/js/lib/bootstrap.bundle.min.js')}}"></script>
     <!-- Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
@@ -142,6 +142,7 @@
         // Add to Home with 2 seconds delay.
         AddtoHome("2000", "once");
     </script>
+    @yield('script')
 
 </body>
 

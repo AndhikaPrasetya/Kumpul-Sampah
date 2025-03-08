@@ -4,6 +4,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategorySampahController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\TransactionFrontendController;
 use App\Http\Controllers\NasabahController;
 use App\Http\Controllers\PenukaranPoinController;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,14 @@ use App\Http\Controllers\WithdrawController;
 Route::middleware(['auth','verified','role:nasabah'])->group(function(){
 
     Route::get('/', [HomeController::class,'index'])->name('home');
+    Route::get('/rewards', [HomeController::class,'listRewards'])->name('listRewards');
+    Route::get('/blog', [HomeController::class,'listBlog'])->name('listBlog');
+    Route::get('/blog/{slug}', [HomeController::class,'detailBlog'])->name('detailBlog');
+    Route::get('/transaksi', [TransactionFrontendController::class, 'index'])->name('transaksiFrontend.index');
+    // Di routes/web.php
+// Route::get('/transaksi/filter', [TransactionFrontendController::class, 'filter'])->name('transaksiFrontend.filter');
+
+    
 });
 
 
@@ -32,7 +41,7 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:super admin|bsu'])->group(function () {
 
-    Route::get('/dashboard', [DashboardController::class,'total']);
+    Route::get('/dashboard', [DashboardController::class,'total'])->name('dashboard');
 
 
     Route::get('/users', [UserController::class, 'index'])->name('users.index');

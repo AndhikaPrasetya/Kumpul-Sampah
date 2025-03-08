@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('reward_id')->constrained('rewards')->onDelete('cascade');
-            $table->enum('status',['berhasil', 'gagal', 'pending']);
+            $table->enum('status',['approved', 'rejected', 'pending']);
             $table->integer('total_points');
             $table->timestamps();
         });
