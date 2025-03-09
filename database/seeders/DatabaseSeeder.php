@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\CategorySampah;
+use App\Models\Saldo;
 use Exception;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -179,6 +180,12 @@ class DatabaseSeeder extends Seeder
             $admin->assignRole('super admin');
             $nasabah->assignRole('nasabah');
             $bsu->assignRole('bsu');
+
+            $saldo = new Saldo();
+            $saldo->user_id = $nasabah->id;
+            $saldo->balance = 0;
+            $saldo->points = 0;
+            $saldo->save();
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();

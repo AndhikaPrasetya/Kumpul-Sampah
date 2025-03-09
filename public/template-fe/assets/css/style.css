@@ -6750,3 +6750,40 @@ body.rtl-mode .form-group.boxed .form-control.custom-select {
   object-fit: cover;
 }
 
+//media queries mobile 
+@media (max-width: 375px) {
+ //buat type date jadi kecil class nya custom-date
+ .custom-date {
+    font-size: 12px;
+    width: 100%;
+  }
+
+  //buat responsive ketika di mobile
+  html[dir="rtl"].custom-date {
+    direction: ltr;
+  }
+
+  html[dir="ltr"].custom-date {
+    direction: rtl;
+  }
+
+  //buat responsive ketika di mobile
+  html[dir="rtl"].searchbox.input-icon {
+    left: 0;
+    right: auto;
+  }
+
+  html[dir="ltr"].searchbox.input-icon {
+    left: auto;
+    right: 0;
+  }
+
+  html[dir="rtl"].form-control,
+  html[dir="ltr"].form-control {
+    padding: 0 16px;
+  }
+
+  html[dir="rtl"].nav-tabs.capsuled,
+ 
+}
+

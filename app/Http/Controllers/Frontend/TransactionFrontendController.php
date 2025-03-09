@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -11,13 +12,13 @@ class TransactionFrontendController extends Controller
 {
     public function index()
     {
-        $user=Auth::user();
-       
+        $user = Auth::user();
+
         // Using a collection instead for section transactions
-        $withdrawals = DB::table('withdraws')->select('id', 'user_id', 'status', 'amount', 'created_at')->where('user_id',$user->id)->get();
-        $pointExchanges = DB::table('penukaran_points')->select('id', 'user_id', 'reward_id', 'status', 'total_points', 'created_at')->where('user_id',$user->id)->get();
-        $wasteDeposits = DB::table('transactions')->select('id', 'transaction_code', 'user_id', 'status', 'total_amount', 'total_points', 'created_at')->where('user_id',$user->id)->get();
-    
+        $withdrawals = DB::table('withdraws')->select('id', 'user_id', 'status', 'amount', 'created_at')->where('user_id', $user->id)->get();
+        $pointExchanges = DB::table('penukaran_points')->select('id', 'user_id', 'reward_id', 'status', 'total_points', 'created_at')->where('user_id', $user->id)->get();
+        $wasteDeposits = DB::table('transactions')->select('id', 'transaction_code', 'user_id', 'status', 'total_amount', 'total_points', 'created_at')->where('user_id', $user->id)->get();
+
         // Tambahkan properti type berdasarkan variabel yang digunakan
         $withdrawalsWithType = $withdrawals->map(function ($item) {
             $item->type = 'tarik_tunai';
@@ -43,51 +44,67 @@ class TransactionFrontendController extends Controller
     public function filter(Request $request)
     {
         $user = Auth::user();
-        $status = $request->input('status');
+        $status = $request->status;
+        $days = $request->days;
+        $jenisTransactions = $request->query('type');
+        // Query Data
+        $withdrawals = DB::table('withdraws')->where('user_id', $user->id);
+        $pointExchanges = DB::table('penukaran_points')->where('user_id', $user->id);
+        $wasteDeposits = DB::table('transactions')->where('user_id', $user->id);
 
-        // Ambil transaksi dengan filter status jika ada
-        $withdrawals = DB::table('withdraws')
-            ->select('id', 'user_id', 'status', 'amount', 'created_at')
-            ->where('user_id', $user->id)
-            ->when($status, function ($query) use ($status) {
-                return $query->where('status', $status);
-            })
-            ->get()
-            ->map(function ($item) {
-                $item->type = 'tarik_tunai';
-                return $item;
-            });
+        // Filter berdasarkan status
+        if ($status) {
+            $withdrawals->where('status', $status);
+            $pointExchanges->where('status', $status);
+            $wasteDeposits->where('status', $status);
+        }
 
-        $pointExchanges = DB::table('penukaran_points')
-            ->select('id', 'user_id', 'reward_id', 'status', 'total_points', 'created_at')
-            ->where('user_id', $user->id)
-            ->when($status, function ($query) use ($status) {
-                return $query->where('status', $status);
-            })
-            ->get()
-            ->map(function ($item) {
-                $item->type = 'tukar_points';
-                return $item;
-            });
+        // Filter berdasarkan tanggal
+        if ($days) {
+            if (is_numeric($days)) {
+                $startDate = now()->subDays($days);
+                $withdrawals->where('created_at', '>=', $startDate);
+                $pointExchanges->where('created_at', '>=', $startDate);
+                $wasteDeposits->where('created_at', '>=', $startDate);
+            } else {
+                $withdrawals->whereDate('created_at', '=', $days);
+                $pointExchanges->whereDate('created_at', '=', $days);
+                $wasteDeposits->whereDate('created_at', '=', $days);
+            }
+        }
+        // Ambil data
+        $withdrawals = $withdrawals->get()->map(function ($item) {
+            $item->type = 'tarik_tunai';
+            return $item;
+        });
 
-        $wasteDeposits = DB::table('transactions')
-            ->select('id', 'transaction_code', 'user_id', 'status', 'total_amount', 'total_points', 'created_at')
-            ->where('user_id', $user->id)
-            ->when($status, function ($query) use ($status) {
-                return $query->where('status', $status);
-            })
-            ->get()
-            ->map(function ($item) {
-                $item->type = 'setor_sampah';
-                return $item;
-            });
+        $pointExchanges = $pointExchanges->get()->map(function ($item) {
+            $item->type = 'tukar_points';
+            return $item;
+        });
 
-        // Gabungkan semua transaksi yang difilter dan urutkan
-        $transactions = $withdrawals->concat($pointExchanges)->concat($wasteDeposits)
-            ->sortByDesc('created_at');
+        $wasteDeposits = $wasteDeposits->get()->map(function ($item) {
+            $item->type = 'setor_sampah';
+            return $item;
+        });
 
-        // Buat HTML untuk response AJAX
-        $html = '';
+        if ($jenisTransactions) {
+            $withdrawals = $withdrawals->where('type', $jenisTransactions);
+            $pointExchanges = $pointExchanges->where('type', $jenisTransactions);
+            $wasteDeposits = $wasteDeposits->where('type', $jenisTransactions);
+        }
+
+
+        // Gabungkan dan urutkan
+        $transactions = $withdrawals->concat($pointExchanges)->concat($wasteDeposits)->sortByDesc('created_at');
+
+        // Jika tidak ada data, return kosong untuk AJAX menangani tampilan
+        if ($transactions->isEmpty()) {
+            return "";
+        }
+
+        // Return HTML langsung tanpa partial
+        $html = "";
         foreach ($transactions as $transaction) {
             $icons = [
                 'tarik_tunai' => asset('/template-fe/assets/img/withdraw.png'),
@@ -111,35 +128,29 @@ class TransactionFrontendController extends Controller
             $icon = $icons[$transaction->type] ?? 'default-icon.png';
             $title = $titles[$transaction->type] ?? 'Transaksi';
 
-            $html .= '
-                <div class="card p-3 mb-2 shadow-sm">
-                    <div class="d-flex align-items-center">
-                        <img src="' . $icon . '" alt="icon" class="me-3" width="40">
-                        <div class="flex-grow-1">
-                            <h5 class="mb-1">' . $title . '</h5>
-                            <small class="text-muted d-block">' . \Carbon\Carbon::parse($transaction->created_at)->format('d-m-Y') . '</small>
-                            <small class="' . $badgeClass . '">' . ucfirst($transaction->status) . '</small>
-                        </div>
-                        <div class="text-end">';
-            
-            if ($transaction->type == 'tarik_tunai') {
-                $html .= '<small class="text-danger">- Rp. ' . number_format($transaction->amount, 0, ',', '.') . '</small>';
+            $html .= "<div class='card p-1 mb-2 shadow-sm'>
+            <div class='d-flex align-items-center'>
+                <img src='$icon' alt='icon' class='me-3' width='40'>
+                <div class='flex-grow-1'>
+                    <h5 class='mb-1'>$title</h5>
+                    <small class='text-muted d-block'>" . \Carbon\Carbon::parse($transaction->created_at)->format('d-m-Y') . "</small>
+                    <small class='$badgeClass'>" . ucfirst($transaction->status) . "</small>
+                </div>
+                <div class='text-end'>";
+
+            if ($transaction->type === 'tarik_tunai') {
+                $html .= "<small class='text-danger'>- Rp. " . number_format($transaction->amount, 0, ',', '.') . "</small>";
+            } elseif ($transaction->type === 'setor_sampah') {
+                $html .= "<small class='text-success'>+ Rp. " . number_format($transaction->total_amount, 0, ',', '.') . "</small>";
+            } elseif ($transaction->type === 'tukar_points') {
+                $html .= "<small class='d-block text-danger'>" . ($transaction->total_points > 0 ? '-' : '') . number_format($transaction->total_points, 0, ',', '.') . " poin</small>";
             }
 
-            if ($transaction->type == 'setor_sampah') {
-                $html .= '<small class="text-success">+ Rp. ' . number_format($transaction->total_amount, 0, ',', '.') . '</small>';
-            }
-
-            if ($transaction->type == 'tukar_points') {
-                $html .= '<small class="d-block text-danger">' . ($transaction->total_points > 0 ? '-' : '') . $transaction->total_points . ' poin</small>';
-            }
-
-            $html .= '</div></div></div>';
+            $html .= "  </div>
+            </div>
+        </div>";
         }
 
-        return response()->json($html);
+        return $html;
     }
-    
-
-
 }
