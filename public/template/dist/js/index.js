@@ -93,6 +93,40 @@ $(document).ready(function() {
         ]
     });
 
+    $('#table_bsu').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        stateSave: true,
+        ajax: {
+            url: "/admin/bsu",
+            type: "GET"
+        },
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            {
+                data: 'name',
+                name: 'name',
+                orderable: false,
+            },
+            {
+                data: 'email',
+                name: 'email',
+                orderable: false,
+            },
+            {
+                data: 'no_phone',
+                name: 'no_phone',
+                orderable: false,
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
+        ]
+    });
     $('#table_nasabah').DataTable({
         processing: true,
         serverSide: true,

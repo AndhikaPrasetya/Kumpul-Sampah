@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\NasabahDetail;
 use Exception;
 use App\Models\User;
+use App\Models\BsuDetail;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
-class NasabahController extends Controller
+
+class BsuController extends Controller
 {
     public function index(Request $request)
     {
-        $title = "Data Nasabah";
-        $breadcrumb = "Nasabah";
+        $title = "Data bsu";
+        $breadcrumb = "bsu";
         if ($request->ajax()) {
-            $data = User::role('nasabah');
+            $data = User::role('bsu');
             if ($search = $request->input('search.value')) {
                 $data->where(function ($data) use ($search) {
                     $data->where('name', 'like', "%{$search}%")
@@ -43,20 +43,20 @@ class NasabahController extends Controller
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
 
-                    if (Gate::allows('update nasabah')) {
-                        $buttons .= '<a href="' . route('nasabah.edit', $data->id) . '" class="btn btn-sm btn-primary mr-1">
+                    if (Gate::allows('update bsu')) {
+                        $buttons .= '<a href="' . route('bsu.edit', $data->id) . '" class="btn btn-sm btn-primary mr-1">
                                         <i class="fas fa-edit"></i>
                                      </a>';
                     }
                     
-                    if (Gate::allows('delete nasabah')) {
-                        $buttons .= '<button type="button" class="btn btn-sm btn-danger mr-1 delete-button" data-id="' . $data->id . '" data-section="nasabah">'.
+                    if (Gate::allows('delete bsu')) {
+                        $buttons .= '<button type="button" class="btn btn-sm btn-danger mr-1 delete-button" data-id="' . $data->id . '" data-section="bsu">'.
                                     '<i class="fas fa-trash-alt"></i>
                                      </button>';
                     }
                     
-                    if (Gate::allows('read nasabah')) {
-                        $buttons .= '<a href="' . route('nasabah.show', $data->id) . '" class="btn btn-sm btn-info btn-show-user">
+                    if (Gate::allows('read bsu')) {
+                        $buttons .= '<a href="' . route('bsu.show', $data->id) . '" class="btn btn-sm btn-info btn-show-user">
                     <i class="fas fa-eye"></i>
                  </a>';
                     }
@@ -69,12 +69,11 @@ class NasabahController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('dashboard.nasabah.index', get_defined_vars());
+        return view('dashboard.bsu.index', get_defined_vars());
     }
 
     public function create(){
-        $bsuList = User::role('bsu')->get();
-        return view('dashboard.nasabah.create',get_defined_vars());
+        return view('dashboard.bsu.create');
     }
 
     public function store(Request $request){
@@ -83,8 +82,10 @@ class NasabahController extends Controller
             'email' =>'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
             'no_phone' =>'required|string|max:15',
+            'rt' =>'required|string|max:15',
+            'rw' =>'required|string|max:15',
+            'kelurahan' =>'required|string|max:15',
             'alamat' =>'required|string|max:255',
-            'photo' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -93,58 +94,62 @@ class NasabahController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
+
         try{
             DB::beginTransaction();
-            $photo = $request->file('photo');
-            $fileName = time() . '.' . $photo->getClientOriginalExtension();
-            $photo->storeAs('foto-profile', $fileName, 'public');
-    
-            $data =  User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'no_phone' => $request->no_phone,
-                'password' => Hash::make($request->password),
-            ]);
-            //assign role nasabah
-            $data->assignRole('nasabah');
-            $nasabahDetail = new NasabahDetail();
-            $nasabahDetail->user_id = $data->id;
-            $nasabahDetail->bsu_id = $request->bsu_id;
-            $nasabahDetail->photo ='storage/foto-profile/' . $fileName;
-            $nasabahDetail->alamat = $request->alamat;
-            $nasabahDetail->save();
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password =  Hash::make($request->password);
+            $user->no_phone = $request->no_phone;
+            $user->save();
+            $user->assignRole('bsu');
+
+            $bsuDetail =new BsuDetail();
+            $bsuDetail->user_id = $user->id;
+            $bsuDetail->rt = $request->rt;
+            $bsuDetail->rw = $request->rw;
+            $bsuDetail->kelurahan = $request->kelurahan;
+            $bsuDetail->alamat = $request->alamat;
+            $bsuDetail->save();
             DB::commit();
             return response()->json([
                'status' => true,
-               'message' => 'Data berhasil disimpan',
-                'data' => $data
-            ], 200);
-        }catch(Exception $e){
-            DB::rollBack();
+               'message' => 'bsu added successfully'
+            ],200);
+        }catch(\Exception $e){
+            DB::rollback();
             return response()->json([
                'status' => false,
-               'message' => 'Data gagal disimpan',
-                'errors' => $e->getMessage()
-            ], 500);
+               'message' => 'Failed to add bsu',
+               'error' => $e->getMessage()
+            ],500);
         }
-
-        return response()->json([
-           'status' => true,
-           'message' => 'Data berhasil disimpan',
-            'data' => $data
-        ], 200);
-
     }
+
     public function show($id){
-        $data = User::find($id);
-        return view('dashboard.nasabah.view', compact('data'));
+        $bsu = User::role('bsu')->findOrFail($id);
+        if (!$bsu) {
+            return response()->json([
+               'status' => false,
+               'message' => 'bsu not found',
+            ], 404);
+        }
+        $bsuDetail = BsuDetail::where('user_id', $id)->first();
+        return view('dashboard.bsu.view', compact('bsu', 'bsuDetail'));
     }
     public function edit($id){
-        $data = User::with('nasabahs')->find($id);
-        $nasabahDetail =NasabahDetail::where('user_id', $id)->first();
-        $bsuList = User::role('bsu')->get();
-        return view('dashboard.nasabah.edit', compact('data','bsuList','nasabahDetail'));
+        $bsu = User::role('bsu')->findOrFail($id);
+        if (!$bsu) {
+            return response()->json([
+               'status' => false,
+               'message' => 'bsu not found',
+            ], 404);
+        }
+        $bsuDetail = BsuDetail::where('user_id', $id)->first();
+        return view('dashboard.bsu.edit', compact('bsu', 'bsuDetail'));
     }
+
 
     public function update(Request $request, $id)
     {
@@ -173,34 +178,23 @@ class NasabahController extends Controller
             }
             $user->save();
 
-        
-            $nasabahDetail = NasabahDetail::where('user_id', $user->id)->first();
-            if ($request->hasFile('photo')) {
-                if ($nasabahDetail->photo && Storage::exists('public/' . $nasabahDetail->photo)) {
-                    Storage::delete('public/' . $nasabahDetail->photo);
-                }
-
-                // Upload file baru
-                $fileName = time() . '.' . $request->photo->extension();
-                $request->photo->storeAs('foto-profile', $fileName, 'public');
-                $nasabahDetail->photo = 'storage/foto-profile/' . $fileName;
-            }
-
-            $nasabahDetail->bsu_id = $request->bsu_id;
-            $nasabahDetail->alamat = $request->alamat;
-            $nasabahDetail->save();
+            $bsuDetail = BsuDetail::where('user_id', $id)->first();
+            $bsuDetail->rt = $request->rt;
+            $bsuDetail->rw = $request->rw;
+            $bsuDetail->kelurahan = $request->kelurahan;
+            $bsuDetail->alamat = $request->alamat;
+            $bsuDetail->save();
             DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => 'User updated successfully',
-                'data' => $user,
+                'message' => 'bsu updated successfully',
             ], 200);
         } catch (Exception $e) {
             // Log::error('error',[$e->getMessage()]);
             return response()->json([
                 'success' => false,
-                'message' => 'Error update user',
+                'message' => 'Error update bsu',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -209,26 +203,23 @@ class NasabahController extends Controller
         try {
             DB::beginTransaction();
         
-            $nasabah = User::findOrFail($id);
-            $nasabah->roles()->detach(); // Hapus relasi roles
-            $nasabah->delete(); 
+            $bsu = User::role('bsu')->findOrFail($id);
+            $bsu->roles()->detach(); // Hapus relasi roles
+            $bsu->delete(); 
         
             DB::commit();
-        
             return response()->json([
-                'success' => true,
-                'message' => 'Nasabah berhasil dihapus'
-            ], 200);
-        } catch (\Exception $e) {
-            DB::rollBack();
-        
+               'status' => true,
+               'message' => 'bsu deleted successfully'
+            ],200);
+        } catch(\Exception $e){
+            DB::rollback();
             return response()->json([
-                'success' => false,
-                'message' => 'Gagal menghapus user',
-                'error' => $e->getMessage()
-            ], 500);
+               'status' => false,
+               'message' => 'Failed to delete bsu',
+               'error' => $e->getMessage()
+            ],500);
         }
-        
     }
 
 }

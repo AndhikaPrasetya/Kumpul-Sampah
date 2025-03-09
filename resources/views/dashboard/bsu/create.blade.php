@@ -4,9 +4,9 @@
     <section class="content m-5">
         <div class="card card-primary">
             <div class="card-header bg-primary">
-                <h3 class="card-title text-white">Tambah data baru nasabah</h3>
+                <h3 class="card-title text-white">Tambah data baru BSU</h3>
             </div>
-            <form id="createFormNasabah" enctype="multipart/form-data">
+            <form id="createFormBsu" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
                     <div class="row">
@@ -24,38 +24,34 @@
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
-                                <label for="bsu_id">BSU</label>
-                            <select name="bsu_id" id="bsu_id" class="form-control">
-                                <option value="" disabled selected>Pilih BSU</option>
-                                @foreach($bsuList as $b)
-                                    <option value="{{$b->id}}">{{$b->name}}</option>
-                                @endforeach
-                            </select>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-4">
-                            <div class="form-group">
                                 <label for="password">Password</label>
                                 <input type="text" class="form-control shadow-sm" name="password" id="password" placeholder="Password" required>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12 col-md-6">
-                            <div class="form-group">
-                                <label for="image">Foto</label>
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                      <input type="file" class="custom-file-input shadow-sm" name="photo" id="exampleInputFile">
-                                      <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                                    </div>
-                                  </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="no_phone">Nomer Handphone</label>
                                 <input type="text" class="form-control shadow-sm" name="no_phone" id="no_phone" placeholder="0812XXXXXX" required>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <div class="form-group">
+                                <label for="rt">RT</label>
+                                <input type="text" class="form-control shadow-sm" name="rt" id="rt" required>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <div class="form-group">
+                                <label for="rw">RW</label>
+                                <input type="text" class="form-control shadow-sm" name="rw" id="rw" required>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="form-group">
+                                <label for="kelurahan">Kelurahan</label>
+                                <input type="text" class="form-control shadow-sm" name="kelurahan" id="kelurahan" required>
                             </div>
                         </div>
                         <div class="col-12">
@@ -71,7 +67,7 @@
                             <i class="fas fa-save mr-1"></i> Submit
                         </button>
                         <button type="button" 
-                                onclick="window.location.href='{{ route('nasabah.index') }}'"
+                                onclick="window.location.href='{{ route('bsu.index') }}'"
                                 class="btn btn-warning px-4">
                             <i class="fas fa-arrow-left mr-1"></i> Back
                         </button>
@@ -105,13 +101,13 @@
                 }
             };
 
-            $('#createFormNasabah').on('submit', function(e) {
+            $('#createFormBsu').on('submit', function(e) {
                 e.preventDefault();
 
                 const formData = new FormData(this);
 
                 $.ajax({
-                    url: '/admin/nasabah/store',
+                    url: '/admin/bsu/store',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -119,7 +115,7 @@
                     success: function(response) {
                         showToast('success', response.message);
                         setTimeout(() => {
-                            window.location.href = '/admin/nasabah';
+                            window.location.href = '/admin/bsu';
                         }, 2000);
                     },
                     error: (xhr) => {

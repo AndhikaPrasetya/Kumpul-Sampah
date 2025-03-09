@@ -22,11 +22,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'photo',
         'no_phone',
-        'alamat',
     ];
 
+    public function nasabahs()
+{
+    return $this->hasMany(NasabahDetail::class, 'user_id');
+}
     /**
      * The attributes that should be hidden for serialization.
      *

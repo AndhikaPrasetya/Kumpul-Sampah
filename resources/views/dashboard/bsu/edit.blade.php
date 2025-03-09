@@ -3,9 +3,9 @@
     <section class="content m-5">
         <div class="card card-primary">
             <div class="card-header bg-primary">
-                <h3 class="card-title text-white">Edit Nasabah</h3>
+                <h3 class="card-title text-white">Edit BSU</h3>
             </div>
-            <form id="updateFormNasabah" data-id="{{ $data->id }}" enctype="multipart/form-data">
+            <form id="updateFormBsu" data-id="{{ $bsu->id }}">
                 @csrf
                 @method('PUT')
                 <div class="card-body">
@@ -14,27 +14,14 @@
                             <div class="form-group">
                                 <label for="name">Name</label>
                                 <input type="text" class="form-control shadow-sm" name="name" id="name"
-                                    value="{{ $data->name }}">
+                                    value="{{ $bsu->name }}">
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input type="email" class="form-control shadow-sm" name="email" id="email"
-                                    value="{{ $data->email }}">
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-4">
-                            <div class="form-group">
-                                <label for="bsu_id">BSU</label>
-                                <select name="bsu_id" id="bsu_id" class="form-control">
-                                    <option value="" disabled selected>Pilih BSU</option>
-                                    @foreach ($bsuList as $b)
-                                        <option value="{{ $b->id }}"
-                                            {{ $b->id === optional($data->nasabahs->first())->bsu_id ? 'selected' : '' }}>
-                                            {{ $b->name }}</option>
-                                    @endforeach
-                                </select>
+                                    value="{{ $bsu->email }}">
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
@@ -47,34 +34,31 @@
                             <div class="form-group">
                                 <label for="no_phone">Nomer Handphone</label>
                                 <input type="text" class="form-control shadow-sm" name="no_phone" id="no_phone"
-                                    placeholder="0812XXXXXX" value="{{ $data->no_phone }}">
+                                    placeholder="0812XXXXXX" value="{{$bsu->no_phone}}">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <div class="form-group">
+                                <label for="rt">RT</label>
+                                <input type="text" class="form-control shadow-sm" name="rt" id="rt" value="{{$bsuDetail->rt}}">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <div class="form-group">
+                                <label for="rw">RW</label>
+                                <input type="text" class="form-control shadow-sm" name="rw" id="rw" value="{{$bsuDetail->rw}}">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="form-group">
+                                <label for="kelurahan">Kelurahan</label>
+                                <input type="text" class="form-control shadow-sm" name="kelurahan" id="kelurahan" value="{{$bsuDetail->kelurahan}}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label for="alamat">Alamat</label>
                             <input type="text" class="form-control shadow-sm" name="alamat" id="alamat"
-                                placeholder="Jl.kayu" value="{{ $nasabahDetail->alamat }}">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 col-md-4">
-                            <div class="form-group">
-                                <label for="photo">Foto Profile</label>
-                                <div class="img-wrapper mb-3">
-                                    @if (!empty($nasabahDetail->photo))
-                                        <img src="{{ asset($nasabahDetail->photo) }}" alt="image" width="100px">
-                                    @else
-                                        <p><i>Anda belum mengupload foto</i></p>
-                                    @endif
-                                </div>
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" name="photo"
-                                            id="exampleInputFile">
-                                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                                    </div>
-                                </div>
-                            </div>
+                            placeholder="Jl.kayu" value="{{$bsuDetail->alamat}}">
                         </div>
                     </div>
                 </div>
@@ -83,8 +67,9 @@
                         <button type="submit" class="btn btn-primary px-4 mr-1">
                             <i class="fas fa-save mr-1"></i> Submit
                         </button>
-                        <button type="button" onclick="window.location.href='{{ route('nasabah.index') }}'"
-                            class="btn btn-warning px-4">
+                        <button type="button" 
+                                onclick="window.location.href='{{ route('bsu.index') }}'"
+                                class="btn btn-warning px-4">
                             <i class="fas fa-arrow-left mr-1"></i> Back
                         </button>
                     </div>
@@ -119,20 +104,18 @@
             const handleFormSubmit = (formId) => {
                 const form = $(`#${formId}`);
                 const id = form.data('id');
-                // // Buat FormData object
-                const formData = new FormData(form[0]);
-                // Tambahkan method PUT karena route menggunakan PUT
-                formData.append('_method', 'PUT');
+               
+                // const formData = new FormData(form[0]);
+                // // Tambahkan method PUT karena route menggunakan PUT
+                // formData.append('_method', 'PUT');
 
                 $.ajax({
-                    url: `/admin/nasabah/update/${id}`,
-                    type: 'POST',
+                    url: `/admin/bsu/update/${id}`,
+                    type: 'PUT',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    data: formData,
-                    processData: false,
-                    contentType: false,
+                    data:form.serialize(),
                     success: (response) => {
                         if (response.success) {
                             showToast('success', response.message);
@@ -158,9 +141,9 @@
                 });
             };
 
-            $('#updateFormNasabah').on('submit', function(e) {
+            $('#updateFormBsu').on('submit', function(e) {
                 e.preventDefault();
-                handleFormSubmit('updateFormNasabah');
+                handleFormSubmit('updateFormBsu');
             });
 
 

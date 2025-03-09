@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\BsuController;
 use App\Http\Controllers\CategorySampahController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Frontend\HomeController;
@@ -50,6 +51,14 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:super admin|bsu'])
     Route::put('/users/update/{id}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/delete/{id}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
+
+    Route::get('/bsu', [BsuController::class, 'index'])->name('bsu.index');
+    Route::get('/bsu/create', [BsuController::class, 'create'])->name('bsu.create');
+    Route::post('/bsu/store', [BsuController::class, 'store'])->name('bsu.store');
+    Route::get('/bsu/edit/{id}', [BsuController::class, 'edit'])->name('bsu.edit');
+    Route::put('/bsu/update/{id}', [BsuController::class, 'update'])->name('bsu.update');
+    Route::delete('/bsu/delete/{id}', [BsuController::class, 'destroy'])->name('bsu.destroy');
+    Route::get('/bsu/view/{id}', [BsuController::class, 'show'])->name('bsu.show');
 
     Route::get('/nasabah', [NasabahController::class, 'index'])->name('nasabah.index');
     Route::get('/nasabah/create', [NasabahController::class, 'create'])->name('nasabah.create');

@@ -16,10 +16,27 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('no_phone')->nullable();
-            $table->string('photo')->nullable();
             $table->string('password');
-            $table->text('alamat')->nullable();
             $table->rememberToken();
+            $table->timestamps();
+        });
+
+        Schema::create('bsu_details', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('rt'); 
+            $table->string('rw');
+            $table->string('kelurahan');
+            $table->text('alamat'); // Data khusus BSU
+            $table->timestamps();
+        });
+        
+        Schema::create('nasabah_details', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('bsu_id')->constrained('users')->onDelete('cascade');
+            $table->string('photo')->nullable();
+            $table->string('alamat')->nullable(); // Alamat Nasabah
             $table->timestamps();
         });
 
