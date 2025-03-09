@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\BsuDetail;
 use App\Models\CategorySampah;
+use App\Models\NasabahDetail;
 use App\Models\Saldo;
 use Exception;
 use App\Models\User;
@@ -81,6 +83,10 @@ class DatabaseSeeder extends Seeder
             'read article',
             'update article',
             'delete article',
+            'create bsu',
+            'read bsu',
+            'update bsu',
+            'delete bsu',
 
         ];
 
@@ -168,7 +174,7 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('password'),
             ]);
             $bsu = User::create([
-                'name' => 'bsu',
+                'name' => 'bsu karya mulya',
                 'email' => 'bsu@gmail.com',
                 'password' => bcrypt('password'),
             ]);
@@ -180,6 +186,20 @@ class DatabaseSeeder extends Seeder
             $admin->assignRole('super admin');
             $nasabah->assignRole('nasabah');
             $bsu->assignRole('bsu');
+
+            $bsuDetail = new BsuDetail();
+            $bsuDetail->user_id = $bsu->id;
+            $bsuDetail->rt = '01';
+            $bsuDetail->rw = '08';
+            $bsuDetail->kelurahan = 'Meruya Selatan';
+            $bsuDetail->alamat = 'jl.H.saaba';
+            $bsuDetail->save();
+
+            $nasabahDetail = new NasabahDetail();
+            $nasabahDetail->user_id = $nasabah->id;
+            $nasabahDetail->bsu_id = $bsu->id;
+            $nasabahDetail->alamat = 'jl.H.saaba';
+            $nasabahDetail->save();
 
             $saldo = new Saldo();
             $saldo->user_id = $nasabah->id;

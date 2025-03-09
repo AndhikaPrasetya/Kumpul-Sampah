@@ -139,6 +139,12 @@
                       </a>
                   </li>
                   <li class="nav-item">
+                      <a href="{{ route('bsu.index') }}" class="nav-link {{ Route::is('bsu.*') ? 'active' : '' }}">
+                          <i class="nav-icon fas fa-user"></i>
+                          <p>Data BSU</p>
+                      </a>
+                  </li>
+                  <li class="nav-item">
                       <a href="{{ route('roles.index') }}" class="nav-link {{ Route::is('roles.*') ? 'active' : '' }}">
                           <i class="nav-icon fas fa-shield-alt"></i>
                           <p>Roles</p>
