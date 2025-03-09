@@ -1,113 +1,78 @@
 @extends('layouts.layout-fe')
 @section('title', 'Transaksi')
 @section('content')
-<div id="appCapsule">
-    <div class="d-flex gap-2 mt-2" style="overflow-x: auto; margin-left:5px;">
-
-        <div class="dropdown-status">
-            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Semua status
-            </button>
-            <div class="dropdown-menu" style="">
-                <a class="dropdown-item" href="#">Send</a>
-                <a class="dropdown-item" href="#">Deposit</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Cancel</a>
-            </div>
-        </div>
-        <div class="dropdown-tanggal">
-            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Semua tanggal
-            </button>
-            <div class="dropdown-menu" style="">
-                <a class="dropdown-item" href="#">Send</a>
-                <a class="dropdown-item" href="#">Deposit</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Cancel</a>
-            </div>
-        </div>
-        <div class="dropdown-jenis">
-            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Semua Transaksi
-            </button>
-            <div class="dropdown-menu" style="">
-                <a class="dropdown-item" href="#">Send</a>
-                <a class="dropdown-item" href="#">Deposit</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Cancel</a>
-            </div>
-        </div>
-    </div>
-    <!-- Transactions -->
-    <div class="section mt-2">
-        @foreach ($transactions as $transaction)
-        <div class="card p-3 mb-2 shadow-sm">
-            <div class="d-flex align-items-center">
-                {{-- Menentukan ikon dan judul berdasarkan jenis transaksi --}}
-                @php
-                    $icons = [
-                        'tarik_tunai' => asset('/template-fe/assets/img/withdraw.png'),
-                        'tukar_points' => asset('/template-fe/assets/img/coin.png'),
-                        'setor_sampah' => asset('/template-fe/assets/img/recycle.png'),
-                    ];
-
-                    $titles = [
-                        'tarik_tunai' => 'Tarik Tunai',
-                        'tukar_points' => 'Tukar Points',
-                        'setor_sampah' => 'Setor Sampah',
-                    ];
-                    $badgeClass = match ($transaction->status) {
-                        'approved' => 'badge badge-success',
-                        'rejected' => 'badge badge-danger',
-                        'pending' => 'badge badge-warning',
-                        default => 'badge bg-secondary',
-                    };
-                    $icon = $icons[$transaction->type] ?? 'default-icon.png';
-                    $title = $titles[$transaction->type] ?? 'Transaksi';
-                @endphp
-
-                <img src="{{ $icon }}" alt="icon" class="me-3" width="40">
-                <div class="flex-grow-1">
-                    <h5 class="mb-1">{{ $title }}</h5>
-                    <small
-                        class="text-muted d-block">{{ \Carbon\Carbon::parse($transaction->created_at)->format('d-m-Y') }}</small>
-                    <small class="{{$badgeClass}}">{{ ucfirst($transaction->status) }}</small>
-                </div>
-
-                <div class="text-end">
-                    {{-- Untuk transaksi tarik_tunai --}}
-                    @if ($transaction->type == 'tarik_tunai')
-                        <small class="text-danger">
-                            - Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
-                        </small>
-                    @endif
-
-                    {{-- Untuk transaksi setor_sampah --}}
-                    @if ($transaction->type == 'setor_sampah')
-                        @if ($transaction->status == 'approved')
-                            <small class="text-success">
-                                + Rp. {{ number_format($transaction->total_amount, 0, ',', '.') }}
-                            </small>
-                        @else
-                            <small class="text-muted">Pending</small>
-                        @endif
-                    @endif
-
-                    {{-- Untuk transaksi tukar_points --}}
-                    @if ($transaction->type == 'tukar_points')
-                        <small class="d-block text-danger">
-                            {{ $transaction->total_points > 0 ? '-' : '' }}{{ $transaction->total_points }}
-                            poin
-                        </small>
-                    @endif
+    <div id="appCapsule">
+        <div class="d-flex gap-2 mt-2" style="overflow-x: auto; margin-left:5px;">
+            <div class="dropdown-status">
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="filterStatus"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Semua status
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item filter-option" href="#" data-status="">Semua status</a>
+                    <a class="dropdown-item filter-option" href="#" data-status="approved">Berhasil</a>
+                    <a class="dropdown-item filter-option" href="#" data-status="rejected">Gagal</a>
+                    <a class="dropdown-item filter-option" href="#" data-status="pending">Menunggu</a>
                 </div>
             </div>
         </div>
-    @endforeach
-    
+
+        <div class="section mt-2" id="transaction-container">
+            {{-- Data transaksi akan dimuat di sini --}}
+        </div>
     </div>
-    <!-- * Transactions -->
 
 
-</div>
+@endsection
+@section('script')
+    <script>
+        $(document).ready(function() {
+            function loadTransactions(status = '') {
+                $.ajax({
+                    url: "{{ url('/transaksi/filter') }}",
+                    type: "GET",
+                    data: {
+                        status: status
+                    },
+                    beforeSend: function() {
+                        $("#transaction-container").html(`
+                    <div class="text-center">
+                        <div class="text-primary" role="status" style="width: 3rem; height: 3rem;">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-3">Loading...</p>
+                    </div>
+                `);
+                    },
+                    success: function(data) {
+                        if (data.length === 0) {
+                            $("#transaction-container").html(`
+                <div class="text-center">
+                    <img src="{{ asset('template-fe/assets/img/empty-box.png') }}" alt="No Data" style="max-width: 200px;">
+                    <p class="mt-3 text-muted">Tidak ada transaksi ditemukan.</p>
+                </div>
+            `);
+                        } else {
+                            $("#transaction-container").html(data);
+                        }
+                    },
+                    error: function() {
+                        $("#transaction-container").html(
+                            '<p class="text-danger">Failed to load transactions.</p>');
+                    }
+                });
+            }
+
+            // Load all transactions on page load
+            loadTransactions();
+
+            // Handle filter click
+            $(".filter-option").click(function(e) {
+                e.preventDefault();
+                let status = $(this).data("status");
+                $("#filterStatus").text($(this).text());
+                loadTransactions(status);
+            });
+        });
+    </script>
 @endsection

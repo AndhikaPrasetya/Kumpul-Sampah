@@ -26,8 +26,7 @@ Route::middleware(['auth','verified','role:nasabah'])->group(function(){
     Route::get('/blog', [HomeController::class,'listBlog'])->name('listBlog');
     Route::get('/blog/{slug}', [HomeController::class,'detailBlog'])->name('detailBlog');
     Route::get('/transaksi', [TransactionFrontendController::class, 'index'])->name('transaksiFrontend.index');
-    // Di routes/web.php
-// Route::get('/transaksi/filter', [TransactionFrontendController::class, 'filter'])->name('transaksiFrontend.filter');
+Route::get('/transaksi/filter', [TransactionFrontendController::class, 'filter'])->name('transaksiFrontend.filter');
 
     
 });
