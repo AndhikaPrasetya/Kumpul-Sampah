@@ -119,7 +119,8 @@
                                     style="max-width: 50px;">
                                 <div class="mt-2">
                                     <h2 class="title">Setor Sampah</h2>
-                                    <p class="text-muted" style="font-size:10px;">Timbang sampah Anda untuk mengetahui jumlah yang dapat ditukar.</p>
+                                    <p class="text-muted" style="font-size:10px;">Timbang sampah Anda untuk mengetahui
+                                        jumlah yang dapat ditukar.</p>
                                 </div>
                             </div>
                             <ion-icon name="arrow-forward-circle"
@@ -130,76 +131,76 @@
             </div>
         </div>
 
-        <div class="section  mb-3">
+        <div class="section full mb-3">
             <div class="section-heading padding">
                 <h2 class="title">Transaksi</h2>
-                <a href="{{route('transaksiFrontend.index')}}" class="link">Lihat semua</a>
+                <a href="{{ route('transaksiFrontend.index') }}" class="link">Lihat semua</a>
             </div>
+            @if ($transactions->isNotEmpty())
 
-            @foreach ($transactions as $transaction)
-                <div class="card p-3 mb-2 shadow-sm">
-                    <div class="d-flex align-items-center">
-                        {{-- Menentukan ikon dan judul berdasarkan jenis transaksi --}}
-                        @php
-                            $icons = [
-                                'tarik_tunai' => asset('/template-fe/assets/img/withdraw.png'),
-                                'tukar_points' => asset('/template-fe/assets/img/coin.png'),
-                                'setor_sampah' => asset('/template-fe/assets/img/recycle.png'),
-                            ];
+                @foreach ($transactions as $transaction)
+                    <div class="card m-2 p-1 mb-2 shadow-sm">
+                        <div class="d-flex align-items-center">
+                            {{-- Menentukan ikon dan judul berdasarkan jenis transaksi --}}
+                            @php
+                                $icons = [
+                                    'tarik_tunai' => asset('/template-fe/assets/img/withdraw.png'),
+                                    'tukar_points' => asset('/template-fe/assets/img/coin.png'),
+                                    'setor_sampah' => asset('/template-fe/assets/img/recycle.png'),
+                                ];
 
-                            $titles = [
-                                'tarik_tunai' => 'Tarik Tunai',
-                                'tukar_points' => 'Tukar Points',
-                                'setor_sampah' => 'Setor Sampah',
-                            ];
-                            $badgeClass = match ($transaction->status) {
-                                'approved' => 'badge badge-success',
-                                'rejected' => 'badge badge-danger',
-                                'pending' => 'badge badge-warning',
-                                default => 'badge bg-secondary',
-                            };
-                            $icon = $icons[$transaction->type] ?? 'default-icon.png';
-                            $title = $titles[$transaction->type] ?? 'Transaksi';
-                        @endphp
+                                $titles = [
+                                    'tarik_tunai' => 'Tarik Tunai',
+                                    'tukar_points' => 'Tukar Points',
+                                    'setor_sampah' => 'Setor Sampah',
+                                ];
+                                $badgeClass = match ($transaction->status) {
+                                    'approved' => 'badge badge-success',
+                                    'rejected' => 'badge badge-danger',
+                                    'pending' => 'badge badge-warning',
+                                    default => 'badge bg-secondary',
+                                };
+                                $icon = $icons[$transaction->type] ?? 'default-icon.png';
+                                $title = $titles[$transaction->type] ?? 'Transaksi';
+                            @endphp
 
-                        <img src="{{ $icon }}" alt="icon" class="me-3" width="40">
-                        <div class="flex-grow-1">
-                            <h5 class="mb-1">{{ $title }}</h5>
-                            <small
-                                class="text-muted d-block">{{ \Carbon\Carbon::parse($transaction->created_at)->format('d-m-Y') }}</small>
-                            <small class="{{$badgeClass}}">{{ ucfirst($transaction->status) }}</small>
-                        </div>
+                            <img src="{{ $icon }}" alt="icon" class="me-3" width="40">
+                            <div class="flex-grow-1">
+                                <h5 class="mb-1">{{ $title }}</h5>
+                                <small
+                                    class="text-muted d-block">{{ \Carbon\Carbon::parse($transaction->created_at)->format('d-m-Y') }}</small>
+                                <small class="{{ $badgeClass }}">{{ ucfirst($transaction->status) }}</small>
+                            </div>
 
-                        <div class="text-end">
-                            {{-- Untuk transaksi tarik_tunai --}}
-                            @if ($transaction->type == 'tarik_tunai')
-                                <small class="text-danger">
-                                    - Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
-                                </small>
-                            @endif
-
-                            {{-- Untuk transaksi setor_sampah --}}
-                            @if ($transaction->type == 'setor_sampah')
-                                @if ($transaction->status == 'approved')
-                                    <small class="text-success">
-                                        + Rp. {{ number_format($transaction->total_amount, 0, ',', '.') }}
+                            <div class="text-end">
+                                {{-- Untuk transaksi tarik_tunai --}}
+                                @if ($transaction->type == 'tarik_tunai')
+                                    <small class="text-danger">
+                                        - Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
                                     </small>
-                                @else
-                                    <small class="text-muted">Pending</small>
                                 @endif
-                            @endif
 
-                            {{-- Untuk transaksi tukar_points --}}
-                            @if ($transaction->type == 'tukar_points')
-                                <small class="d-block text-danger">
-                                    {{ $transaction->total_points > 0 ? '-' : '' }}{{ $transaction->total_points }}
-                                    poin
-                                </small>
-                            @endif
+                                {{-- Untuk transaksi setor_sampah --}}
+                                @if ($transaction->type == 'setor_sampah')
+                                        <small class="text-success">
+                                            + Rp. {{ number_format($transaction->total_amount, 0, ',', '.') }}
+                                        </small>
+                                @endif
+
+                                {{-- Untuk transaksi tukar_points --}}
+                                @if ($transaction->type == 'tukar_points')
+                                    <small class="d-block text-danger">
+                                        {{ $transaction->total_points > 0 ? '-' : '' }}{{ $transaction->total_points }}
+                                        poin
+                                    </small>
+                                @endif
+                            </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            @else
+                <div class="title p-3">Belum ada transaksi</div>
+            @endif
         </div>
 
         <div class="section full mb-3">
@@ -253,28 +254,34 @@
             <div class="carousel-multiple splide splide--loop splide--ltr splide--draggable is-active" id="splide03"
                 style="visibility: visible;">
                 <div class="splide__track" id="splide03-track" style="padding-left: 16px; padding-right: 16px;">
-                    <ul class="splide__list" id="splide03-list" style="transform: translateX(-2224px);">
-                        @foreach ($rewards as $reward)
-                            <li class="splide__slide splide__slide--clone" aria-hidden="true" tabindex="-1"
-                                style="margin-right: 16px; width: 240px;">
+                    @if ($rewards->isNotEmpty())
+                        <ul class="splide__list" id="splide03-list" style="transform: translateX(-2224px);">
 
-                                <div class="blog-card">
-                                    <div class="image-wrapper d-flex justify-content-center">
-                                        <img src="{{ asset($reward->image) }}" alt="image" class="imaged w86">
-                                    </div>
-                                    <div class="text-wrapper p-2">
-                                        <div class="mb-1 text-center">
-                                            <h5>{{ $reward->name }}</h5>
-                                            <span
-                                                class="badge badge-warning">{{ number_format($reward->points, 0, ',', '.') }}
-                                                Poin</span>
+                            @foreach ($rewards as $reward)
+                                <li class="splide__slide splide__slide--clone" aria-hidden="true" tabindex="-1"
+                                    style="margin-right: 16px; width: 240px;">
+
+                                    <div class="blog-card">
+                                        <div class="image-wrapper d-flex justify-content-center">
+                                            <img src="{{ asset($reward->image) }}" alt="image"
+                                                class="imaged w86">
+                                        </div>
+                                        <div class="text-wrapper p-2">
+                                            <div class="mb-1 text-center">
+                                                <h5>{{ $reward->name }}</h5>
+                                                <span
+                                                    class="badge badge-warning">{{ number_format($reward->points, 0, ',', '.') }}
+                                                    Poin</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                            </li>
-                        @endforeach
-                    </ul>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <div class="title p-3">Belum ada rewards yang tersedia</div>
+                    @endif
                 </div>
             </div>
             <!-- * carousel multiple -->

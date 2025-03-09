@@ -5,22 +5,18 @@ namespace App\Http\Controllers\Frontend;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionFrontendController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $statusFilter = $request->input('status');
+        $user=Auth::user();
+       
         // Using a collection instead for section transactions
-        $withdrawals = DB::table('withdraws')->select('id', 'user_id', 'status', 'amount', 'created_at')->get();
-        $pointExchanges = DB::table('penukaran_points')->select('id', 'user_id', 'reward_id', 'status', 'total_points', 'created_at')->get();
-        $wasteDeposits = DB::table('transactions')->select('id', 'transaction_code', 'user_id', 'status', 'total_amount', 'total_points', 'created_at')->get();
-
-        if ($statusFilter && $statusFilter !== 'all') {
-            $withdrawals->where('status', $statusFilter);
-            $pointExchanges->where('status', $statusFilter);
-            $wasteDeposits->where('status', $statusFilter);
-        }
+        $withdrawals = DB::table('withdraws')->select('id', 'user_id', 'status', 'amount', 'created_at')->where('user_id',$user->id)->get();
+        $pointExchanges = DB::table('penukaran_points')->select('id', 'user_id', 'reward_id', 'status', 'total_points', 'created_at')->where('user_id',$user->id)->get();
+        $wasteDeposits = DB::table('transactions')->select('id', 'transaction_code', 'user_id', 'status', 'total_amount', 'total_points', 'created_at')->where('user_id',$user->id)->get();
     
         // Tambahkan properti type berdasarkan variabel yang digunakan
         $withdrawalsWithType = $withdrawals->map(function ($item) {
