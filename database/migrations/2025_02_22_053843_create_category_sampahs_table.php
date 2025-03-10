@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('category_sampahs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('bsu_id')->constrained('users')->onDelete('cascade');
             $table->string('nama');
             $table->string('deskripsi');
             $table->timestamps();

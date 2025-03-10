@@ -17,7 +17,7 @@ class SampahController extends Controller
         $title = "Data sampah";
         $breadcrumb = "sampah";
         if ($request->ajax()) {
-            $data = Sampah::with('categories');
+            $data = Sampah::with('categories')->where('bsu_id', $request->user()->id);
             if ($search = $request->input('search.value')) {
                 $data->where(function ($data) use ($search) {
                     $data->where('nama', 'like', "%{$search}%");
@@ -63,9 +63,10 @@ class SampahController extends Controller
         return view('dashboard.sampah.index', get_defined_vars());
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $categories = CategorySampah::all();
+        $bsu_id = $request->user()->id;
+        $categories = CategorySampah::where('bsu_id',$bsu_id)->get();
         return view('dashboard.sampah.create', get_defined_vars());
     }
 
@@ -98,7 +99,10 @@ class SampahController extends Controller
                 throw new \Exception('Image file is required');
             }
 
+            $bsu_id = $request->user()->id;
+
             $data = Sampah::create([
+                'bsu_id' => $bsu_id,
                 'nama' => $request->nama,
                 'category_id' => $request->category_id,
                 'harga' => $request->harga,
@@ -121,10 +125,10 @@ class SampahController extends Controller
         }
     }
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         $data = Sampah::find($id);
-        $categories = CategorySampah::all();
+        $categories = CategorySampah::where('bsu_id',$request->user()->id)->get();
         return view('dashboard.sampah.edit', get_defined_vars());
     }
     public function show($id)
@@ -157,7 +161,7 @@ class SampahController extends Controller
         try {
             DB::beginTransaction();
     
-            $data = Sampah::find($id);
+            $data = Sampah::where('id',$id)->where('bsu_id',$request->user()->id)->findOrFail($id);
             if (!$data) {
                 return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
             }
