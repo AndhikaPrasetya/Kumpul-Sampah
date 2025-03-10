@@ -11,7 +11,8 @@ class CategorySampah extends Model
 
     protected $fillable = [
         'nama',
-        'deskripsi'
+        'deskripsi',
+        'bsu_id'
     ];
 
     public function sampah(){

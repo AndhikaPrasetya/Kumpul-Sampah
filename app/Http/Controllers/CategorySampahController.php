@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use App\Models\CategorySampah;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -18,7 +20,7 @@ class CategorySampahController extends Controller
         $title = "Data Kategori sampah";
         $breadcrumb = "Kategori sampah";
         if($request->ajax()){
-            $data = CategorySampah::query();
+            $data = CategorySampah::where('bsu_id',$request->user()->id);
             if($search= $request->input('search.value')){
                 $data->where(function($data) use ($search){
                     $data->where('nama','like',"%{$search}%");
@@ -84,8 +86,9 @@ class CategorySampahController extends Controller
             'message'=>'validation failed',
             'errors'=>$validator->errors()], 422);
         }
-
+        $bsu_id = $request->user()->id;
         $data = CategorySampah::create([
+            'bsu_id' =>$bsu_id,
             'nama' => $request->nama,
             'deskripsi' => $request->deskripsi,
         ]);
@@ -138,17 +141,28 @@ class CategorySampahController extends Controller
             'message'=>'validation failed',
             'errors'=>$validator->errors()], 422);
         }
-        $data = CategorySampah::findOrFail($id);
-        $data->update([
-            'nama' => $request->nama,
-            'deskripsi' => $request->deskripsi,
-        ]);
-        
-        return response()->json([
-                'success' => true,
-                'message' => 'Kategori berhasil diubah',
-                'kategori' => $data
-                ], 200);
+        try{
+            DB::beginTransaction();
+
+            $data = CategorySampah::where('id',$id)->where('bsu_id',$request->user()->id)->firstOrFail();
+            $data->update([
+                'nama' => $request->nama,
+                'deskripsi' => $request->deskripsi,
+            ]);
+            DB::commit();
+            return response()->json([
+                    'success' => true,
+                    'message' => 'Kategori berhasil diubah',
+                    'kategori' => $data
+                    ], 200);
+        }catch(Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengubah kategori',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

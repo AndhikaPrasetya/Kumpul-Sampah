@@ -172,12 +172,20 @@ class DatabaseSeeder extends Seeder
                 'name' => 'admin',
                 'email' => 'admin@gmail.com',
                 'password' => bcrypt('password'),
-            ]);
+            ],);
             $bsu = User::create([
                 'name' => 'bsu karya mulya',
                 'email' => 'bsu@gmail.com',
                 'password' => bcrypt('password'),
             ]);
+            $bsu2 = User::create([
+                'name' => 'bsu cinta kasih',
+                'email' => 'bsu2@gmail.com',
+                'password' => bcrypt('password'),
+            ]);
+
+            
+
             $nasabah = User::create([
                 'name' => 'nasabah',
                 'email' => 'nasabah@gmail.com',
@@ -186,6 +194,7 @@ class DatabaseSeeder extends Seeder
             $admin->assignRole('super admin');
             $nasabah->assignRole('nasabah');
             $bsu->assignRole('bsu');
+            $bsu2->assignRole('bsu');
 
             $bsuDetail = new BsuDetail();
             $bsuDetail->user_id = $bsu->id;
@@ -194,6 +203,14 @@ class DatabaseSeeder extends Seeder
             $bsuDetail->kelurahan = 'Meruya Selatan';
             $bsuDetail->alamat = 'jl.H.saaba';
             $bsuDetail->save();
+
+            $bsuDetail2 = new BsuDetail();
+            $bsuDetail2->user_id = $bsu2->id;
+            $bsuDetail2->rt = '01';
+            $bsuDetail2->rw = '08';
+            $bsuDetail2->kelurahan = 'Meruya Selatan';
+            $bsuDetail2->alamat = 'jl.H.saaba';
+            $bsuDetail2->save();
 
             $nasabahDetail = new NasabahDetail();
             $nasabahDetail->user_id = $nasabah->id;
