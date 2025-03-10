@@ -68,6 +68,7 @@
         };
 
         const handleFormSubmit = (formId) => {
+
           //get id form
             const form = $(`#${formId}`);
           //get id user
@@ -98,12 +99,15 @@
                 } else {
                     showToast('error', xhr.responseJSON.error);
                 }
+                // Re-enable the submit button
+                $(this).find('button[type="submit"]').prop('disabled', false);
             }
             });
         };
 
         $('#updateFormKategori').on('submit', function (e) {
             e.preventDefault();
+            $(this).find('button[type="submit"]').prop('disabled', true);
             handleFormSubmit('updateFormKategori');
         });
     });

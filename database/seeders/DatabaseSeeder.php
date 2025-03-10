@@ -250,6 +250,7 @@ class DatabaseSeeder extends Seeder
         DB::beginTransaction();
         try {
             CategorySampah::create([
+                'bsu_id' => $bsu->id,
                 'nama' => 'Plastik',
                 'deskripsi' => 'sampah plastik',
             ]);

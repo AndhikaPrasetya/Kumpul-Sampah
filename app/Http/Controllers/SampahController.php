@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\CategorySampah;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 

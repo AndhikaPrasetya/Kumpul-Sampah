@@ -91,11 +91,13 @@
                 } else {
                     showToast('error', xhr.responseJSON.error);
                 }
+                $(this).find('button[type="submit"]').prop('disabled', false);
             }
           });
         }
         $('#createFormCategory').on('submit', function(e){
           e.preventDefault();
+          $(this).find('button[type="submit"]').prop('disabled', true);
           handleCreateForm('createFormCategory');
         });
 
