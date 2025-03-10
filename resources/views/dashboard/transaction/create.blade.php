@@ -142,6 +142,8 @@
                 } else {
                     showToast('error', xhr.responseJSON.error);
                 }
+                $(this).find('button[type="submit"]').prop('disabled', false);
+
             }
         });
     };
@@ -149,6 +151,8 @@
     // Event submit form transaksi
     $('#createFormTransaction').on('submit', function(e) {
         e.preventDefault();
+        $(this).find('button[type="submit"]').prop('disabled', true);
+
         handleCreateForm('createFormTransaction');
     });
 

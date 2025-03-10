@@ -471,7 +471,6 @@ $('#exportPDF').click(function() {
     //-------------------------> start table transaction <-----------------------\\
     $(".select-transaction").select2({
         dropdownParent: $("#filterModalTransaction"),
-        placeholder: "Pilih Nasabah",
         allowClear: true,
       }); 
       
@@ -495,6 +494,7 @@ $('#exportPDF').click(function() {
             type: "GET",
             data:function(d){
                 d.nama_nasabah_transaksi = $("#nama_nasabah_transaksi_filter").val();
+                d.status_transaksi = $("#status_transaksi_filter").val();
                 const daterange = $("#daterange").val();
                 if (daterange) {
                     const dates = daterange.split(" s/d ");
@@ -578,11 +578,13 @@ $('#exportPDF').click(function() {
     // Handle tombol apply filter
     $("#apply_filter_transaction").click(function () {
         const selectedNasabahTransaction = $("#nama_nasabah_transaksi_filter").val(); 
+        const selectedStatusTransaction = $("#status_transaksi_filter").val(); 
         const selectedRange = $("#daterange").val(); 
         
-        if (selectedNasabahTransaction||selectedRange) {
+        if (selectedNasabahTransaction||selectedRange||selectedStatusTransaction) {
             $("#selectedNasabahTransactionFilter").text(selectedNasabahTransaction); 
             $("#selectedRangeTransactionFilter").text(selectedRange); 
+            $("#selectedStatusTransactionFilter").text(selectedStatusTransaction); 
             $("#filterContainerTransaction").show(); // Tampilkan filter
         } else {
             $("#filterContainerTransaction").hide();
@@ -597,6 +599,7 @@ $('#exportPDF').click(function() {
         $("#reset_filter_transaction").click(function () {
             // Reset select2 filter
             $("#nama_nasabah_transaksi_filter").val([]).trigger("change"); 
+            $("#status_transaksi_filter").val([]).trigger("change"); 
         
             // Reset Daterangepicker dengan event khusus
             $("#daterange").val("").trigger("change"); 

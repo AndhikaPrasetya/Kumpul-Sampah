@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NasabahDetail;
 use App\Models\Saldo;
 use Exception;
 use App\Models\User;
@@ -28,7 +29,7 @@ class TransactionsController extends Controller
             ->get();
         if ($request->ajax()) {
             //cara agar ascending
-            $data = Transactions::with('users')->orderBy('created_at', 'desc');
+            $data = Transactions::with('users')->where('bsu_id', $request->user()->id)->orderBy('created_at', 'desc');
             if ($search = $request->input('search.value')) {
                 $data->whereHas('users', function ($query) use ($search) {
                     $query->where('name', 'like', "%{$search}%");
@@ -46,6 +47,9 @@ class TransactionsController extends Controller
                         Carbon::parse($request->start_date)->startOfDay(),
                         Carbon::parse($request->end_date)->endOfDay()
                     ]);
+                })
+                ->when($request->filled('status_transaksi'), function ($query) use ($request) {
+                    $query->whereIn('status', $request->status_transaksi);
                 });
 
             return DataTables::eloquent($data)
@@ -162,26 +166,29 @@ class TransactionsController extends Controller
         return view('dashboard.transaction.historyTransaksi', get_defined_vars());
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $users = User::with('roles')
-            ->whereHas('roles', function ($query) {
-                $query->where('name', 'nasabah');
-            })
-            ->get();
-        $sampahs = Sampah::all();
-        return view('dashboard.transaction.create', get_defined_vars());
+        $currentUserId = $request->user()->id;
+
+        // Ambil nasabah yang terkait dengan BSU saat ini
+        $users = $this->getNasabahUsers($currentUserId);
+        //data sampah
+        $sampahs = $this->getSampahData($currentUserId);
+
+        return view('dashboard.transaction.create', compact('users', 'sampahs'));
     }
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'user_id' => 'required|exists:users,id',
             'sampah_id' => 'required|array',
             'sampah_id.*' => 'required|exists:sampahs,id',
             'berat' => 'required|array',
             'berat.*' => 'required|numeric|min:0.1',
-        ]);
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json([
@@ -193,63 +200,18 @@ class TransactionsController extends Controller
 
         try {
             DB::beginTransaction();
-            $user = User::findOrFail($request->user_id);
-            // Simpan transaksi utama
-            $transaction = Transactions::create([
-                'user_id' => $request->user_id,
-                'tanggal' => Carbon::now()->format('Y-m-d'),
-                'total_amount' => 0,
-                'total_points' => 0,
-                'status' => 'pending'
+
+            // Create transaction with initial values
+
+            $transaction = $this->createTransaction($request);
+            // Process transaction details and calculate totals
+            $result = $this->processTransactionDetails($request, $transaction);
+
+            // Update transaction with final totals
+            $transaction->update([
+                'total_amount' => $result['totalAmount'],
+                'total_points' => $result['totalPoints']
             ]);
-
-            $totalAmount = 0;
-            $totalPoints = 0;
-            $transactionDetails = [];
-
-            // Pre-fetch semua data sampah sekaligus
-            $sampahIds = $request->sampah_id;
-            $sampahItems = Sampah::whereIn('id', $sampahIds)->get()->keyBy('id');
-
-            // Gunakan timestamp yang sama untuk semua record
-            $now = now();
-
-            foreach ($request->sampah_id as $key => $sampahId) {
-                // Ambil harga sampah dari collection yang sudah di-cache
-                $sampah = $sampahItems[$sampahId];
-                $hargaPerKg = $sampah->harga;
-
-                // Hitung subtotal
-                $berat = $request->berat[$key];
-                $subtotal = $berat * $hargaPerKg;
-                $points = $berat * $sampah->points;
-
-                // Simpan detail transaksi
-                $transactionDetails[] = [
-                    'transaction_id' => $transaction->id,
-                    'sampah_id' => $sampahId,
-                    'berat' => $berat,
-                    'subtotal' => $subtotal,
-                    'points' => $points,
-                    'created_at' => $now,
-                    'updated_at' => $now
-                ];
-
-                // Tambahkan subtotal ke total amount
-                $totalAmount += $subtotal;
-                $totalPoints += $points;
-            }
-
-            // Simpan semua transaction details sekaligus
-            TransactionDetail::insert($transactionDetails);
-
-            // Update total_amount di transactions
-            $transaction->update(
-                [
-                    'total_amount' => $totalAmount,
-                    'total_points' => $totalPoints
-                ]
-            );
 
             DB::commit();
 
@@ -257,7 +219,7 @@ class TransactionsController extends Controller
                 'success' => true,
                 'message' => 'Transaksi berhasil disimpan',
                 'data' => $transaction
-            ], 201);
+            ], 200);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -268,67 +230,169 @@ class TransactionsController extends Controller
         }
     }
 
-    public function edit($id)
+    /**
+     * Create a new transaction record
+     *
+     * @param Request $request
+     * @return Transactions
+     */
+    private function createTransaction(Request $request)
     {
-        $transaction = Transactions::find($id);
+        return Transactions::create([
+            'user_id' => $request->user_id,
+            'tanggal' => Carbon::now()->format('Y-m-d'),
+            'total_amount' => 0,
+            'total_points' => 0,
+            'status' => 'pending',
+            'bsu_id' => $request->user()->id,
+        ]);
+    }
 
-        if (!$transaction) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Transaksi tidak ditemukan',
-            ], 404);
+    /**
+     * Process transaction details and calculate totals
+     *
+     * @param Request $request
+     * @param Transactions $transaction
+     * @return array
+     */
+    private function processTransactionDetails(Request $request, Transactions $transaction)
+    {
+        $totalAmount = 0;
+        $totalPoints = 0;
+        $transactionDetails = [];
+        $now = now();
+
+        // Pre-fetch all sampah data at once
+        $sampahItems = Sampah::whereIn('id', $request->sampah_id)
+            ->get()
+            ->keyBy('id');
+
+        foreach ($request->sampah_id as $key => $sampahId) {
+            $sampah = $sampahItems[$sampahId];
+            $berat = $request->berat[$key];
+
+            // Calculate values
+            $subtotal = $berat * $sampah->harga;
+            $points = $berat * $sampah->points;
+
+            // Build transaction detail record
+            $transactionDetails[] = [
+                'transaction_id' => $transaction->id,
+                'sampah_id' => $sampahId,
+                'berat' => $berat,
+                'subtotal' => $subtotal,
+                'points' => $points,
+                'created_at' => $now,
+                'updated_at' => $now
+            ];
+
+            // Update running totals
+            $totalAmount += $subtotal;
+            $totalPoints += $points;
         }
-        //filter user
-        $users = User::with('roles')
-            ->whereHas('roles', function ($query) {
-                $query->where('name', 'nasabah');
-            })
-            ->get();
 
-        $sampahs = Sampah::all();
-        $transactionDetails = TransactionDetail::where('transaction_id', $id)->get();
+        // Bulk insert all transaction details
+        TransactionDetail::insert($transactionDetails);
+
+        return [
+            'totalAmount' => $totalAmount,
+            'totalPoints' => $totalPoints
+        ];
+    }
+
+
+    public function show(Request $request, $id)
+    {
+        $currentUserId = $request->user()->id;
+
+        // Cari transaksi dengan chaining where dan findOrFail
+        $transaction = Transactions::where('bsu_id', $currentUserId)->findOrFail($id);
+
+        // Tidak perlu cek null karena findOrFail sudah throw exception jika tidak ditemukan
+        // Yang akan ditangkap oleh Laravel dan otomatis mengembalikan 404
+
+        // Load data terkait
+        $users = $this->getNasabahUsers($currentUserId);
+        $sampahs = $this->getSampahData($currentUserId);
+        $transactionDetails = $this->getTransactionDetails($id);
+        $selectedUserIds = $transaction->user_id;
+
+        // Gunakan compact untuk eksplisit menyatakan variabel yang diteruskan ke view
+        return view('dashboard.transaction.detail', compact(
+            'transaction',
+            'users',
+            'sampahs',
+            'transactionDetails',
+            'selectedUserIds',
+            'currentUserId'
+        ));
+    }
+    public function edit(Request $request, $id)
+    {
+        $currentUserId = $request->user()->id;
+
+        // Cari transaksi dengan chaining where dan findOrFail
+        $transaction = Transactions::where('bsu_id', $currentUserId)->findOrFail($id);
+
+        // Load data terkait
+        $users = $this->getNasabahUsers($currentUserId);
+        $sampahs = $this->getSampahData($currentUserId);
+        $transactionDetails = $this->getTransactionDetails($id);
         $selectedUserIds = $transaction->user_id;
 
         return view('dashboard.transaction.edit', get_defined_vars());
     }
-    public function show($id)
-    {
-        $transaction = Transactions::find($id);
 
-        if (!$transaction) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Transaksi tidak ditemukan',
-            ], 404);
-        }
-        //filter user
-        $users = User::with('roles')
+    /**
+     * Get users with nasabah role that belong to current BSU
+     *
+     * @param int $bsuId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    private function getNasabahUsers($bsuId)
+    {
+        return User::with('roles')
             ->whereHas('roles', function ($query) {
                 $query->where('name', 'nasabah');
             })
+            ->whereHas('nasabahs', function ($query) use ($bsuId) {
+                $query->where('bsu_id', $bsuId);
+            })
             ->get();
+    }
 
-        $sampahs = Sampah::all();
-        $transactionDetails = TransactionDetail::where('transaction_id', $id)->get();
-        $selectedUserIds = $transaction->user_id;
+    /**
+     * Get sampah data for current BSU
+     *
+     * @param int $bsuId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    private function getSampahData($bsuId)
+    {
+        return Sampah::where('bsu_id', $bsuId)->get();
+    }
 
-        return view('dashboard.transaction.detail', get_defined_vars());
+    /**
+     * Get transaction details for a transaction
+     *
+     * @param int $transactionId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    private function getTransactionDetails($transactionId)
+    {
+        return TransactionDetail::where('transaction_id', $transactionId)->get();
     }
 
     public function update(Request $request, $id)
     {
-        // Check if this is an approval request
-        if ($request->has('status')) {
-            return $this->handleApproval($request, $id);
-        }
-
         $validator = Validator::make($request->all(), [
             'sampah_id' => 'required|array',
             'sampah_id.*' => 'required|exists:sampahs,id',
             'berat' => 'required|array',
             'berat.*' => 'required|numeric|min:0.1',
+            'status' => 'sometimes|required|in:approved,rejected,pending'
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
@@ -336,66 +400,29 @@ class TransactionsController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
-
+    
         try {
             DB::beginTransaction();
-
-            // Cek apakah transaksi ada
+    
+            // Find transaction or fail with 404
             $transaction = Transactions::findOrFail($id);
-
-            // Hapus detail transaksi lama
-            TransactionDetail::where('transaction_id', $id)->delete();
-
-            $totalAmount = 0;
-            $totalPoints = 0;
-            $transactionDetails = [];
-
-            // Pre-fetch semua data sampah sekaligus
-            $sampahIds = $request->sampah_id;
-            $sampahItems = Sampah::whereIn('id', $sampahIds)->get()->keyBy('id');
-
-            // Gunakan timestamp yang sama untuk semua record
-            $now = now();
-
-            foreach ($request->sampah_id as $key => $sampahId) {
-                // Ambil harga sampah dari collection yang sudah di-cache
-                $sampah = $sampahItems[$sampahId];
-                $hargaPerKg = $sampah->harga;
-
-                // Hitung subtotal
-                $berat = $request->berat[$key];
-                $subtotal = $berat * $hargaPerKg;
-                $points = $berat * $sampah->points;
-
-                // Simpan detail transaksi
-                $transactionDetails[] = [
-                    'transaction_id' => $transaction->id,
-                    'sampah_id' => $sampahId,
-                    'berat' => $berat,
-                    'subtotal' => $subtotal,
-                    'points' => $points,
-                    'created_at' => $now,
-                    'updated_at' => $now
-                ];
-
-                // Tambahkan subtotal ke total amount
-                $totalAmount += $subtotal;
-                $totalPoints += $points;
+            $originalStatus = $transaction->status;
+            $newStatus = $request->status ?? $originalStatus;
+    
+            // Process transaction details update
+            $result = $this->processUpdateDetails($request, $transaction);
+            $transaction = $this->updateTransactionTotals($transaction, $result);
+            
+            // Handle balance updates based on status change
+            $this->handleStatusChange($transaction, $originalStatus, $newStatus);
+            
+            // Update transaction status if provided
+            if ($request->has('status')) {
+                $transaction->update(['status' => $newStatus]);
             }
-
-            // Simpan semua transaction details sekaligus
-            TransactionDetail::insert($transactionDetails);
-
-            // Update total_amount di transactions
-            $transaction->update(
-                [
-                    'total_amount' => $totalAmount,
-                    'total_points' => $totalPoints
-                ]
-            );
-
+    
             DB::commit();
-
+    
             return response()->json([
                 'success' => true,
                 'message' => 'Transaksi berhasil diperbarui',
@@ -405,92 +432,310 @@ class TransactionsController extends Controller
             DB::rollBack();
             return response()->json([
                 'success' => false,
+                'message' => 'Transaksi tidak ditemukan',
+            ], 404);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
                 'message' => 'Terjadi kesalahan saat memperbarui transaksi.',
                 'errors' => $e->getMessage()
             ], 500);
         }
     }
+    
+    /**
+     * Handle balance updates based on transaction status changes
+     *
+     * @param Transactions $transaction
+     * @param string $originalStatus
+     * @param string $newStatus
+     * @return void
+     */
+    private function handleStatusChange(Transactions $transaction, string $originalStatus, string $newStatus): void
+    {
+        // Skip if status hasn't changed
+        if ($originalStatus === $newStatus) {
+            return;
+        }
+    
+        $saldoNasabah = Saldo::where('user_id', $transaction->user_id)->first();
+    
+        // Case 1: Transaction was approved but now rejected - deduct balance
+        if ($originalStatus === 'approved' && $newStatus === 'rejected') {
+            $this->deductBalance($saldoNasabah, $transaction);
+        }
+    
+        // Case 2: Transaction is newly approved - add balance
+        if ($newStatus === 'approved' && $originalStatus !== 'approved') {
+            $this->addBalance($saldoNasabah, $transaction);
+        }
+    }
+    
+    /**
+     * Deduct transaction amount from user balance
+     *
+     * @param Saldo|null $saldoNasabah
+     * @param Transactions $transaction
+     * @return void
+     */
+    private function deductBalance(?Saldo $saldoNasabah, Transactions $transaction): void
+    {
+        if ($saldoNasabah) {
+            $saldoNasabah->update([
+                'balance' => max(0, $saldoNasabah->balance - $transaction->total_amount),
+                'points' => max(0, $saldoNasabah->points - $transaction->total_points),
+            ]);
+        }
+    }
+    
+    /**
+     * Add transaction amount to user balance
+     *
+     * @param Saldo|null $saldoNasabah
+     * @param Transactions $transaction
+     * @return void
+     */
+    private function addBalance(?Saldo $saldoNasabah, Transactions $transaction): void
+    {
+        $totalAmount = $transaction->total_amount;
+        $totalPoints = $transaction->total_points;
+    
+        if ($saldoNasabah) {
+            $saldoNasabah->update([
+                'balance' => $saldoNasabah->balance + $totalAmount,
+                'points' => $saldoNasabah->points + $totalPoints,
+            ]);
+        } else {
+            Saldo::create([
+                'user_id' => $transaction->user_id,
+                'balance' => $totalAmount,
+                'points' => $totalPoints,
+            ]);
+        }
+    }
+    /**
+     * Process updated transaction details
+     *
+     * @param Request $request
+     * @param Transactions $transaction
+     * @return array
+     */
+    private function processUpdateDetails(Request $request, Transactions $transaction)
+    {
+        $totalAmount = 0;
+        $totalPoints = 0;
+        $transactionDetails = [];
+        $now = now();
+        // Pre-fetch semua data sampah sekaligus
+        $sampahIds = $request->sampah_id;
+        $sampahItems = Sampah::whereIn('id', $sampahIds)->get()->keyBy('id');
+
+        TransactionDetail::where('transaction_id', $transaction->id)->delete();
+
+        foreach ($request->sampah_id as $key => $sampahId) {
+            // Ambil harga sampah dari collection yang sudah di-cache
+            $sampah = $sampahItems[$sampahId];
+            $hargaPerKg = $sampah->harga;
+
+            // Hitung subtotal
+            $berat = $request->berat[$key];
+            $subtotal = $berat * $hargaPerKg;
+            $points = $berat * $sampah->points;
+
+            // Simpan detail transaksi
+            $transactionDetails[] = [
+                'transaction_id' => $transaction->id,
+                'sampah_id' => $sampahId,
+                'berat' => $berat,
+                'subtotal' => $subtotal,
+                'points' => $points,
+                'created_at' => $now,
+                'updated_at' => $now
+            ];
+
+            // Tambahkan subtotal ke total amount
+            $totalAmount += $subtotal;
+            $totalPoints += $points;
+        }
+        // Simpan semua transaction details sekaligus
+        TransactionDetail::insert($transactionDetails);
+        return [
+            'totalAmount' => $totalAmount,
+            'totalPoints' => $totalPoints
+        ];
+
+    }
+
+    /**
+     * Update transaction with new totals
+     *
+     * @param Transactions $transaction
+     * @param array $totals
+     * @return Transactions
+     */
+    private function updateTransactionTotals(Transactions $transaction, array $totals)
+    {
+        $transaction->update([
+            'total_amount' => $totals['totalAmount'],
+            'total_points' => $totals['totalPoints']
+        ]);
+
+        return $transaction;
+    }
+
+    /**
+     * Delete all existing transaction details
+     *
+     * @param int $transactionId
+     * @return void
+     */
+    private function deleteTransactionOld($transactionId)
+    {
+        TransactionDetail::where('transaction_id', $transactionId)->delete();
+    }
 
     // Private method to handle the approval functionality
-    private function handleApproval(Request $request, $id)
-    {
-        $transaction = Transactions::find($id);
-        if (!$transaction) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Transaksi tidak ditemukan',
-            ], 404);
-        }
+    // private function handleApproval(Request $request, $id)
+    // {
+    //     $transaction = Transactions::find($id);
+    //     if (!$transaction) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Transaksi tidak ditemukan',
+    //         ], 404);
+    //     }
 
-        if ($transaction->status !== 'pending') {
-            return response()->json([
-                'success' => false,
-                'error' => 'Transaksi sudah disetujui',
-            ], 400);
-        }
+    //     if ($transaction->status !== 'pending') {
+    //         return response()->json([
+    //             'success' => false,
+    //             'error' => 'Transaksi sudah disetujui',
+    //         ], 400);
+    //     }
 
-        $transaction->update(['status' => $request->status]);
+    //     $transaction->update(['status' => $request->status]);
 
-        if ($request->status === 'approved') {
-            // Get the user and total amount
-            $user = User::find($transaction->user_id);
-            $totalAmount = $transaction->total_amount;
-            $totalPoints = $transaction->total_points;
+    //     if ($request->status === 'approved') {
+    //         // Get the user and total amount
+    //         $user = User::find($transaction->user_id);
+    //         $totalAmount = $transaction->total_amount;
+    //         $totalPoints = $transaction->total_points;
 
-            // Get the latest saldo record for this user
-            $saldoNasabah = Saldo::where('user_id', $user->id)->first();
+    //         // Get the latest saldo record for this user
+    //         $saldoNasabah = Saldo::where('user_id', $user->id)->first();
 
-            if ($saldoNasabah) {
-                $saldoNasabah->update([
-                    'balance' => $saldoNasabah->balance + $totalAmount,
-                    'points' => $saldoNasabah->points + $totalPoints,
-                ]);
-            } else {
-                $saldoNasabah = Saldo::create([
-                    'user_id' => $user->id,
-                    'balance' => $totalAmount,
-                ]);
-            }
-        }
+    //         if ($saldoNasabah) {
+    //             $saldoNasabah->update([
+    //                 'balance' => $saldoNasabah->balance + $totalAmount,
+    //                 'points' => $saldoNasabah->points + $totalPoints,
+    //             ]);
+    //         } else {
+    //             $saldoNasabah = Saldo::create([
+    //                 'user_id' => $user->id,
+    //                 'balance' => $totalAmount,
+    //             ]);
+    //         }
+    //     }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Status transaksi berhasil diubah',
-            'data' => $transaction
-        ], 200);
-    }
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Status transaksi berhasil diubah',
+    //         'data' => $transaction
+    //     ], 200);
+    // }
     public function deleteTransactionDetail($id)
     {
-        $transaction = TransactionDetail::findOrFail($id);
-        if ($transaction) {
-            $transaction->delete();
+        $transactionDetail = TransactionDetail::findOrFail($id);
+
+        // Simpan ID transaksi sebelum dihapus
+        $transactionId = $transactionDetail->transaction_id;
+
+        if ($transactionDetail) {
+            $transactionDetail->delete();
+
+            // Update total_amount di tabel transactions
+            $this->updateTotalAmount($transactionId);
+
             return response()->json([
                 'success' => true,
-                'message' => 'Detail transaksi berhasil dihapus',
-                'data' => $transaction
+                'message' => 'Detail transaksi berhasil dihapus'
             ], 200);
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Detail transaksi tidak ditemukan',
-                'errors' => 'Detail transaksi tidak ditemukan'
+                'message' => 'Detail transaksi tidak ditemukan'
             ], 404);
         }
     }
 
+    /**
+     * Fungsi untuk mengupdate total_amount di tabel transactions
+     *
+     * @param int $transactionId
+     * @return void
+     */
+    private function updateTotalAmount($transactionId)
+    {
+        $transaction = Transactions::find($transactionId);
+
+        if ($transaction) {
+            // Ambil total subtotal dan points dalam satu query
+            $totals = TransactionDetail::where('transaction_id', $transactionId)
+                ->selectRaw('SUM(subtotal) as total_amount, SUM(points) as total_point')
+                ->first();
+
+            // Update total_amount dan points di transaksi
+
+            $transaction->update([
+                'total_amount' => $totals->total_amount ?? 0, // Jika NULL, jadikan 0
+                'total_points' => $totals->total_point ?? 0
+            ]);
+        }
+    }
+
+
     public function destroy($id)
     {
-        $transaction = Transactions::find($id);
-        if (!$transaction) {
+        try {
+            DB::beginTransaction();
+    
+            // Cek apakah transaksi ada
+            $transaction = Transactions::find($id);
+            if (!$transaction) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Transaksi tidak ditemukan',
+                ], 404);
+            }
+    
+            // Ambil saldo pengguna
+            $saldoNasabah = Saldo::where('user_id', $transaction->user_id)->first();
+    
+            if ($saldoNasabah) {
+                // Kurangi saldo dan poin sesuai transaksi yang dihapus
+                $saldoNasabah->update([
+                    'balance' => max(0, $saldoNasabah->balance - $transaction->total_amount),
+                    'points' => max(0, $saldoNasabah->points - $transaction->total_points),
+                ]);
+            }
+    
+            // Hapus transaksi
+            $transaction->delete();
+    
+            DB::commit();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Transaksi berhasil dihapus dan saldo diperbarui.',
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
-                'message' => 'Transaksi tidak ditemukan',
-            ], 404);
+                'message' => 'Terjadi kesalahan saat menghapus transaksi.',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-        $transaction->delete();
-        return response()->json([
-            'success' => true,
-            'message' => 'Transaksi berhasil dihapus',
-        ], 200);
     }
+    
 }

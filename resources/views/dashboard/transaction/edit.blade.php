@@ -172,12 +172,16 @@
                         } else {
                             showToast('error', xhr.responseJSON.error);
                         }
+                        $(this).find('button[type="submit"]').prop('disabled', false);
+
                     }
                 });
             };
 
             $('#updateFormTransaction').on('submit', function(e) {
                 e.preventDefault();
+                $(this).find('button[type="submit"]').prop('disabled', true);
+
                 handleFormSubmit('updateFormTransaction');
             });
 
@@ -233,7 +237,7 @@
                 }
 
                 $.ajax({
-                    url: "/delete-detail/" + id,
+                    url: "/admin/delete-detail/" + id,
                     type: "DELETE",
                     data: {
                         _token: $('meta[name="csrf-token"]').attr('content')
@@ -273,15 +277,15 @@
                         const subtotal = parseFloat(harga) * parseFloat(berat);
                         const subPoints = parseFloat(points) * parseFloat(berat);
                         totalAmount += subtotal;
-                        totalPoints += points;
+                        totalPoints += subPoints;
                     }
                 });
 
                 // Tampilkan total amount
                 $('#total_amount').val(totalAmount.toLocaleString('id-ID'));
                 $('#total_amount_hidden').val(totalAmount);
-                $('#total_points').val(totalAmount.toLocaleString('id-ID'));
-                $('#total_points_hidden').val(totalAmount);
+                $('#total_points').val(totalPoints);
+                $('#total_points_hidden').val(totalPoints);
             };
 
             // Event listener untuk select sampah dan input berat

@@ -49,6 +49,7 @@
                                         <div class="d-flex flex-wrap mb-2">
                                             <span id="selectedNasabahTransactionFilter" class="badge badge-pill badge-info p-2 mr-1"></span>
                                             <span id="selectedRangeTransactionFilter" class="badge badge-pill badge-info p-2 mr-1"></span>
+                                            <span id="selectedStatusTransactionFilter" class="badge badge-pill badge-info p-2 mr-1"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -98,6 +99,15 @@
                     <div class="form-group">
                         <label>Tanggal Terbit</label>
                         <input type="text" class="form-control" id="daterange">
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="status_transaksi_filter" class="select-transaction" multiple style="width: 100%;">
+                            <option value="">Pilih Status</option>
+                            <option value="approved">Berhasil</option>
+                            <option value="pending">Menunggu</option>
+                            <option value="rejected">tolak</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
