@@ -21,7 +21,10 @@ class NasabahController extends Controller
         $title = "Data Nasabah";
         $breadcrumb = "Nasabah";
         if ($request->ajax()) {
-            $data = User::role('nasabah');
+            $data = User::role('nasabah')
+            ->whereHas('nasabahs', function ($query) use ($request) {
+                $query->where('bsu_id', $request->user()->id);
+            });
             if ($search = $request->input('search.value')) {
                 $data->where(function ($data) use ($search) {
                     $data->where('name', 'like', "%{$search}%")
@@ -73,8 +76,7 @@ class NasabahController extends Controller
     }
 
     public function create(){
-        $bsuList = User::role('bsu')->get();
-        return view('dashboard.nasabah.create',get_defined_vars());
+        return view('dashboard.nasabah.create');
     }
 
     public function store(Request $request){
@@ -89,7 +91,7 @@ class NasabahController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'Validation Failed',
+                'message' => 'Validasi gagal',
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -109,30 +111,24 @@ class NasabahController extends Controller
             $data->assignRole('nasabah');
             $nasabahDetail = new NasabahDetail();
             $nasabahDetail->user_id = $data->id;
-            $nasabahDetail->bsu_id = $request->bsu_id;
+            $nasabahDetail->bsu_id = $request->user()->id;
             $nasabahDetail->photo ='storage/foto-profile/' . $fileName;
             $nasabahDetail->alamat = $request->alamat;
             $nasabahDetail->save();
             DB::commit();
             return response()->json([
                'status' => true,
-               'message' => 'Data berhasil disimpan',
+               'message' => 'User berhasil disimpan',
                 'data' => $data
             ], 200);
         }catch(Exception $e){
             DB::rollBack();
             return response()->json([
                'status' => false,
-               'message' => 'Data gagal disimpan',
+               'message' => 'User gagal disimpan',
                 'errors' => $e->getMessage()
             ], 500);
         }
-
-        return response()->json([
-           'status' => true,
-           'message' => 'Data berhasil disimpan',
-            'data' => $data
-        ], 200);
 
     }
     public function show($id){
@@ -142,8 +138,7 @@ class NasabahController extends Controller
     public function edit($id){
         $data = User::with('nasabahs')->find($id);
         $nasabahDetail =NasabahDetail::where('user_id', $id)->first();
-        $bsuList = User::role('bsu')->get();
-        return view('dashboard.nasabah.edit', compact('data','bsuList','nasabahDetail'));
+        return view('dashboard.nasabah.edit', compact('data','nasabahDetail'));
     }
 
     public function update(Request $request, $id)
@@ -159,7 +154,7 @@ class NasabahController extends Controller
 
         try {
             DB::beginTransaction();
-            $user = User::find($id);
+            $user = User::findOrFail($id);
             $user->name = $request->name;
             $user->no_phone = $request->no_phone;
 
@@ -185,22 +180,20 @@ class NasabahController extends Controller
                 $request->photo->storeAs('foto-profile', $fileName, 'public');
                 $nasabahDetail->photo = 'storage/foto-profile/' . $fileName;
             }
-
-            $nasabahDetail->bsu_id = $request->bsu_id;
             $nasabahDetail->alamat = $request->alamat;
             $nasabahDetail->save();
             DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => 'User updated successfully',
+                'message' => 'nasabah berhasil diupdate',
                 'data' => $user,
             ], 200);
         } catch (Exception $e) {
             // Log::error('error',[$e->getMessage()]);
             return response()->json([
                 'success' => false,
-                'message' => 'Error update user',
+                'message' => 'ada kendala update nasabah',
                 'error' => $e->getMessage(),
             ], 500);
         }

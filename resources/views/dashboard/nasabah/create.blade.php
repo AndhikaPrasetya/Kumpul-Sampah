@@ -24,17 +24,6 @@
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
-                                <label for="bsu_id">BSU</label>
-                            <select name="bsu_id" id="bsu_id" class="form-control">
-                                <option value="" disabled selected>Pilih BSU</option>
-                                @foreach($bsuList as $b)
-                                    <option value="{{$b->id}}">{{$b->name}}</option>
-                                @endforeach
-                            </select>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-4">
-                            <div class="form-group">
                                 <label for="password">Password</label>
                                 <input type="text" class="form-control shadow-sm" name="password" id="password" placeholder="Password" required>
                             </div>
@@ -107,6 +96,7 @@
 
             $('#createFormNasabah').on('submit', function(e) {
                 e.preventDefault();
+                $(this).find('button[type="submit"]').prop('disabled', true);
 
                 const formData = new FormData(this);
 
@@ -133,6 +123,7 @@
                         } else {
                             showToast('error', xhr.responseJSON.error);
                         }
+                        $(this).find('button[type="submit"]').prop('disabled', false);
                     }
                 });
             });

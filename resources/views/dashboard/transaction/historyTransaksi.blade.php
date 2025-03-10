@@ -42,6 +42,7 @@
                                         <div class="d-flex flex-wrap mb-2">
                                             <span id="selectedNasabahFilter" class="badge badge-pill badge-info p-2 mr-1"></span>
                                             <span id="selectedRangeFilter" class="badge badge-pill badge-info p-2 mr-1"></span>
+                                            <span id="selectedStatusNasabahFilter" class="badge badge-pill badge-info p-2 mr-1"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -56,6 +57,7 @@
                                             <th>Berat</th>
                                             <th>Total Harga</th>
                                             <th>Total Points</th>
+                                            <th>Status</th>
                                             <th>Tanggal</th>
                                         </tr>
                                     </thead>
@@ -83,7 +85,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Nama nasabah</label>
-                        <select id="nama_nasabah_filter" class="select2" multiple style="width: 100%;">
+                        <select id="nama_nasabah_filter" class="select-history" multiple style="width: 100%;">
                             <option value="">Pilih Nasabah</option>
                             @foreach($nasabahs as $p)
                                 <option value="{{ $p->name }}">{{ $p->name }}</option>
@@ -95,6 +97,15 @@
                     <div class="form-group">
                         <label>Tanggal Terbit</label>
                         <input type="text" class="form-control" id="daterange">
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="status_nasabah_filter" class="select-history" multiple style="width: 100%;">
+                            <option value="">Pilih Status</option>
+                            <option value="approved">Berhasil</option>
+                            <option value="pending">Menunggu</option>
+                            <option value="rejected">tolak</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">

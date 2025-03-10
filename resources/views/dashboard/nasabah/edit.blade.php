@@ -26,19 +26,6 @@
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
-                                <label for="bsu_id">BSU</label>
-                                <select name="bsu_id" id="bsu_id" class="form-control">
-                                    <option value="" disabled selected>Pilih BSU</option>
-                                    @foreach ($bsuList as $b)
-                                        <option value="{{ $b->id }}"
-                                            {{ $b->id === optional($data->nasabahs->first())->bsu_id ? 'selected' : '' }}>
-                                            {{ $b->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-4">
-                            <div class="form-group">
                                 <label for="password">New password</label>
                                 <input type="text" class="form-control shadow-sm" name="password" id="password">
                             </div>
@@ -118,6 +105,7 @@
 
             const handleFormSubmit = (formId) => {
                 const form = $(`#${formId}`);
+                
                 const id = form.data('id');
                 // // Buat FormData object
                 const formData = new FormData(form[0]);
@@ -150,16 +138,24 @@
                                 messages.forEach(message => {
                                     showToast('error', message);
                                 });
+                                setTimeout(() => {
+                                window.location.reload();
+                            }, 2000);
                             }
                         } else {
                             showToast('error', 'An unexpected error occurred.');
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000);
                         }
+                        $(this).find('button[type="submit"]').prop('disabled', false);
                     }
                 });
             };
 
             $('#updateFormNasabah').on('submit', function(e) {
                 e.preventDefault();
+                $(this).find('button[type="submit"]').prop('disabled', true);
                 handleFormSubmit('updateFormNasabah');
             });
 

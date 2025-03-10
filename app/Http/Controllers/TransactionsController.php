@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\NasabahDetail;
-use App\Models\Saldo;
 use Exception;
 use App\Models\User;
+use App\Models\Saldo;
 use App\Models\Sampah;
-use App\Models\TransactionDetail;
 use App\Models\Transactions;
 use Illuminate\Http\Request;
+use App\Models\NasabahDetail;
 use Illuminate\Support\Carbon;
+use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -22,11 +23,15 @@ class TransactionsController extends Controller
     {
         $title = "Data Transaksi";
         $breadcrumb = "Transaksi";
+        $bsuId = $request->user()->id;
         $nasabahs = User::with('roles')
-            ->whereHas('roles', function ($query) {
-                $query->where('name', 'nasabah');
-            })
-            ->get();
+        ->whereHas('roles', function ($query) {
+            $query->where('name', 'nasabah');
+        })
+        ->whereHas('nasabahs', function ($query) use ($bsuId) {
+            $query->where('bsu_id', $bsuId);
+        })
+        ->get();
         if ($request->ajax()) {
             //cara agar ascending
             $data = Transactions::with('users')->where('bsu_id', $request->user()->id)->orderBy('created_at', 'desc');
@@ -117,7 +122,10 @@ class TransactionsController extends Controller
             })
             ->get();
         if ($request->ajax()) {
-            $data = TransactionDetail::with(['transaction.users', 'sampah']);
+            $data = TransactionDetail::with(['transaction.users', 'sampah'])
+            ->whereHas('transaction', function ($query) use($request) {
+                $query->where('bsu_id', $request->user()->id);
+            });
 
             if ($search = $request->input('search.value')) {
                 $data->whereHas('sampah', function ($query) use ($search) {
@@ -139,8 +147,12 @@ class TransactionsController extends Controller
                         Carbon::parse($request->start_date)->startOfDay(),
                         Carbon::parse($request->end_date)->endOfDay()
                     ]);
+                })
+                ->when($request->filled('status'), function ($query) use ($request) {
+                    $query->whereHas('transaction', function ($subQuery) use ($request) {
+                        $subQuery->whereIn('status', $request->status);
+                    });
                 });
-
             return DataTables::eloquent($data)
                 ->addIndexColumn()
                 ->addColumn('transaction_id', function ($data) {
@@ -158,17 +170,30 @@ class TransactionsController extends Controller
                 ->addColumn('points', function ($data) {
                     return number_format($data->points, 0, ',', '.');
                 })
+                ->addColumn('status', function ($data) {
+                    if ($data->transaction->status === 'approved') {
+                        return '<span class="badge badge-primary">' . $data->transaction->status . '</span>';
+                    } elseif ($data->transaction->status === 'rejected') {
+                        return '<span class="badge badge-danger">' . $data->transaction->status . '</span>';
+                    } elseif ($data->transaction->status === 'pending') {
+                        return '<span class="badge badge-warning">' . $data->transaction->status . '</span>';
+                    } else {
+                        return '<span class="badge badge-secondary">' . $data->transaction->status . '</span>';
+                    }
+                })
                 ->addColumn('created_at', function ($data) {
                     return Carbon::parse($data->created_at)->format('d-m-Y');
                 })
+                ->rawColumns(['status'])
                 ->make(true);
         }
         return view('dashboard.transaction.historyTransaksi', get_defined_vars());
     }
 
-    public function create(Request $request)
+    public function create()
     {
-        $currentUserId = $request->user()->id;
+        $currentUserId = optional(Auth::user())->id; 
+        ;
 
         // Ambil nasabah yang terkait dengan BSU saat ini
         $users = $this->getNasabahUsers($currentUserId);

@@ -293,9 +293,8 @@ $(document).ready(function() {
 
     //-------------------------> start table history transaction <-----------------------\\
 
-    $(".select2").select2({
+    $(".select-history").select2({
         dropdownParent: $("#filterModalHistory"),
-        placeholder: "Pilih Nasabah",
         allowClear: true,
       });
     
@@ -352,6 +351,7 @@ $('#exportPDF').click(function() {
         type: "GET",
         data: function(d){
             d.nama_nasabah = $("#nama_nasabah_filter").val();
+            d.status = $("#status_nasabah_filter").val();
             const daterange = $("#daterange").val();
             if (daterange) {
                 const dates = daterange.split(" s/d ");
@@ -367,6 +367,7 @@ $('#exportPDF').click(function() {
         { data: 'berat', name: 'berat', orderable: false, searchable: true },
         { data: 'subtotal', name: 'subtotal', orderable: false, searchable: true },
         { data: 'points', name: 'points', orderable: false, searchable: true },
+        { data: 'status', name: 'status', orderable: false, searchable: true },
         { data: 'created_at', name: 'created_at', orderable: false, searchable: true },
     ],
     dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
@@ -436,10 +437,12 @@ $('#exportPDF').click(function() {
     $("#apply_filter").click(function () {
         const selectedNasabah = $("#nama_nasabah_filter").val(); 
         const selectedRange = $("#daterange").val(); 
+        const selectedStatus = $("#status_nasabah_filter").val(); 
         
-        if (selectedNasabah||selectedRange) {
+        if (selectedNasabah||selectedRange||selectedStatus) {
             $("#selectedNasabahFilter").text(selectedNasabah); 
             $("#selectedRangeFilter").text(selectedRange); 
+            $("#selectedStatusNasabahFilter").text(selectedStatus); 
             $("#filterContainerHistory").show(); // Tampilkan filter
         } else {
             $("#filterContainerHistory").hide();
@@ -454,6 +457,7 @@ $('#exportPDF').click(function() {
       $("#reset_filter").click(function () {
         // Reset select2 filter
         $("#nama_nasabah_filter").val([]).trigger("change"); 
+        $("#status_nasabah_filter").val([]).trigger("change"); 
     
         // Reset Daterangepicker dengan event khusus
         $("#daterange").val("").trigger("change"); 
