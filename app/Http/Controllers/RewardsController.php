@@ -20,7 +20,7 @@ class RewardsController extends Controller
         $title = "Data rewards";
         $breadcrumb = "rewards";
         if ($request->ajax()) {
-            $data = Rewards::query();
+            $data = Rewards::where('bsu_id', $request->user()->id);
             if ($search = $request->input('search.value')) {
                 $data->where(function ($data) use ($search) {
                     $data->where('name', 'like', "%{$search}%");
@@ -102,6 +102,7 @@ class RewardsController extends Controller
             }
 
             $data = Rewards::create([
+                'bsu_id' => $request->user()->id,
                 'name' => $request->name,
                 'points' => str_replace('.', '', $request->points ?? 0),
                 'image' => $fileData,
@@ -109,9 +110,8 @@ class RewardsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Data berhasil dibuat',
-                'data' => $data
-            ], 201);
+                'message' => 'Rewards berhasil dibuat',
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

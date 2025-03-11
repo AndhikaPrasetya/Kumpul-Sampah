@@ -41,6 +41,7 @@
                                             <th>Nama nasabah</th>
                                             <th>Rewards</th>
                                             <th>Status</th>
+                                            <th>Points</th>
                                             <th class="text-center" style="width: 20%;">Action</th>
                                         </tr>
                                     </thead>

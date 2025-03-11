@@ -55,8 +55,8 @@
                                             <th>Nasabah</th>
                                             <th>Sampah</th>
                                             <th>Berat</th>
-                                            <th>Total Harga</th>
-                                            <th>Total Points</th>
+                                            <th>Pendapatan</th>
+                                            <th>Points</th>
                                             <th>Status</th>
                                             <th>Tanggal</th>
                                         </tr>

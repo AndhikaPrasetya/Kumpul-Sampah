@@ -27,7 +27,7 @@ class TransactionsController extends Controller
         $nasabahs = $this->getNasabahUsers($bsuId);
         if ($request->ajax()) {
             //cara agar ascending
-            $data = Transactions::with('users')->where('bsu_id', $request->user()->id)->orderBy('created_at', 'desc');
+            $data = Transactions::with(['users','details'])->where('bsu_id', $request->user()->id)->orderBy('created_at', 'desc');
             if ($search = $request->input('search.value')) {
                 $data->whereHas('users', function ($query) use ($search) {
                     $query->where('name', 'like', "%{$search}%");
@@ -71,6 +71,10 @@ class TransactionsController extends Controller
                 })
                 ->addColumn('total_points', function ($data) {
                     return number_format($data->total_points, 0, ',', '.');
+                })
+                //cara sum transaction->details->berat 
+                ->addColumn('berat', function ($data) {
+                    return number_format($data->details->sum('berat'), 0, ',', '.'). 'KG';
                 })
                 ->addColumn('tanggal', function ($data) {
                     return Carbon::parse($data->tanggal)->format('d-m-Y');

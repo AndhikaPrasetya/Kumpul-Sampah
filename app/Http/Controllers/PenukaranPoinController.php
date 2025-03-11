@@ -20,15 +20,12 @@ class PenukaranPoinController extends Controller
     {
         $title = "Data Penukaran points";
         $breadcrumb = "Penukaran points";
-        $nasabahs = User::with('roles')
-            ->whereHas('roles', function ($query) {
-                $query->where('name', 'nasabah');
-            })
-            ->get();
+        $bsuId = $request->user()->id;
+        $nasabahs = $this->getNasabahUsers($bsuId);
 
         $rewards = Rewards::all();
         if ($request->ajax()) {
-            $data = PenukaranPoints::with(['user','reward']);
+            $data = PenukaranPoints::with(['user','reward'])->where('bsu_id',$bsuId);
             if ($search = $request->input('search.value')) {
                 $data->whereHas('users', function ($query) use ($search) {
                     $query->where('name', 'like', "%{$search}%");
@@ -53,6 +50,9 @@ class PenukaranPoinController extends Controller
                     } else {
                         return '<span class="badge badge-secondary">' . $data->status . '</span>';
                     }
+                })
+                ->addColumn('total_points', function ($data) {
+                    return $data->total_points;
                 })
 
 
@@ -80,13 +80,10 @@ class PenukaranPoinController extends Controller
 
     public function create()
     {
-        $nasabahs = User::with('roles')
-            ->whereHas('roles', function ($query) {
-                $query->where('name', 'nasabah');
-            })
-            ->get();
+        $bsuId = Auth::user()->id;
+        $nasabahs = $this->getNasabahUsers($bsuId);
 
-        $rewards = Rewards::all();
+        $rewards = Rewards::where('bsu_id',$bsuId)->get();
         return view('dashboard.penukaranPoints.create', get_defined_vars());
     }
 
@@ -107,7 +104,7 @@ class PenukaranPoinController extends Controller
 
         try {
             DB::beginTransaction();
-            $reward = Rewards::findOrFail($request->reward_id);
+            $reward = Rewards::where('bsu_id', $request->user()->id)->findOrFail($request->reward_id);
 
             //ambil points di saldo user 
             $saldo = Saldo::where('user_id', $user->id)->first();
@@ -123,6 +120,7 @@ class PenukaranPoinController extends Controller
         
             PenukaranPoints::create([
                 'user_id' => $user->id,
+                'bsu_id'=>$request->user()->id,
                 'reward_id' => $request->reward_id,
                 'total_points' => $reward->points,
             ]);
@@ -146,14 +144,22 @@ class PenukaranPoinController extends Controller
 
     public function show($id){
         $penukaranPoint = PenukaranPoints::findOrFail($id);
-        $nasabahs = User::with('roles')
+        $bsuId = Auth::user()->id;
+        $nasabahs = $this->getNasabahUsers($bsuId);
+
+        $rewards = Rewards::where('bsu_id', $bsuId)->get();
+        return view('dashboard.penukaranPoints.detail', get_defined_vars());
+    }
+
+    private function getNasabahUsers($bsuId){
+        return User::with('roles')
             ->whereHas('roles', function ($query) {
                 $query->where('name', 'nasabah');
             })
+            ->whereHas('nasabahs', function ($query) use ($bsuId) {
+                $query->where('bsu_id', $bsuId);
+            })
             ->get();
-
-        $rewards = Rewards::all();
-        return view('dashboard.penukaranPoints.detail', get_defined_vars());
     }
     public function destroy($id){
         $penukaranPoint = PenukaranPoints::findOrFail($id);

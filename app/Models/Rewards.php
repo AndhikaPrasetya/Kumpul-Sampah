@@ -9,7 +9,8 @@ class Rewards extends Model
     protected $fillable=[
         'name',
         'points',
-        'image'
+        'image',
+        'bsu_id'
     ];
     public function penukaranPoints(){
         return $this->hasMany(PenukaranPoints::class, 'reward_id');

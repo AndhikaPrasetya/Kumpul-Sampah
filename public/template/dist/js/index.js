@@ -513,6 +513,7 @@ $('#exportPDF').click(function() {
             { data: 'status', name: 'status', orderable: false, searchable: true },
             { data: 'total_amount', name: 'total_amount', orderable: false, searchable: true },
             { data: 'total_points', name: 'total_points', orderable: false, searchable: true },
+            { data: 'berat', name: 'berat', orderable: false, searchable: true },
             { data: 'tanggal', name: 'tanggal', orderable: false, searchable: true },
             { data: 'action', name: 'action', orderable: false, searchable: false }
         ],
@@ -748,6 +749,11 @@ $('#table_penukaran_points').DataTable({
         {
             data: 'status',
             name: 'status',
+            orderable: false,
+        },
+        {
+            data: 'total_points',
+            name: 'total_points',
             orderable: false,
         },
         {

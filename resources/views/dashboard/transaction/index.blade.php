@@ -61,8 +61,9 @@
                                             <th>No</th>
                                             <th>Nasabah</th>
                                             <th>Status</th>
-                                            <th>Total</th>
+                                            <th>Pendapatan</th>
                                             <th>Points</th>
+                                            <th>Total setor (kg)</th>
                                             <th>Tanggal</th>
                                             <th class="text-center" style="width: 20%;">Action</th>
                                         </tr>
@@ -138,15 +139,33 @@
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="tanggal" data-column-index="2" id="check_tanggal">
-                                <label class="form-check-label" for="check_tanggal">
-                                    Tanggal
+                                <input class="form-check-input" type="checkbox" value="status" data-column-index="2" id="check_status">
+                                <label class="form-check-label" for="check_status">
+                                    Status
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="total" data-column-index="3" id="check_total">
-                                <label class="form-check-label" for="check_total">
-                                    Total Nilai
+                                <input class="form-check-input" type="checkbox" value="total_amount" data-column-index="3" id="check_total_amount">
+                                <label class="form-check-label" for="check_total_amount">
+                                    Pendapatan
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="total_points" data-column-index="4" id="check_total_points">
+                                <label class="form-check-label" for="check_total_points">
+                                    Points
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="berat" data-column-index="5" id="check_berat">
+                                <label class="form-check-label" for="check_berat">
+                                    Total setor
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="tanggal" data-column-index="6" id="check_tanggal">
+                                <label class="form-check-label" for="check_tanggal">
+                                    Tanggal
                                 </label>
                             </div>
                         </div>
