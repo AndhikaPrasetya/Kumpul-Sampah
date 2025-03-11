@@ -6,6 +6,7 @@ use Exception;
 use App\Models\User;
 use App\Models\Saldo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
@@ -19,7 +20,7 @@ class SaldoController extends Controller
         $title = "Data Saldo";
         $breadcrumb = "Saldo";
         if ($request->ajax()) {
-            $data = Saldo::with('nasabah');
+            $data = Saldo::with('nasabah')->where('bsu_id',$request->user()->id);
             if ($search = $request->input('search.value')) {
                 $data->where(function ($data) use ($search) {
                     $data->where('user_id', 'like', "%{$search}%");
@@ -68,11 +69,8 @@ class SaldoController extends Controller
 
     public function create()
     {
-        $nasabahs = User::with('roles')
-            ->whereHas('roles', function ($query) {
-                $query->where('name', 'nasabah');
-            })
-            ->get();
+        $bsuId = Auth::user()->id;
+        $nasabahs =$this->getNasabahUsers($bsuId);
         return view('dashboard.saldo.create', get_defined_vars());
     }
 
@@ -89,6 +87,7 @@ class SaldoController extends Controller
 
         Saldo::create([
             'user_id' => $request->user_id,
+            'bsu_id' => $request->user()->id,
             'balance' => $saldoMasuk,
             'points' => $saldoPoints,
         ]);
@@ -149,6 +148,23 @@ class SaldoController extends Controller
                 'errors' => $e->getMessage()
             ], 500);
         }
+    }
+
+     /**
+     * Get users with nasabah role that belong to current BSU
+     *
+     * @param int $bsuId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    private function getNasabahUsers($bsuId){
+        return User::with('roles')
+        ->whereHas('roles', function ($query) {
+            $query->where('name', 'nasabah');
+        })
+        ->whereHas('nasabahs', function ($query) use ($bsuId) {
+            $query->where('bsu_id', $bsuId);
+        })
+        ->get();
     }
 
     public function destroy($id)

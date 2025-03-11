@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('saldos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); 
+            $table->foreignId('bsu_id')->constrained('users')->onDelete('cascade'); 
             $table->decimal('balance', 10, 2)->default(0);
             $table->decimal('points',10, 2)->default(0);
             $table->timestamps();

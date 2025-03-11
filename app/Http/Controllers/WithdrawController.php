@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Withdraw;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Yajra\DataTables\Facades\DataTables;
@@ -23,7 +24,7 @@ class WithdrawController extends Controller
         $title = "Data Penarikan";
         $breadcrumb = "Penarikan";
         if ($request->ajax()) {
-            $data = Withdraw::with('user')->orderBy('created_at', 'desc');
+            $data = Withdraw::with('user')->where('bsu_id', $request->user()->id)->orderBy('created_at', 'desc');
             if ($search = $request->input('search.value')) {
                 $data->where(function ($data) use ($search) {
                     $data->where('user_id', 'like', "%{$search}%");
@@ -87,11 +88,8 @@ class WithdrawController extends Controller
      */
     public function create()
     {
-        $nasabahs = User::with('roles')
-        ->whereHas('roles', function ($query) {
-            $query->where('name', 'nasabah');
-        })
-        ->get();
+        $bsuId = Auth::user()->id;
+        $nasabahs = $this->getNasabahUsers($bsuId);
         return view('dashboard.withdraw.create', get_defined_vars());
         
     }
@@ -124,6 +122,7 @@ class WithdrawController extends Controller
              // Simpan data ke tabel withdrawals
         Withdraw::create([
             'user_id' => $request->user_id,
+            'bsu_id' => $request->user()->id,
             'amount' => $request->amount,
             'tanggal' => now(),
             'status' => 'pending'
@@ -208,6 +207,20 @@ class WithdrawController extends Controller
     }
 
     return response()->json(['message' => 'Status penarikan berhasil diperbarui'], 200);
+}
+
+/**
+ * Get list of nasabahs for the selected BSU
+ */
+private function getNasabahUsers($bsuId){
+    return User::with('roles')
+    ->whereHas('roles', function ($query) {
+        $query->where('name', 'nasabah');
+    })
+    ->whereHas('nasabahs', function ($query) use ($bsuId) {
+        $query->where('bsu_id', $bsuId);
+    })
+    ->get();
 }
     /**
      * Remove the specified resource from storage.

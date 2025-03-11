@@ -24,14 +24,7 @@ class TransactionsController extends Controller
         $title = "Data Transaksi";
         $breadcrumb = "Transaksi";
         $bsuId = $request->user()->id;
-        $nasabahs = User::with('roles')
-        ->whereHas('roles', function ($query) {
-            $query->where('name', 'nasabah');
-        })
-        ->whereHas('nasabahs', function ($query) use ($bsuId) {
-            $query->where('bsu_id', $bsuId);
-        })
-        ->get();
+        $nasabahs = $this->getNasabahUsers($bsuId);
         if ($request->ajax()) {
             //cara agar ascending
             $data = Transactions::with('users')->where('bsu_id', $request->user()->id)->orderBy('created_at', 'desc');
@@ -115,12 +108,8 @@ class TransactionsController extends Controller
 
         $title = "Data Riwayat Transaksi";
         $breadcrumb = "Riwayat Transaksi";
-        //filter user
-        $nasabahs = User::with('roles')
-            ->whereHas('roles', function ($query) {
-                $query->where('name', 'nasabah');
-            })
-            ->get();
+        $bsuId = $request->user()->id;
+        $nasabahs = $this->getNasabahUsers($bsuId);
         if ($request->ajax()) {
             $data = TransactionDetail::with(['transaction.users', 'sampah'])
             ->whereHas('transaction', function ($query) use($request) {
@@ -193,7 +182,6 @@ class TransactionsController extends Controller
     public function create()
     {
         $currentUserId = optional(Auth::user())->id; 
-        ;
 
         // Ambil nasabah yang terkait dengan BSU saat ini
         $users = $this->getNasabahUsers($currentUserId);

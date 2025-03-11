@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\NasabahDetail;
+use App\Models\Saldo;
 use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -115,6 +116,13 @@ class NasabahController extends Controller
             $nasabahDetail->photo ='storage/foto-profile/' . $fileName;
             $nasabahDetail->alamat = $request->alamat;
             $nasabahDetail->save();
+
+            $saldoNasabah = new Saldo();
+            $saldoNasabah->user_id = $data->id;
+            $saldoNasabah->bsu_id = $request->user()->id;
+            $saldoNasabah->balance = 0;
+            $saldoNasabah->points = 0;
+            $saldoNasabah->save();
             DB::commit();
             return response()->json([
                'status' => true,

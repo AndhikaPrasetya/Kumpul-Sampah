@@ -220,6 +220,7 @@ class DatabaseSeeder extends Seeder
 
             $saldo = new Saldo();
             $saldo->user_id = $nasabah->id;
+            $saldo->bsu_id = $bsu->id;
             $saldo->balance = 0;
             $saldo->points = 0;
             $saldo->save();

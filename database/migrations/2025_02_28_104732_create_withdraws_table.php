@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('withdraws', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('bsu_id')->constrained('users')->onDelete('cascade'); 
             $table->decimal('amount', 10, 2);
             $table->date('tanggal');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
