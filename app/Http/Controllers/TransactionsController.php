@@ -14,6 +14,7 @@ use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Cache;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
@@ -423,6 +424,7 @@ class TransactionsController extends Controller
     
             // Find transaction or fail with 404
             $transaction = Transactions::findOrFail($id);
+            $bsu_id = $request->user()->id;
             $originalStatus = $transaction->status;
             $newStatus = $request->status ?? $originalStatus;
     
@@ -437,7 +439,7 @@ class TransactionsController extends Controller
             if ($request->has('status')) {
                 $transaction->update(['status' => $newStatus]);
             }
-    
+             Cache::forget("total_sampah_{$bsu_id}");
             DB::commit();
     
             return response()->json([
@@ -498,11 +500,13 @@ class TransactionsController extends Controller
      */
     private function deductBalance(?Saldo $saldoNasabah, Transactions $transaction): void
     {
+        $bsu_id= Auth::id();
         if ($saldoNasabah) {
             $saldoNasabah->update([
                 'balance' => max(0, $saldoNasabah->balance - $transaction->total_amount),
                 'points' => max(0, $saldoNasabah->points - $transaction->total_points),
             ]);
+            Cache::forget("total_saldo_{$bsu_id}");
         }
     }
     
@@ -517,12 +521,14 @@ class TransactionsController extends Controller
     {
         $totalAmount = $transaction->total_amount;
         $totalPoints = $transaction->total_points;
+        $bsu_id = Auth::id();
     
         if ($saldoNasabah) {
             $saldoNasabah->update([
                 'balance' => $saldoNasabah->balance + $totalAmount,
                 'points' => $saldoNasabah->points + $totalPoints,
             ]);
+            Cache::forget("total_saldo_{$bsu_id}");
         } else {
             Saldo::create([
                 'user_id' => $transaction->user_id,

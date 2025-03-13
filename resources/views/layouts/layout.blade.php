@@ -134,25 +134,25 @@
               <ul class="nav nav-treeview">
                   <li class="nav-item">
                       <a href="{{ route('users.index') }}" class="nav-link {{ Route::is('users.*') ? 'active' : '' }}">
-                          <i class="nav-icon fas fa-user"></i>
+                           <i class="far fa-circle nav-icon"></i>
                           <p>Users</p>
                       </a>
                   </li>
                   <li class="nav-item">
                       <a href="{{ route('bsu.index') }}" class="nav-link {{ Route::is('bsu.*') ? 'active' : '' }}">
-                          <i class="nav-icon fas fa-user"></i>
+                           <i class="far fa-circle nav-icon"></i>
                           <p>Data BSU</p>
                       </a>
                   </li>
                   <li class="nav-item">
                       <a href="{{ route('roles.index') }}" class="nav-link {{ Route::is('roles.*') ? 'active' : '' }}">
-                          <i class="nav-icon fas fa-shield-alt"></i>
+                        <i class="far fa-circle nav-icon"></i>
                           <p>Roles</p>
                       </a>
                   </li>
                   <li class="nav-item">
                       <a href="{{ route('permission.index') }}" class="nav-link {{ Route::is('permission.*') ? 'active' : '' }}">
-                          <i class="nav-icon fas fa-cogs"></i>
+                        <i class="far fa-circle nav-icon"></i>
                           <p>Permission</p>
                       </a>
                   </li>
@@ -177,7 +177,7 @@
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{{route('sampah.index')}}" class="nav-link {{ Route::is('sampah.*') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-recycle"></i>
+                    <i class="far fa-circle nav-icon"></i>
                     <p>
                     Data sampah
                     </p>
@@ -185,7 +185,7 @@
                 </li>
                 <li class="nav-item">
                   <a href="{{route('kategori-sampah.index')}}" class="nav-link {{ Route::is('kategori-sampah.*') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-trash"></i>
+                    <i class="far fa-circle nav-icon"></i>
                     <p>
                       Kategori Sampah
                     </p>
@@ -205,7 +205,7 @@
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{{route('transaction.index')}}" class="nav-link {{ Route::is('transaction.*') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-exchange-alt"></i>
+                    <i class="far fa-circle nav-icon"></i>
                     <p>
                     Data transaksi
                     </p>
@@ -213,7 +213,7 @@
                 </li>
                 <li class="nav-item">
                   <a href="{{route('history-transaction.index')}}" class="nav-link {{ Route::is('history-transaction.index') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-history"></i>
+                    <i class="far fa-circle nav-icon"></i>
                     <p>
                     Riwayat transaksi
                     </p>
@@ -221,7 +221,7 @@
                 </li>
                 <li class="nav-item">
                   <a href="{{route('saldo.index')}}" class="nav-link {{ Route::is('saldo.index') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-wallet"></i>
+                    <i class="far fa-circle nav-icon"></i>
                     <p>
                     Saldo & Points
                     </p>
@@ -229,7 +229,7 @@
                 </li>
                 <li class="nav-item">
                   <a href="{{route('withdraw.index')}}" class="nav-link {{ Route::is('withdraw.index') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-history"></i>
+                    <i class="far fa-circle nav-icon"></i>
                     <p>
                     Penarikan dana 
                     </p>
@@ -248,7 +248,7 @@
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{{route('rewards.index')}}" class="nav-link {{ Route::is('rewards.index') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-gift"></i>
+                    <i class="far fa-circle nav-icon"></i>
                     <p>
                     Data rewards 
                     </p>
@@ -256,14 +256,21 @@
                 </li>
                 <li class="nav-item">
                   <a href="{{route('penukaran-points.index')}}" class="nav-link {{ Route::is('penukaran-points.index') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-ticket-alt"></i>
+                    <i class="far fa-circle nav-icon"></i>
                     <p>
                     Penukaran Poin 
                     </p>
                   </a>
                 </li>
               </ul>
-              
+          </li>
+          <li class="nav-item">
+            <a href="{{route('laporan-keuangan.index')}}" class="nav-link {{ Route::is('laporan-keuangan.index') ? 'active' : '' }}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>
+              Laporan Keuangan 
+              </p>
+            </a>
           </li>
           @if (auth()->user()->hasRole('super admin'))
           <li class="nav-item">

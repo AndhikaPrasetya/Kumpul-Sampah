@@ -6,6 +6,7 @@ use App\Http\Controllers\CategorySampahController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\TransactionFrontendController;
+use App\Http\Controllers\LaporanKeuanganController;
 use App\Http\Controllers\NasabahController;
 use App\Http\Controllers\PenukaranPoinController;
 use Illuminate\Support\Facades\Route;
@@ -39,7 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::prefix('admin')->middleware(['auth', 'verified', 'role:super admin|bsu|nasabah'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'verified', 'role:super admin|bsu'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class,'total'])->name('dashboard');
 
@@ -151,6 +152,9 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:super admin|bsu|na
     Route::get('/article/edit/{id}', [ArticleController::class, 'edit'])->name('article.edit');
     Route::put('/article/update/{id}', [ArticleController::class, 'update'])->name('article.update');
     Route::delete('/article/delete/{id}', [ArticleController::class, 'destroy'])->name('article.destroy');
+
+    Route::get('/laporan-keuangan', [LaporanKeuanganController::class, 'index'])->name('laporan-keuangan.index');
+    Route::get('/laporan-keuangan/filter', [LaporanKeuanganController::class, 'filterLaporan'])->name('laporan-keuangan.filter');
 });
 
 

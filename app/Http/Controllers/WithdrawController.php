@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Saldo;
 use Exception;
 use App\Models\User;
+use App\Models\Saldo;
 use App\Models\Withdraw;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Cache;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
@@ -175,6 +176,7 @@ class WithdrawController extends Controller
 {
 
     $withdraw = Withdraw::findOrFail($id);
+    $bsu_id = Auth::id();
 
     if ($withdraw->status !== 'pending') {
         return response()->json(['error' => 'Permintaan sudah diproses'], 400);
@@ -195,6 +197,7 @@ class WithdrawController extends Controller
         if ($saldo && $saldo->balance >= $withdraw->amount) {
             $saldo->balance -= $withdraw->amount;
             $saldo->save();
+            Cache::forget("total_saldo_keluar_{$bsu_id}");
             return response()->json(['message' => 'Penarikan berhasil disetujui dan saldo dikurangi'], 200);
         } else {
             // Rollback jika saldo tidak cukup

@@ -13,7 +13,7 @@
                   <p>Total sampah terkumpul</p>
                 </div>
                 <div class="icon">
-                  <i class="ion ion-folder"></i>
+                  <i class="ion ion-trash"></i>
                 </div>
                 <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
@@ -24,10 +24,23 @@
               <div class="small-box bg-success">
                 <div class="inner">
                   <h3>{{'RP'. number_format($totalSaldo, 0, ',', '.')}}</h3>
-                  <p>Total saldo</p>
+                  <p>Total Saldo Nasabah</p>
                 </div>
                 <div class="icon">
-                  <i class="ion ion-folder"></i>
+                  <i class="ion ion-dollar"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-warning">
+                <div class="inner">
+                  <h3>{{'-'.'RP'. number_format($totalSaldoKeluar, 0, ',', '.')}}</h3>
+                  <p>Total Saldo Keluar</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-dollar"></i>
                 </div>
                 <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
@@ -55,7 +68,7 @@
                           @endforeach
                       </td>
                       <td class="text-center">
-                          <button class="btn btn-sm btn-primary">Edit</button>
+                          <a class="btn btn-sm btn-primary" href="{{route('transaction.edit', $transaction->id)}}">Edit</a>
                           <button class="btn btn-sm btn-danger">Hapus</button>
                       </td>
                   </tr>

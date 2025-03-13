@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\CategorySampah;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Cache;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -111,7 +112,6 @@ class SampahController extends Controller
                 'image' => $fileData,
                 'deskripsi' => $request->deskripsi,
             ]);
-
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil dibuat',
