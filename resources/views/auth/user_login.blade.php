@@ -12,10 +12,12 @@
     <link rel="stylesheet" href="{{ asset('template-fe/assets/css/style.css') }}">
 
     <style>
-
+        /* Container utama */
         .onboarding-container {
             max-width: 400px;
+            width: 100%;
             height: 100vh;
+            min-height: 600px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
@@ -23,45 +25,105 @@
             position: relative;
             overflow: hidden;
         }
-
-        .illustration-container {
-            position: relative;
-            height: 80%;
+    
+        /* Swiper container */
+        .swiper-container {
+            flex-grow: 1;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             overflow: hidden;
         }
-
-        .illustration-container img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            z-index: 10;
+    
+        /* Slide styling */
+        .swiper-slide {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
         }
-
+    
+        /* Gambar dalam slide */
+        .illustration-container img {
+            width: 80%;
+            max-width: 300px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+    
+        /* Kontainer teks */
         .content-container {
             margin-top: 1em;
             padding: 20px;
             text-align: center;
-            flex-grow: 1;
+        }
+    
+        .content-container h2 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    
+        .content-container p {
+            font-size: 0.9rem;
+            color: #555;
+        }
+    
+        /* Tombol Register & Login */
+        .carousel-button-footer {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            margin: 0 auto;
+        }
+    
+        .button-group {
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            gap: 10px;
         }
-
-        .get-started-btn {
-            background-color: #26d077;
-            color: white;
-            border: none;
+    
+        .button-group a, 
+        .button-group button {
+            flex: 1;
+            text-align: center;
             padding: 12px;
+            font-size: 1rem;
             border-radius: 8px;
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
+            cursor: pointer;
+            border: none;
         }
-
+    
+        .btn-outline-secondary {
+            background-color: white;
+            border: 1px solid #ccc;
+            color: #333;
+        }
+    
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+    
+        /* Responsive styling */
+        /* @media (max-width: 480px) {
+            .content-container h2 {
+                font-size: 1rem;
+            }
+    
+            .content-container p {
+                font-size: 0.8rem;
+            }
+    
+            .button-group a, 
+            .button-group button {
+                font-size: 0.9rem;
+                padding: 10px;
+            }
+            
+        } */
         #appCapsule {
             
             display: none;

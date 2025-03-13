@@ -19,53 +19,40 @@
     
     <section class="content">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="d-flex justify-content-end border-bottom p-3">
-                            <div class="mr-2">
-                                <button type="button" class="btn btn-sm btn-success mb-3" data-toggle="modal" data-target="#exportDataModal">
-                                    <i class="fas fa-file-export"></i> Export Data
-                                </button>
-                            </div>
-                            <div>
-                                <button type="button" class="btn btn-sm btn-primary mb-3" data-toggle="modal" data-target="#filterModalHistory">
-                                    <i class="fas fa-filter"></i> Filter Data
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <form id="filterLaporan">
-                                <label for="bulan">Bulan:</label>
-                                <select name="bulan" id="bulan">
-                                    <option value="01">Januari</option>
-                                    <option value="02">Februari</option>
-                                    <option value="03">Maret</option>
-                                    <option value="04">April</option>
-                                    <option value="05">Mei</option>
-                                </select>
-                            
-                                <label for="tahun">Tahun:</label>
-                                <select name="tahun" id="tahun">
-                                    <option value="2024">2024</option>
-                                    <option value="2023">2023</option>
-                                    <option value="2022">2022</option>
-                                </select>
-                            
-                                <button type="submit">Tampilkan Laporan</button>
-                            </form>
-                            
-                            <div id="laporanResult">
-                                <p><strong>Total Nasabah Setor:</strong> <span id="nasabah">-</span></p>
-                                <p><strong>Total Sampah (Kg):</strong> <span id="sampah">-</span></p>
-                                <p><strong>Total Saldo (Rp):</strong> <span id="saldo">-</span></p>
-                            </div>
-                            
-                            
-                        </div>
-                    </div>
-                </div>
+           <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+        <form id="filterLaporan" class="space-y-4">
+            <div class="flex flex-col space-y-2">
+                <label for="bulan" class="text-sm font-medium text-gray-700">Bulan:</label>
+                <select name="bulan" id="bulan" class="p-2 border border-gray-300 rounded-md">
+                    <option value="01">maret</option>
+                    <option value="02">Februari</option>
+                    <option value="03">Maret</option>
+                    <option value="04">April</option>
+                    <option value="05">Mei</option>
+                </select>
             </div>
+
+            <div class="flex flex-col space-y-2">
+                <label for="tahun" class="text-sm font-medium text-gray-700">Tahun:</label>
+                <select name="tahun" id="tahun" class="p-2 border border-gray-300 rounded-md">
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                </select>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-200">
+                Tampilkan Laporan
+            </button>
+        </form>
+
+        <div id="laporanResult" class="mt-6 space-y-4">
+            <p><strong class="text-gray-700">No:</strong> <span id="noLaporan" class="text-gray-900">-</span></p>
+            <p><strong class="text-gray-700">Bulan:</strong> <span id="periode" class="text-gray-900">-</span></p>
+        
+           
+        </div>
+    </div>
         </div>
     </section>
 
