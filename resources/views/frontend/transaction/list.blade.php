@@ -1,7 +1,7 @@
 @extends('layouts.layout-fe')
 @section('title', 'Riwayat transaksi')
 @section('content')
-    <div id="appCapsule">
+    <div id="appCapsule" style="max-width: 400px; margin:0 auto;">
         <div class="d-flex gap-2 mt-2" style="overflow-x: auto; margin-left:5px;">
             <div class="dropdown-status">
                 <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="filterStatus"

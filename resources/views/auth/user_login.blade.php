@@ -212,6 +212,7 @@
                                         aria-label="close circle"></ion-icon>
                                 </i>
                             </div>
+                            <x-input-error :messages="$errors->get('email')" class="mt-2" />
                         </div>
                         <div class="form-group boxed">
                             <div class="input-wrapper">
@@ -222,10 +223,8 @@
                                     <ion-icon name="close-circle" role="img" class="md hydrated"
                                         aria-label="close circle"></ion-icon>
                                 </i>
-                                <div class="text-red-400">
-                                    red
-                                </div>
                             </div>
+                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
                         </div>
                     </div>
                     <div class=" transparent text-center" style="margin-top: 2em;">

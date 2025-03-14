@@ -28,7 +28,7 @@
 
   
         <!-- App Header -->
-        <div class="appHeader">
+        <div class="appHeader" style="max-width: 400px; margin:0 auto;">
             <div class="left">
                 <a href="{{ route(View::yieldContent('route', 'home')) }}" class="headerButton">
                     <ion-icon name="arrow-back-outline"></ion-icon>
@@ -45,7 +45,7 @@
 
 
     <!-- App Bottom Menu -->
-    <div class="appBottomMenu">
+    <div class="appBottomMenu" style="max-width: 400px; margin:0 auto;">
         <a href="{{route('home')}}" class="item">
             <div class="col">
                 <ion-icon name="home-outline"></ion-icon>
