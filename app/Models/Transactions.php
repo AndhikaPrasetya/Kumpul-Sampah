@@ -9,15 +9,23 @@ class Transactions extends Model
     protected $fillable = ['user_id','bsu_id', 'tanggal', 'total_amount','total_points','status','transaction_code'];
 
     public static function boot()
-{
-    parent::boot();
-    static::creating(function ($transaction) {
-        $date = now()->format('Ymd');
-        $lastTransaction = Transactions::whereDate('tanggal', now()->toDateString())->latest()->first();
-        $nextNumber = $lastTransaction ? ((int) substr($lastTransaction->transaction_code, -3) + 1) : 1;
-        $transaction->transaction_code = 'BS-' . $date . '-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
-    });
-}
+    {
+        parent::boot();
+        static::creating(function ($transaction) {
+            $date = now()->format('Ymd');
+    
+            // Gunakan locking untuk mencegah race condition
+            $lastTransaction = Transactions::whereDate('tanggal', now()->toDateString())
+                ->lockForUpdate() // Mengunci baris terkait agar tidak berubah oleh transaksi lain
+                ->latest()
+                ->first();
+    
+            $nextNumber = $lastTransaction ? ((int) substr($lastTransaction->transaction_code, -3) + 1) : 1;
+    
+            $transaction->transaction_code = 'BS-' . $date . '-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        });
+    }
+    
 
 
     public function details()
@@ -28,4 +36,6 @@ class Transactions extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    
 }

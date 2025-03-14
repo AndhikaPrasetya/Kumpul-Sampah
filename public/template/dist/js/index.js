@@ -805,6 +805,133 @@ $('#table_article').DataTable({
     ]
 });
 
+//=================================== START LAPORAN ==========================================\\
+$(".select-laporan").select2({
+    dropdownParent: $("#filterModalLaporan"),
+    allowClear: true,
+  });
+
+// Function to get selected columns
+function getSelectedColumnsLaporan() {
+    return $('.checkbox-list input:checked').map(function() {
+        return parseInt($(this).data('column-index'));
+    }).get();
+}
+
+// Handle Excel export
+$('#exportExcel').click(function() {
+table_laporan.button('.buttons-excel').trigger();
+});
+
+// Handle PDF export
+$('#exportPDF').click(function() {
+table_laporan.button('.buttons-pdf').trigger();
+});
+
+let table_laporan =  $('#table_laporan').DataTable({
+processing: true,
+serverSide: true,
+searching: true,
+stateSave: true,
+ajax: {
+    url: "/admin/laporan-keuangan",
+    type: "GET",
+    data: function(d){
+        d.nama_nasabah = $("#nama_nasabah_filter").val();
+        const daterange = $("#daterange").val();
+        if (daterange) {
+            const dates = daterange.split(" s/d ");
+            d.start_date = moment(dates[0], "DD-MM-YYYY").format("YYYY-MM-DD 00:00:00");
+            d.end_date = moment(dates[1], "DD-MM-YYYY").format("YYYY-MM-DD 23:59:59");
+        } 
+    }
+},
+columns: [
+    { data: 'transaction_id', name: 'transaction_id', orderable: false, searchable: true },
+    { data: 'sampah_id', name: 'sampah_id', orderable: false, searchable: true },
+    { data: 'berat', name: 'berat', orderable: false, searchable: true },
+    { data: 'subtotal', name: 'subtotal', orderable: false, searchable: true },
+    { data: 'points', name: 'points', orderable: false, searchable: true },
+    { data: 'tanggal', name: 'tanggal', orderable: false, searchable: true },
+],
+dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+"<'row'<'col-sm-12'tr>>" +
+"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+buttons: [
+    {
+        extend: 'excelHtml5',
+        text: 'Excel',
+        title: 'Laporan Riwayat Transaksi',
+        exportOptions: {
+            columns: function(idx, data, node) {
+                return getSelectedColumnsLaporan().includes(idx);
+            }
+        }
+    },
+    {
+        extend: 'pdfHtml5',
+        text: 'PDF',
+        exportOptions: {
+            columns: function(idx, data, node) {
+                return getSelectedColumnsLaporan().includes(idx);
+            }
+        },
+        customize: function(doc) {
+            // Set page size to A4
+            doc.pageSize = 'A4';
+            doc.pageOrientation = 'portrait';
+
+            // Center the table
+            doc.content[1].table.widths = 
+                Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+
+            // Adjust table styling
+            doc.styles.tableHeader.alignment = 'center';
+            doc.styles.tableBodyEven.alignment = 'center';
+            doc.styles.tableBodyOdd.alignment = 'center';
+
+            // Add margin to center the table vertically
+            doc.content[1].margin = [0, 10, 0, 0];
+
+            // Adjust font size if needed
+            doc.defaultStyle.fontSize = 10;
+
+            // Add title
+            doc.content.unshift({
+                text: 'Laporan Riwayat Transaksi',
+                style: 'title',
+                alignment: 'center',
+                margin: [0, 0, 0, 0]
+            });
+
+            // Define title style
+            doc.styles.title = {
+                fontSize: 18,
+                bold: true,
+                alignment: 'center'
+            };
+        }
+    }
+]
+});
+
+
+
+// Handle tombol apply filter
+$("#apply_filter").click(function () {
+    table_laporan.draw(); 
+    $("#filterModalHistory").modal("hide");
+});
+
+
+//   // Handle tombol reset
+  $("#reset_filter").click(function () {
+    // Reset Datatable_laporans dan pastikan pemanggilan ulang ke server
+    table_laporan.state.clear(); 
+    table_laporan.ajax.reload();
+});
+//=================================== END LAPORAN ==========================================\\
+
 
 
     //getDataRoleInUser

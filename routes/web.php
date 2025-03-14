@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:super admin|bsu'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class,'total'])->name('dashboard');
+    Route::get('/get-nasabah-data', [DashboardController::class, 'getNasabahData'])->name('nasabah.data');
 
 
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
@@ -154,7 +155,8 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:super admin|bsu'])
     Route::delete('/article/delete/{id}', [ArticleController::class, 'destroy'])->name('article.destroy');
 
     Route::get('/laporan-keuangan', [LaporanKeuanganController::class, 'index'])->name('laporan-keuangan.index');
-    Route::get('/laporan-keuangan/filter', [LaporanKeuanganController::class, 'filterLaporan'])->name('laporan-keuangan.filter');
+    Route::get('/laporan-keuangan/report', [LaporanKeuanganController::class, 'getReport'])->name('laporan-keuangan.getReport');
+
 });
 
 

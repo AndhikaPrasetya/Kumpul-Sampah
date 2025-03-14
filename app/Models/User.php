@@ -29,6 +29,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(NasabahDetail::class, 'user_id');
     }
+
+    public function withdraw(){
+        return $this->hasMany(Withdraw::class);
+    }
+
+    public function transaction(){
+        return $this->hasMany(Transactions::class);
+    }
     
     /**
      * The attributes that should be hidden for serialization.

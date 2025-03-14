@@ -15,7 +15,6 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href={{asset('/template/plugins/fontawesome-free/css/all.min.css')}}>
   <!-- Ionicons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css">
   <link rel="stylesheet" href={{asset('/template/plugins/select2/css/select2.min.css')}}>
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.min.css"
@@ -123,8 +122,8 @@
               </p>
             </a>
           </li>
-          <li class="nav-item {{ Route::is('users.*', 'roles.*', 'permission.*',) ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Route::is('users.*', 'roles.*', 'permission.*',) ? 'active' : '' }}">
+          <li class="nav-item {{ Route::is('users.*', 'roles.*','bsu.*', 'permission.*',) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('users.*', 'roles.*','bsu.*', 'permission.*',) ? 'active' : '' }}">
                   <i class="fas fa-users mr-2"></i>
                   <p>
                       Users Management
@@ -158,7 +157,16 @@
                   </li>
               </ul>
           </li>
+          <li class="nav-item">
+            <a href="{{route('article.index')}}" class="nav-link {{ Route::is('article.*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+              Article 
+              </p>
+            </a>
+          </li>
           @endif
+          @if (auth()->user()->hasRole('bsu'))
           <li class="nav-item">
             <a href="{{ route('nasabah.index') }}" class="nav-link {{ Route::is('nasabah.*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-user"></i>
@@ -266,18 +274,9 @@
           </li>
           <li class="nav-item">
             <a href="{{route('laporan-keuangan.index')}}" class="nav-link {{ Route::is('laporan-keuangan.index') ? 'active' : '' }}">
-              <i class="far fa-circle nav-icon"></i>
+              <i class="fas fa-book nav-icon"></i>
               <p>
-              Laporan Keuangan 
-              </p>
-            </a>
-          </li>
-          @if (auth()->user()->hasRole('super admin'))
-          <li class="nav-item">
-            <a href="{{route('article.index')}}" class="nav-link {{ Route::is('article.*') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-book"></i>
-              <p>
-              Article 
+              Laporan Bulanan 
               </p>
             </a>
           </li>
