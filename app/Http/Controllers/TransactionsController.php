@@ -192,7 +192,7 @@ class TransactionsController extends Controller
         $users = $this->getNasabahUsers($currentUserId);
         //data sampah
         $sampahs = $this->getSampahData($currentUserId);
-
+       
         return view('dashboard.transaction.create', compact('users', 'sampahs'));
     }
 
@@ -436,7 +436,7 @@ class TransactionsController extends Controller
             $bsu_id = $request->user()->id;
             $originalStatus = $transaction->status;
             $newStatus = $request->status ?? $originalStatus;
-    
+            $user = NasabahDetail::where('bsu_id', $bsu_id)->select('user_id')->first();
             // Process transaction details update
             $result = $this->processUpdateDetails($request, $transaction);
             $transaction = $this->updateTransactionTotals($transaction, $result);
@@ -450,6 +450,9 @@ class TransactionsController extends Controller
             }
              Cache::forget("total_sampah_{$bsu_id}");
              Cache::forget("grafik_sampah_{$bsu_id}");
+            
+             Cache::forget("saldo_{$user}");
+            
 
             DB::commit();
     
