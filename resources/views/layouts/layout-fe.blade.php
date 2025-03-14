@@ -16,6 +16,7 @@
     {{-- <link rel="manifest" href="{{asset('template-fe/__manifest.json')}}"> --}}
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+    @livewireStyles
 </head>
 
 <body>
@@ -42,6 +43,7 @@
 
 
   @yield('content')
+  @livewireScripts
 
 
     <!-- App Bottom Menu -->

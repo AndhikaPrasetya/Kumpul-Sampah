@@ -111,7 +111,7 @@
         <div class="section  mb-3">
             <div class="row mt-2">
                 <div class="col-12">
-                    <a href="#">
+                    <a href="{{route('setor-sampah.index')}}">
                         <div class="stat-box d-flex align-items-center justify-content-between"
                             style="padding: 10px 15px;">
                             <div class="d-flex align-items-center gap-3">
@@ -182,9 +182,9 @@
 
                                 {{-- Untuk transaksi setor_sampah --}}
                                 @if ($transaction->type == 'setor_sampah')
-                                        <small class="text-success">
-                                            + Rp. {{ number_format($transaction->total_amount, 0, ',', '.') }}
-                                        </small>
+                                    <small class="text-success">
+                                        + Rp. {{ number_format($transaction->total_amount, 0, ',', '.') }}
+                                    </small>
                                 @endif
 
                                 {{-- Untuk transaksi tukar_points --}}
@@ -249,42 +249,63 @@
                 <a href="{{ route('listRewards') }}" class="link">Lihat semua</a>
             </div>
 
+            @if ($rewards->count() > 1)
+                <!-- carousel multiple -->
+                <div class="carousel-multiple splide splide--loop splide--ltr splide--draggable is-active"
+                    id="splide03" style="visibility: visible;">
+                    <div class="splide__track" id="splide03-track" style="padding-left: 16px; padding-right: 16px;">
+                        @if ($rewards->isNotEmpty())
+                            <ul class="splide__list" id="splide03-list" style="transform: translateX(-2224px);">
 
-            <!-- carousel multiple -->
-            <div class="carousel-multiple splide splide--loop splide--ltr splide--draggable is-active" id="splide03"
-                style="visibility: visible;">
-                <div class="splide__track" id="splide03-track" style="padding-left: 16px; padding-right: 16px;">
-                    @if ($rewards->isNotEmpty())
-                        <ul class="splide__list" id="splide03-list" style="transform: translateX(-2224px);">
+                                @foreach ($rewards as $reward)
+                                    <li class="splide__slide splide__slide--clone" aria-hidden="true" tabindex="-1"
+                                        style="margin-right: 16px; width: 240px;">
 
-                            @foreach ($rewards as $reward)
-                                <li class="splide__slide splide__slide--clone" aria-hidden="true" tabindex="-1"
-                                    style="margin-right: 16px; width: 240px;">
-
-                                    <div class="blog-card">
-                                        <div class="image-wrapper d-flex justify-content-center">
-                                            <img src="{{ asset($reward->image) }}" alt="image"
-                                                class="imaged w86">
-                                        </div>
-                                        <div class="text-wrapper p-2">
-                                            <div class="mb-1 text-center">
-                                                <h5>{{ $reward->name }}</h5>
-                                                <span
-                                                    class="badge badge-warning">{{ number_format($reward->points, 0, ',', '.') }}
-                                                    Poin</span>
+                                        <div class="blog-card">
+                                            <div class="image-wrapper d-flex justify-content-center">
+                                                <img src="{{ asset($reward->image) }}" alt="image"
+                                                    class="imaged w86">
+                                            </div>
+                                            <div class="text-wrapper p-2">
+                                                <div class="mb-1 text-center">
+                                                    <h5>{{ $reward->name }}</h5>
+                                                    <span
+                                                        class="badge badge-warning">{{ number_format($reward->points, 0, ',', '.') }}
+                                                        Poin</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                </li>
-                            @endforeach
-                        </ul>
-                    @else
-                        <div class="title p-3">Belum ada rewards yang tersedia</div>
-                    @endif
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <div class="title p-3">Belum ada rewards yang tersedia</div>
+                        @endif
+                    </div>
                 </div>
-            </div>
-            <!-- * carousel multiple -->
+                <!-- * carousel multiple -->
+            @elseif ($rewards->count() == 1)
+                <div class="single-reward text-center">
+                    <div class="blog-card mx-auto" style="max-width: 140px;">
+                        <div class="image-wrapper d-flex justify-content-center">
+                            <img src="{{ asset($rewards->first()->image) }}" alt="image" class="imaged w86">
+                        </div>
+                        <div class="text-wrapper p-2">
+                            <div class="mb-1 text-center">
+                                <h5>{{ $rewards->first()->name }}</h5>
+                                <span
+                                    class="badge badge-warning">{{ number_format($rewards->first()->points, 0, ',', '.') }}
+                                    Poin</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div class="title p-3">Belum ada rewards yang tersedia</div>
+            @endif
+
+
 
         </div>
 
@@ -292,13 +313,13 @@
     <!-- * App Capsule -->
     <!-- App Bottom Menu -->
     <div class="appBottomMenu" style="max-width: 400px; margin:0 auto;">
-        <a href="{{route('home')}}" class="item {{ Route::is('home') ? 'active' : '' }}">
+        <a href="{{ route('home') }}" class="item {{ Route::is('home') ? 'active' : '' }}">
             <div class="col">
                 <ion-icon name="home-outline"></ion-icon>
                 <strong>Home</strong>
             </div>
         </a>
-        <a href="{{route('listBlog')}}" class="item">
+        <a href="{{ route('listBlog') }}" class="item">
             <div class="col">
                 <ion-icon name="newspaper-outline"></ion-icon>
                 <strong>Info</strong>

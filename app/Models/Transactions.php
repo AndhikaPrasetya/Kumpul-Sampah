@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 
 class Transactions extends Model
@@ -12,17 +13,10 @@ class Transactions extends Model
     {
         parent::boot();
         static::creating(function ($transaction) {
+            $uuid = (string) Str::uuid();
             $date = now()->format('Ymd');
     
-            // Gunakan locking untuk mencegah race condition
-            $lastTransaction = Transactions::whereDate('tanggal', now()->toDateString())
-                ->lockForUpdate() // Mengunci baris terkait agar tidak berubah oleh transaksi lain
-                ->latest()
-                ->first();
-    
-            $nextNumber = $lastTransaction ? ((int) substr($lastTransaction->transaction_code, -3) + 1) : 1;
-    
-            $transaction->transaction_code = 'BS-' . $date . '-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+            $transaction->transaction_code = 'BS-' . $date . '-' . $uuid;
         });
     }
     

@@ -5,6 +5,7 @@ use App\Http\Controllers\BsuController;
 use App\Http\Controllers\CategorySampahController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\SetorSampahController;
 use App\Http\Controllers\Frontend\TransactionFrontendController;
 use App\Http\Controllers\LaporanKeuanganController;
 use App\Http\Controllers\NasabahController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RewardsController;
 use App\Http\Controllers\SaldoController;
 use App\Http\Controllers\SampahController;
+
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\WebsiteSettingController;
 use App\Http\Controllers\WithdrawController;
@@ -32,6 +34,9 @@ Route::get('/transaksi/filter', [TransactionFrontendController::class, 'filter']
 Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+   // routes/web.php
+Route::get('/setor-sampah', [SetorSampahController::class, 'index'])->name('setor-sampah.index');
+Route::post('/setor-sampah/store', [SetorSampahController::class, 'store']);
 
     
 });
