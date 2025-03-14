@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{{asset('template-fe/assets/css/style.css')}}">
     {{-- <link rel="manifest" href="{{asset('template-fe/__manifest.json')}}"> --}}
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
 </head>
 
 <body>
@@ -46,13 +46,13 @@
 
     <!-- App Bottom Menu -->
     <div class="appBottomMenu">
-        <a href="index.html" class="item active">
+        <a href="{{route('home')}}" class="item">
             <div class="col">
                 <ion-icon name="home-outline"></ion-icon>
                 <strong>Home</strong>
             </div>
         </a>
-        <a href="app-pages.html" class="item">
+        <a href="{{route('listBlog')}}" class="item  {{ Route::is('listBlog') ? 'active' : '' }}">
             <div class="col">
                 <ion-icon name="newspaper-outline"></ion-icon>
                 <strong>Info</strong>
@@ -64,7 +64,7 @@
                 <strong>Peringkat</strong>
             </div>
         </a>
-        <a href="/profile" class="item">
+        <a href="{{route('profile.edit')}}" class="item {{ Route::is('profile.edit') ? 'active' : '' }}">
             <div class="col">
                 <ion-icon name="person-circle-outline"></ion-icon>
                 <strong>Profile</strong>

@@ -10,21 +10,8 @@
     <!-- Swiper.js -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" href="{{ asset('template-fe/assets/css/style.css') }}">
-
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     <style>
-        /* Container utama */
-        .onboarding-container {
-            max-width: 400px;
-            width: 100%;
-            height: 100vh;
-            min-height: 600px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            background-color: white;
-            position: relative;
-            overflow: hidden;
-        }
     
         /* Swiper container */
         .swiper-container {
@@ -108,7 +95,7 @@
         }
     
         /* Responsive styling */
-        /* @media (max-width: 480px) {
+        @media (max-width: 480px) {
             .content-container h2 {
                 font-size: 1rem;
             }
@@ -123,7 +110,7 @@
                 padding: 10px;
             }
             
-        } */
+        }
         #appCapsule {
             
             display: none;
@@ -235,6 +222,9 @@
                                     <ion-icon name="close-circle" role="img" class="md hydrated"
                                         aria-label="close circle"></ion-icon>
                                 </i>
+                                <div class="text-red-400">
+                                    red
+                                </div>
                             </div>
                         </div>
                     </div>

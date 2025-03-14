@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Models\Rewards;
 use App\Models\Transactions;
 use Illuminate\Http\Request;
+use App\Models\NasabahDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -16,25 +17,30 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $nasabahDetail = NasabahDetail::where('user_id', $user->id)->first();
+
+        // Jika nasabahDetail tidak ditemukan, set bsu_id ke null
+        $bsuId = $nasabahDetail ? $nasabahDetail->bsu_id : null;
+
         $saldo = Saldo::where('user_id', $user->id)->first();
 
         //list articles for home
         $articles = Article::where('status', 'published')->get();
 
         //list rewards for home
-        $rewards = Rewards::all();
+        $rewards = Rewards::where('bsu_id',$bsuId)->get();
 
         //list transaksi berddasarkan user_id
         // Using a collection instead for section transactions
         $withdrawals = DB::table('withdraws')->select('id', 'user_id', 'status', 'amount', 'created_at')
-        ->where('user_id', $user->id)
-        ->get();
+            ->where('user_id', $user->id)
+            ->get();
         $pointExchanges = DB::table('penukaran_points')->select('id', 'user_id', 'reward_id', 'status', 'total_points', 'created_at')
-        ->where('user_id', $user->id)
-        ->get();
+            ->where('user_id', $user->id)
+            ->get();
         $wasteDeposits = DB::table('transactions')->select('id', 'transaction_code', 'user_id', 'status', 'total_amount', 'total_points', 'created_at')
-        ->where('user_id', $user->id)
-        ->get();
+            ->where('user_id', $user->id)
+            ->get();
 
         // Tambahkan properti type berdasarkan variabel yang digunakan
         $withdrawalsWithType = $withdrawals->map(function ($item) {

@@ -6787,3 +6787,24 @@ body.rtl-mode .form-group.boxed .form-control.custom-select {
  
 }
 
+.onboarding-container {
+  max-width: 400px;
+  width: 100%;
+  height: 100vh;
+  min-height: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+ /* Gambar dalam slide */
+ .illustration-container img {
+  width: 80%;
+  max-width: 300px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}

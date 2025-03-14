@@ -26,7 +26,7 @@
     <!-- * loader -->
 
     <!-- App Header -->
-    <div class="appHeader bg-primary text-light">
+    <div class="appHeader bg-primary text-light" style="max-width: 400px; margin:0 auto;">
         <div class="left">
             <h4>@yield('title', 'Default Title')</h4> <!-- Jika tidak ada yield, tampilkan 'Default Title' -->
         </div>
@@ -37,7 +37,7 @@
         </div>
     </div>
     <!-- App Capsule -->
-    <div id="appCapsule">
+    <div id="appCapsule" style="max-width: 400px; margin:0 auto;">
 
         <!-- Wallet Card -->
         @php
@@ -291,14 +291,14 @@
     </div>
     <!-- * App Capsule -->
     <!-- App Bottom Menu -->
-    <div class="appBottomMenu">
-        <a href="index.html" class="item active">
+    <div class="appBottomMenu" style="max-width: 400px; margin:0 auto;">
+        <a href="{{route('home')}}" class="item {{ Route::is('home') ? 'active' : '' }}">
             <div class="col">
                 <ion-icon name="home-outline"></ion-icon>
                 <strong>Home</strong>
             </div>
         </a>
-        <a href="app-pages.html" class="item">
+        <a href="{{route('listBlog')}}" class="item">
             <div class="col">
                 <ion-icon name="newspaper-outline"></ion-icon>
                 <strong>Info</strong>
