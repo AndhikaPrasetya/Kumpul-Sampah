@@ -1,288 +1,198 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#000000">
-    <title>Bank Imam</title>
-    <meta name="description" content="Bank imam">
-    <link rel="icon" type="image/png" href="assets/img/favicon.png" sizes="32x32">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
-    <link rel="stylesheet" href={{asset('/template/plugins/select2/css/select2.min.css')}}>
-    <link rel="stylesheet" href={{asset('/template/plugins/fontawesome-free/css/all.min.css')}}>
-    <link rel="stylesheet" href="{{ asset('template-fe/assets/css/style.css') }}">
-    <link rel="stylesheet" href="{{asset('template/plugins/toastr/toastr.min.css')}}">
-
-    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
-    @livewireStyles
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Order</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
-<body>
+<body class="bg-gray-50 font-sans">
+    <!-- Header -->
+    <header class="bg-gray-50 py-4 px-4 border-b border-gray-200 relative text-center">
+        <a href="{{ route('transaksiFrontend.index') }}"
+            class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-700">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+        <h1 class="text-base font-medium">Create Order</h1>
+    </header>
 
-    <!-- loader -->
-    <div id="loader">
-        <img src="{{ asset('template-fe/assets/img/bank.svg') }}" alt="icon" class="loading-icon">
-    </div>
-    <!-- * loader -->
+    <div class="p-4 bg-gray-50 min-h-screen">
+        <form id="createFormTransaction">
+            @csrf
+            <input type="hidden" name="total_amount" id="total_amount_hidden">
+            <input type="hidden" name="total_points" id="total_points_hidden">
 
-
-    <!-- App Header -->
-    <div class="appHeader" style="max-width: 400px; margin:0 auto;">
-        <div class="left">
-            <a href="{{ route(View::yieldContent('route', 'home')) }}" class="headerButton">
-                <i class="fas fa-arrow-left"></i>
-            </a>
-
-        </div>
-        <div class="pageTitle">Setor Sampah</div>
-
-    </div>
-    <!-- * App Header -->
-
-
-
-    <div class="container mb-5 pb-5" id="appCapsule" style="max-width: 400px; margin:0 auto;">
-          <div class="card card-primary">
-            <div class="card-header bg-primary">
-                <h3 class="card-title text-white">Buat Transaksi</h3>
-            </div>
-            <form id="createFormTransaction">
-                @csrf
-                <div class="card-body">
-                    <!-- Dynamic Input Sampah -->
-                    <div id="dynamic-input-sampah">
-                        <div class="row align-items-center input-group-sampah mb-3">
-                            <div class="col-12 col-md-12 mb-2 mb-md-0">
-                                <div class="form-group">
-                                    <label for="sampah_id" class="required">Sampah</label>
-                                    <select name="sampah_id[]" class="form-control select2">
-                                        <option value="" disabled selected>Pilih sampah</option>
-                                        @foreach($sampahs as $sampah)
-                                        <option value="{{$sampah->id}}" data-harga="{{$sampah->harga}}" data-points="{{$sampah->points}}">
-                                            {{$sampah->nama}} - Rp {{number_format($sampah->harga, 0, ',', '.')}}/kg
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+            @foreach ($kategoriSampah as $kategori)
+                <div class="category-card bg-white rounded-xl shadow-sm mb-4 overflow-hidden">
+                    <!-- Category Header -->
+                    <div class="flex justify-between items-center p-3 border-b border-gray-100">
+                        <div class="flex items-center">
+                            <div
+                                class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-3 text-red-500">
+                                <i class="fas fa-wine-bottle text-sm"></i>
                             </div>
-                            <div class="col-6 col-md-12">
-                                <div class="form-group">
-                                    <label for="berat" class="required">Berat (KG)</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control berat-input" name="berat[]" required>
-                                      
+                            <span class="font-medium">{{ $kategori->nama }}</span>
+                        </div>
+                        <i class="fas fa-chevron-up text-gray-400 toggle-icon"
+                            data-category-id="{{ $kategori->id }}"></i>
+                    </div>
+
+                    <!-- Category Items -->
+                    <div class="category-content" id="category-content-{{ $kategori->id }}">
+                        @if (isset($groupedSampahs[$kategori->id]))
+                            @foreach ($groupedSampahs[$kategori->id] as $sampah)
+                                <div class="flex justify-between items-center p-3 border-b border-gray-100">
+                                    <div>
+                                        <div class="font-medium">{{ $sampah->nama }}</div>
+                                        <div class="text-xs text-gray-400">Harga: Rp
+                                            {{ number_format($sampah->harga, 0, ',', '.') }}/kg</div>
+                                        <div class="text-xs text-gray-400">Points: {{ $sampah->points }}/kg</div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <button
+                                            class="w-7 h-7 rounded-full border border-gray-200 flex items-center justify-center btn-minus">
+                                            <i class="fas fa-minus text-xs text-gray-400"></i>
+                                        </button>
+                                        <span class="mx-3 text-sm min-w-8 text-center berat-value"
+                                            data-harga="{{ $sampah->harga }}"
+                                            data-points="{{ $sampah->points }}">0</span>
+                                        <button
+                                            class="w-7 h-7 rounded-full border border-gray-200 flex items-center justify-center btn-plus">
+                                            <i class="fas fa-plus text-xs text-gray-400"></i>
+                                        </button>
+                                        <!-- Input tersembunyi untuk sampah_id dan berat -->
+                                        <input type="hidden" name="sampah_id[]" value="{{ $sampah->id }}">
+                                        <input type="hidden" name="berat[]" class="berat-hidden" value="0">
                                     </div>
                                 </div>
+                            @endforeach
+                        @else
+                            <div class="p-3 text-center text-gray-400">
+                                Tidak ada sampah dalam kategori ini.
                             </div>
-                        </div>
-                    </div>
-            
-                    <!-- Tombol Tambah Baris -->
-                    <div class="mb-3 text-left">
-                        <button type="button" class="btn btn-primary add-row-sampah">
-                            <i class="fas fa-plus"></i> Tambah Sampah
-                        </button>
-                    </div>
-            
-                    <!-- Total Amount dan Total Points -->
-                    <div class="row">
-                        <div class="col-6 col-md-6 mb-3 mb-md-0">
-                            <div class="form-group">
-                                <label for="total_amount">Total Pendapatan</label>
-                                <input type="text" class="form-control shadow-sm" name="total_amount" id="total_amount" readonly>
-                                <input type="hidden" name="total_amount_hidden" id="total_amount_hidden">
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-6">
-                            <div class="form-group">
-                                <label for="total_points">Total Points</label>
-                                <input type="text" class="form-control shadow-sm" name="total_points" id="total_points" readonly>
-                                <input type="hidden" name="total_points_hidden" id="total_points_hidden">
-                            </div>
-                        </div>
-                    </div>
-            
-                    <!-- Tombol Submit -->
-                    <div class="card-footer text-center">
-                        <button type="submit" class="btn btn-primary px-4">
-                            Submit
-                        </button>
+                        @endif
                     </div>
                 </div>
-            </form>
-          </div>
-    
-        
-        
+            @endforeach
+            <input type="hidden" name="total_amount_hidden" id="total_amount_hidden">
+            <input type="hidden" name="total_points_hidden" id="total_points_hidden">
+            <div class="btn-wrapper text-center">
+
+                <button type="submit"
+                    class="w-80 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Submit</button>
+            </div>
+        </form>
     </div>
-
-
-    <!-- ========= JS Files =========  -->
     <script src={{ asset('/template/plugins/jquery/jquery.min.js') }}></script>
-    <script src="{{ asset('template-fe/assets/js/lib/bootstrap.bundle.min.js') }}"></script>
-    <!-- Base Js File -->
-    <script src="{{ asset('template-fe/assets/js/base.js') }}"></script>
-    <script src="{{asset('template/plugins/toastr/toastr.min.js')}}"></script>
-    <script src="{{asset('/template/plugins/select2/js/select2.full.min.js')}}"></script>
-
     <script>
-        // Add to Home with 2 seconds delay.
-        AddtoHome("2000", "once");
+        $(document).ready(function() {
+            // Event listener untuk ikon chevron
+            $('.category-content').hide();
+            $('.category-card .fa-chevron-up').on('click', function() {
+                // Toggle class untuk membuka/menutup category-content
+                $(this).closest('.category-card').find('.category-content').slideToggle('fast');
+
+                // Toggle ikon chevron antara up dan down
+                $(this).toggleClass('fa-chevron-up fa-chevron-down');
+            });
+
+            const handleCreateForm = (formId) => {
+                const form = $(`#${formId}`);
+                $.ajax({
+                    url: 'setor-sampah/store',
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            setTimeout(() => {
+                                window.location.href = '/transaksi';
+                            }, 1000);
+                        } else {
+                            showToast('error', response.message);
+                        }
+                    },
+                    error: (xhr) => {
+                        if (xhr.status === 422) {
+                            const errors = xhr.responseJSON.errors;
+                            $.each(errors, (field, messages) => {
+                                messages.forEach(message => {
+                                    showToast('error', message);
+                                });
+                            });
+                        } else {
+                            showToast('error', xhr.responseJSON.error);
+                        }
+                        $(this).find('button[type="submit"]').prop('disabled', false);
+
+                    }
+                });
+            };
+
+            // Event submit form transaksi
+            $('#createFormTransaction').on('submit', function(e) {
+                e.preventDefault();
+                $(this).find('button[type="submit"]').prop('disabled', true);
+
+                handleCreateForm('createFormTransaction');
+            });
+
+            // Fungsi untuk menghitung total amount dan points
+            const hitungTotalAmount = () => {
+                let totalAmount = 0;
+                let totalPoints = 0;
+
+                // Loop melalui setiap span berat
+                $('.berat-value').each(function() {
+                    const berat = parseFloat($(this).text());
+                    const harga = parseFloat($(this).data('harga'));
+                    const points = parseFloat($(this).data('points'));
+
+                    if (!isNaN(berat) && berat > 0) {
+                        const subtotal = harga * berat;
+                        const subPoints = points * berat;
+                        totalAmount += subtotal;
+                        totalPoints += subPoints;
+                    }
+                });
+
+                // Tampilkan total amount dan points
+                $('#total_amount').val(totalAmount.toLocaleString('id-ID'));
+                $('#total_amount_hidden').val(totalAmount);
+                $('#total_points').val(totalPoints.toLocaleString('id-ID'));
+                $('#total_points_hidden').val(totalPoints);
+            };
+
+            // Event listener untuk tombol plus
+            $(document).on('click', '.btn-plus', function(e) {
+                e.preventDefault(); // Mencegah tindakan default (submit form)
+                const beratValue = $(this).siblings('.berat-value');
+                const beratHidden = $(this).siblings('.berat-hidden');
+                let berat = parseFloat(beratValue.text());
+                berat += 1; // Tambah 1 kg
+                beratValue.text(berat);
+                beratHidden.val(berat); // Update nilai input tersembunyi
+                hitungTotalAmount(); // Hitung ulang total
+            });
+
+            // Event listener untuk tombol minus
+            $(document).on('click', '.btn-minus', function(e) {
+                e.preventDefault(); // Mencegah tindakan default (submit form)
+                const beratValue = $(this).siblings('.berat-value');
+                const beratHidden = $(this).siblings('.berat-hidden');
+                let berat = parseFloat(beratValue.text());
+                if (berat > 0) {
+                    berat -= 1; // Kurangi 1 kg
+                    beratValue.text(berat);
+                    beratHidden.val(berat); // Update nilai input tersembunyi
+                    hitungTotalAmount(); // Hitung ulang total
+                }
+            });
+
+        });
     </script>
-
-     <script>
-        $(function () {
-            $('.select2').select2();
-        })
-    $(document).ready(() => {
-     
-     // Toastr Configuration
-     toastr.options = {
-         "closeButton": true,
-         "progressBar": true,
-         "positionClass": "toast-top-right",
-         "timeOut": "1000",          
-     };
- 
-     // Fungsi untuk menampilkan Toastr
-     const showToast = (icon, message) => {
-         if (icon === 'error') {
-             toastr.error(message);
-         } else if (icon === 'success') {
-             toastr.success(message); 
-         } else if (icon === 'info') {
-             toastr.info(message); 
-         } else {
-             toastr.warning(message); 
-         }
-     };
- 
-     // Fungsi untuk menangani form transaksi
-     const handleCreateForm = (formId) => {
-         const form = $(`#${formId}`);
-         $.ajax({
-             url: 'setor-sampah/store',
-             type: 'POST',
-             data: form.serialize(),
-             success: function(response) {
-                 if (response.success) {
-                     showToast('success', response.message);
-                     setTimeout(() => {
-                         window.location.href = '/transaksi';
-                     }, 1000);
-                 } else {
-                     showToast('error', response.message);
-                 }
-             },
-             error: (xhr) => {
-                 if (xhr.status === 422) {
-                     const errors = xhr.responseJSON.errors;
-                     $.each(errors, (field, messages) => {
-                         messages.forEach(message => {
-                             showToast('error', message);
-                         });
-                     });
-                 } else {
-                     showToast('error', xhr.responseJSON.error);
-                 }
-                 $(this).find('button[type="submit"]').prop('disabled', false);
- 
-             }
-         });
-     };
- 
-     // Event submit form transaksi
-     $('#createFormTransaction').on('submit', function(e) {
-         e.preventDefault();
-         $(this).find('button[type="submit"]').prop('disabled', true);
- 
-         handleCreateForm('createFormTransaction');
-     });
- 
-     // Tambah input baru
-     $(document).on('click','.add-row-sampah', function(e) {
-                 e.preventDefault();
- 
-                 if (e.target.classList.contains('add-row-sampah')) {
-                     const newRow = document.createElement('div');
-                     newRow.classList.add('row', 'align-items-center','input-group-sampah');
-                     newRow.innerHTML = `
-                 <div class="col-12 col-md-12">
-                         <div class="form-group">
-                             <label for="sampah_id" class="required">Sampah</label>
-                             <select name="sampah_id[]" class="form-control select2">
-                                 <option value="" disabled selected>Pilih sampah</option>
-                                 @foreach($sampahs as $sampah)
-                                 <option value="{{$sampah->id}}" data-harga="{{$sampah->harga}}" data-points="{{$sampah->points}}">
-                                     {{$sampah->nama}} - Rp {{number_format($sampah->harga, 0, ',', '.')}}/kg
-                                 </option>
-                                 @endforeach
-                             </select>
-                         </div>
-                     </div>
-                     <div class="col-12 col-md-12">
-                         <div class="form-group">
-                             <label for="berat" class="required">Berat</label>
-                             <div class="input-group">
-                                 <input type="text" class="form-control berat-input" name="berat[]" required>
-                             </div>
-                         </div>
-                     </div>
-                 <div class="mt-2 mb-2" >
-                     <button type="button" class="btn btn-danger remove-row"><i class="fas fa-trash"></i></button>
-                 </div>
-             `;
-                     const container = document.getElementById('dynamic-input-sampah');
-                     container.appendChild(newRow);
-                 }
-             });
- 
-             $(document).on('click', '.remove-row', function(e) {
-                 e.preventDefault();
-                 $(this).closest('.row').remove();
-                 hitungTotalAmount();
-             });
-     
-     const hitungTotalAmount = () => {
-     let totalAmount = 0;
-     let totalPoints = 0;
- 
-     $(".input-group-sampah").each(function () {
-         const selectedOption = $(this).find('.select2 option:selected');
-         const harga = selectedOption.data('harga');
-         const points = selectedOption.data('points');
-         const berat = $(this).find('.berat-input').val();
- 
-         if (harga && berat && !isNaN(berat)) {
-             const subtotal = parseFloat(harga) * parseFloat(berat);
-             const subPoints = parseFloat(points) * parseFloat(berat);
-             totalAmount += subtotal;
-             totalPoints += subPoints;
-         }
-     });
- 
-     // Tampilkan total amount
-     $('#total_amount').val(totalAmount.toLocaleString('id-ID'));
-     $('#total_amount_hidden').val(totalAmount);
-     $('#total_points').val(totalPoints.toLocaleString('id-ID'));
-     $('#total_points_hidden').val(totalPoints);
- 
- };
- 
- // Event listener untuk select sampah dan input berat
- $(document).on('change', '.select2', hitungTotalAmount);
- $(document).on('input', '.berat-input', hitungTotalAmount);
- 
- 
- });
- 
-     </script>
-
-
 </body>
 
 </html>

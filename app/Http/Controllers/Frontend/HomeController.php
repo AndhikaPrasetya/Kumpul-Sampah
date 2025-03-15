@@ -36,7 +36,10 @@ class HomeController extends Controller
 
     public function listRewards()
     {
-        $rewards = Rewards::all();
+        $user = Auth::user();
+        $nasabahDetail = NasabahDetail::where('user_id',$user)->first();
+        $bsuid = $nasabahDetail ? $nasabahDetail->bsu_id : null;
+        $rewards = Rewards::where('bsu_id',$bsuid)->get();
         return view('frontend.rewards', compact('rewards'));
     }
 

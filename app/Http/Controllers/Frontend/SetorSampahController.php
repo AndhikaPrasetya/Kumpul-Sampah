@@ -22,14 +22,25 @@ class SetorSampahController extends Controller
     {
         $user = Auth::user();
         $nasabahDetail = NasabahDetail::where('user_id', $user->id)->first();
-    
-        // Jika nasabahDetail tidak ditemukan, set bsu_id ke null
         $bsuId = $nasabahDetail ? $nasabahDetail->bsu_id : null;
+        
+        // Ambil semua kategori sampah
+        $kategoriSampah = CategorySampah::where('bsu_id', $bsuId)->get();
+        
+        // Ambil semua sampah yang terkait dengan BSU
         $sampahs = Sampah::with('categories')->where('bsu_id', $bsuId)->get();
-        $kategoriSampah =CategorySampah::where('bsu_id', $bsuId)->get();
-
-    
-        return view('frontend.setor-sampah.list', compact('sampahs','kategoriSampah'));
+        
+        // Kelompokkan sampah berdasarkan category_id
+        $groupedSampahs = [];
+        foreach ($sampahs as $sampah) {
+            $categoryId = $sampah->categories->id; // Asumsikan relasi categories ada
+            if (!isset($groupedSampahs[$categoryId])) {
+                $groupedSampahs[$categoryId] = [];
+            }
+            $groupedSampahs[$categoryId][] = $sampah;
+        }
+        // Kirim data ke view
+        return view('frontend.setor-sampah.list', compact('kategoriSampah', 'groupedSampahs'));
     }
 
     public function store(Request $request)

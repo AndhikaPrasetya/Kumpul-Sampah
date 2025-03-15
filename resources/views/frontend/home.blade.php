@@ -14,7 +14,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <link rel="stylesheet" href="{{ asset('template-fe/assets/css/style.css') }}">
     {{-- <link rel="manifest" href="{{asset('template-fe/__manifest.json')}}"> --}}
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+
 </head>
 
 <body>
@@ -312,7 +312,7 @@
     <script src="{{ asset('template-fe/assets/js/plugins/splide/splide.min.js') }}"></script>
     <!-- Base Js File -->
     <script src="{{ asset('template-fe/assets/js/base.js') }}"></script>
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
 
     <script>
         // Add to Home with 2 seconds delay.

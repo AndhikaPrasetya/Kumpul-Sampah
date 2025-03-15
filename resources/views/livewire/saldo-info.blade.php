@@ -1,4 +1,4 @@
-<div class="balance" wire:poll.5s="updateSaldo">
+<div class="balance" >
     <div>
         <span class="title">Saldo</span>
         <h1 class="total">RP {{$saldo }}</h1>

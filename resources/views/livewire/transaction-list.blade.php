@@ -1,4 +1,4 @@
-<div class="section full mb-3"  wire:poll.5s="loadTransactions">
+<div class="section full mb-3" >
     <div class="section-heading padding">
         <h2 class="title">Transaksi</h2>
         <a href="{{ route('transaksiFrontend.index') }}" class="link">Lihat semua</a>
