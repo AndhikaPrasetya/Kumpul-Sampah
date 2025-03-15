@@ -250,13 +250,19 @@ class DatabaseSeeder extends Seeder
         //DATA Kategori sampah
         DB::beginTransaction();
         try {
-            CategorySampah::create([
-                'bsu_id' => $bsu->id,
-                'nama' => 'Plastik',
-                'deskripsi' => 'sampah plastik',
-            ]);
+            $categories = [
+                'Plastik', 'Bodong A', 'Tutup Botol', 'Tutup Galon', 'Ember Warna',
+                'Ember Hitam', 'Paralon', 'Naso', 'Kresek', 'Galon Aqua',
+                'Akrilik', 'Gelas Kotor', 'Inject', 'Mainan'
+            ];
 
-            // Simpan data ke database
+            foreach($categories as $category){
+                CategorySampah::create([
+                    'bsu_id' => $bsu->id,
+                    'nama' => $category,
+                    'deskripsi' => 'sampah '. $category,
+                ]);
+            }
 
             DB::commit();
         } catch (Exception $e) {

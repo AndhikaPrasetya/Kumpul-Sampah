@@ -23,22 +23,22 @@ use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\WebsiteSettingController;
 use App\Http\Controllers\WithdrawController;
 
-Route::middleware(['auth','verified','role:nasabah'])->group(function(){
+Route::middleware(['auth', 'verified', 'role:nasabah'])->group(function () {
 
-    Route::get('/', [HomeController::class,'index'])->name('home');
-    Route::get('/rewards', [HomeController::class,'listRewards'])->name('listRewards');
-    Route::get('/blog', [HomeController::class,'listBlog'])->name('listBlog');
-    Route::get('/blog/{slug}', [HomeController::class,'detailBlog'])->name('detailBlog');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/rewards', [HomeController::class, 'listRewards'])->name('listRewards');
+    Route::get('/blog', [HomeController::class, 'listBlog'])->name('listBlog');
+    Route::get('/blog/{slug}', [HomeController::class, 'detailBlog'])->name('detailBlog');
     Route::get('/transaksi', [TransactionFrontendController::class, 'index'])->name('transaksiFrontend.index');
-Route::get('/transaksi/filter', [TransactionFrontendController::class, 'filter'])->name('transaksiFrontend.filter');
-Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-   // routes/web.php
-Route::get('/setor-sampah', [SetorSampahController::class, 'index'])->name('setor-sampah.index');
-Route::post('/setor-sampah/store', [SetorSampahController::class, 'store']);
-
-    
+    Route::get('/transaksi/filter', [TransactionFrontendController::class, 'filter'])->name('transaksiFrontend.filter');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // routes/web.php
+    Route::get('/setor-sampah', [TransactionFrontendController::class, 'setorSampah'])->name('setor-sampah');
+    Route::post('/setor-sampah/store', [TransactionFrontendController::class, 'store']);
+    Route::get('/setor-sampah/detail/{id}', [TransactionFrontendController::class, 'transactionDetails'])->name('transaction-details');
+    Route::get('/list-sampah', [TransactionFrontendController::class, 'listSampah'])->name('sampahlist');
 });
 
 
@@ -46,7 +46,7 @@ Route::post('/setor-sampah/store', [SetorSampahController::class, 'store']);
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:super admin|bsu'])->group(function () {
 
-    Route::get('/dashboard', [DashboardController::class,'total'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'total'])->name('dashboard');
     Route::get('/get-nasabah-data', [DashboardController::class, 'getNasabahData'])->name('nasabah.data');
 
 
@@ -91,7 +91,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:super admin|bsu'])
 
     Route::get('/website-settings', [WebsiteSettingController::class, 'index'])->name('website-settings.index');
     Route::post('/website-settings/store', [WebsiteSettingController::class, 'store'])->name('website-settings.store');
-    
+
     Route::get('/list-sampah', [SampahController::class, 'index'])->name('sampah.index');
     Route::get('/sampah/create', [SampahController::class, 'create'])->name('sampah.create');
     Route::post('/sampah/store', [SampahController::class, 'store'])->name('sampah.store');
@@ -99,7 +99,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:super admin|bsu'])
     Route::put('/sampah/update/{id}', [SampahController::class, 'update'])->name('sampah.update');
     Route::delete('/sampah/delete/{id}', [SampahController::class, 'destroy'])->name('sampah.destroy');
     Route::get('/sampah/{id}', [SampahController::class, 'show'])->name('sampah.show');
-    
+
     Route::get('/kategori-sampah', [CategorySampahController::class, 'index'])->name('kategori-sampah.index');
     Route::get('/kategori-sampah/create', [CategorySampahController::class, 'create'])->name('kategori-sampah.create');
     Route::post('/kategori-sampah/store', [CategorySampahController::class, 'store'])->name('kategori-sampah.store');
@@ -134,7 +134,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:super admin|bsu'])
     Route::put('/withdraw/update/{id}', [WithdrawController::class, 'approveWithdraw'])->name('withdraw.approveWithdraw');
     Route::delete('/withdraw/delete/{id}', [WithdrawController::class, 'destroy'])->name('withdraw.destroy');
     Route::get('/withdraw/show/{id}', [WithdrawController::class, 'show'])->name('withdraw.show');
-    
+
     Route::get('/rewards', [RewardsController::class, 'index'])->name('rewards.index');
     Route::get('/rewards/create', [RewardsController::class, 'create'])->name('rewards.create');
     Route::post('/rewards/store', [RewardsController::class, 'store'])->name('rewards.store');
@@ -160,7 +160,6 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:super admin|bsu'])
 
     Route::get('/laporan-keuangan', [LaporanKeuanganController::class, 'index'])->name('laporan-keuangan.index');
     Route::get('/laporan-keuangan/report', [LaporanKeuanganController::class, 'getReport'])->name('laporan-keuangan.getReport');
-
 });
 
 

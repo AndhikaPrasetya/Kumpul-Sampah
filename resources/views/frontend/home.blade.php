@@ -26,18 +26,22 @@
     <!-- * loader -->
 
     <!-- App Header -->
-    <div class="appHeader bg-primary text-light" style="max-width: 400px; margin:0 auto;">
+    <div class="appHeader bg-primary text-light" style="max-width: 640px; margin:0 auto;">
         <div class="left">
             <h4>@yield('title', 'Default Title')</h4> <!-- Jika tidak ada yield, tampilkan 'Default Title' -->
         </div>
         <div class="right">
-            <a href="app-notifications.html" class="headerButton">
-                <ion-icon class="icon" name="notifications-outline"></ion-icon>
-            </a>
+            <form method="POST" action="{{ route('logout') }}" id="logout-form">
+                @csrf
+                <a href="#" class="headerButton" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <ion-icon name="exit-outline"></ion-icon>
+                </a>
+            </form>
+           
         </div>
     </div>
     <!-- App Capsule -->
-    <div id="appCapsule" style="max-width: 400px; margin:0 auto;">
+    <div id="appCapsule" style="max-width: 640px; margin:0 auto; background-color:#f9fafb;">
 
         <!-- Wallet Card -->
         @php
@@ -104,7 +108,7 @@
         <div class="section  mb-3">
             <div class="row mt-2">
                 <div class="col-12">
-                    <a href="{{route('setor-sampah.index')}}">
+                    <a href="{{route('setor-sampah')}}">
                         <div class="stat-box d-flex align-items-center justify-content-between"
                             style="padding: 10px 15px;">
                             <div class="d-flex align-items-center gap-3">
@@ -235,7 +239,7 @@
     </div>
     <!-- * App Capsule -->
     <!-- App Bottom Menu -->
-    <div class="appBottomMenu" style="max-width: 400px; margin:0 auto;">
+    <div class="appBottomMenu" style="max-width: 640px; margin:0 auto;">
         <a href="{{ route('home') }}" class="item {{ Route::is('home') ? 'active' : '' }}">
             <div class="col">
                 <ion-icon name="home-outline"></ion-icon>

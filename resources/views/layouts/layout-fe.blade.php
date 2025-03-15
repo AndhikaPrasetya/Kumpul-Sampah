@@ -13,9 +13,6 @@
     <link rel="icon" type="image/png" href="assets/img/favicon.png" sizes="32x32">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <link rel="stylesheet" href="{{asset('template-fe/assets/css/style.css')}}">
-    {{-- <link rel="manifest" href="{{asset('template-fe/__manifest.json')}}"> --}}
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     @livewireStyles
 </head>
 
@@ -29,7 +26,7 @@
 
   
         <!-- App Header -->
-        <div class="appHeader" style="max-width: 400px; margin:0 auto;">
+        <div class="appHeader" style="max-width: 640px; margin:0 auto;">
             <div class="left">
                 <a href="{{ route(View::yieldContent('route', 'home')) }}" class="headerButton">
                     <ion-icon name="arrow-back-outline"></ion-icon>
@@ -47,7 +44,7 @@
 
 
     <!-- App Bottom Menu -->
-    <div class="appBottomMenu" style="max-width: 400px; margin:0 auto;">
+    <div class="appBottomMenu" style="max-width: 640px; margin:0 auto;">
         <a href="{{route('home')}}" class="item">
             <div class="col">
                 <ion-icon name="home-outline"></ion-icon>
@@ -139,7 +136,6 @@
     <script src="{{asset('template-fe/assets/js/plugins/splide/splide.min.js')}}"></script>
     <!-- Base Js File -->
     <script src="{{asset('template-fe/assets/js/base.js')}}"></script>
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
     <script>
         // Add to Home with 2 seconds delay.
