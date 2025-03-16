@@ -83,7 +83,7 @@ $icons = [
             <div class="text-sm">
                 <span class="font-medium">Total Sampah</span> | <span class="font-bold total-berat">0 Kg</span> 
             </div>
-            <button class="font-bold text-white" type="submit">
+            <button id="submitBtn" class="font-bold text-white" type="submit">
                 Setor
             </button>
         </div>
@@ -107,6 +107,13 @@ $icons = [
 
             const handleCreateForm = (formId) => {
                 const form = $(`#${formId}`);
+                  // Hapus input sampah yang beratnya 0 sebelum submit
+    form.find('.berat-hidden').each(function() {
+        if (parseFloat($(this).val()) === 0) {
+            $(this).siblings('input[name="sampah_id[]"]').remove();
+            $(this).remove();
+        }
+    });
                 $.ajax({
                     url: 'setor-sampah/store',
                     type: 'POST',
@@ -140,7 +147,11 @@ $icons = [
             // Event submit form transaksi
             $('#createFormTransaction').on('submit', function(e) {
                 e.preventDefault();
-                $(this).find('button[type="submit"]').prop('disabled', true);
+                // Nonaktifkan tombol
+    const submitBtn = $('#submitBtn');
+    submitBtn.prop('disabled', true);
+    submitBtn.text('Memproses...');
+    submitBtn.addClass('opacity-70 cursor-not-allowed');
 
                 handleCreateForm('createFormTransaction');
             });

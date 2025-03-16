@@ -344,7 +344,9 @@ class TransactionFrontendController extends Controller
     public function transactionDetails($id)
     {
         $transaction = Transactions::with('details.sampah')->findOrFail($id);
+        // dd($transaction);
         $transactionDetail = $transaction->details;
+
         $transactionCode = $transaction->transaction_code;
         $transactionDate = $transaction->created_at;
 
