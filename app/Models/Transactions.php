@@ -12,11 +12,19 @@ class Transactions extends Model
     public static function boot()
     {
         parent::boot();
+        
         static::creating(function ($transaction) {
-            $uuid = (string) Str::uuid();
-            $date = now()->format('Ymd');
-    
-            $transaction->transaction_code = 'BS-' . $date . '-' . $uuid;
+            // Get current date in shorter format YYMMDD
+            $date = now()->format('ymd');
+            
+            // Generate a very short random string (3 characters)
+            $random = strtoupper(Str::random(3));
+            
+            // Add a sequential counter based on current time to ensure uniqueness
+            $sequence = base_convert(now()->format('His'), 10, 36);
+            
+            // Combine to create unique code
+            $transaction->transaction_code = "BS-{$date}-{$random}{$sequence}";
         });
     }
     

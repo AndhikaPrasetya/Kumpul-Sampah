@@ -47,21 +47,22 @@ class TransactionFrontendController extends Controller
         $transactions = $withdrawalsWithType->concat($pointExchangesWithType)->concat($wasteDepositsWithType)
             ->sortByDesc('created_at');
 
-            
+
         return view('frontend.transaction.list', compact('transactions'));
     }
 
-    public function setorSampah(){
+    public function setorSampah()
+    {
         $user = Auth::user();
         $nasabahDetail = NasabahDetail::where('user_id', $user->id)->first();
         $bsuId = $nasabahDetail ? $nasabahDetail->bsu_id : null;
-        
+
         // Ambil semua kategori sampah
         $kategoriSampah = CategorySampah::where('bsu_id', $bsuId)->get();
-        
+
         // Ambil semua sampah yang terkait dengan BSU
         $sampahs = Sampah::with('categories')->where('bsu_id', $bsuId)->get();
-        
+
         // Kelompokkan sampah berdasarkan category_id
         $groupedSampahs = [];
         foreach ($sampahs as $sampah) {
@@ -79,7 +80,7 @@ class TransactionFrontendController extends Controller
             'sampah_id' => 'required|array',
             'sampah_id.*' => 'required|exists:sampahs,id',
             'berat' => 'required|array',
-            'berat.*' => 'required|numeric|min:0.1',
+            'berat.*' => 'required|numeric',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -136,11 +137,11 @@ class TransactionFrontendController extends Controller
         $lockKey = "create_transaction_user_{$request->user_id}";
         $user = Auth::user();
         $nasabahDetail = NasabahDetail::where('user_id', $user->id)->first();
-    
+
         // Jika nasabahDetail tidak ditemukan, set bsu_id ke null
         $bsuId = $nasabahDetail ? $nasabahDetail->bsu_id : null;
-        
-        return Cache::lock($lockKey, 10)->block(5, function() use ($request,$user,$bsuId) {
+
+        return Cache::lock($lockKey, 10)->block(5, function () use ($request, $user, $bsuId) {
             return Transactions::create([
                 'user_id' => $user->id,
                 'tanggal' => Carbon::now()->format('Y-m-d'),
@@ -163,26 +164,26 @@ class TransactionFrontendController extends Controller
     {
         // Use a cache lock with a unique key based on the transaction ID
         $lockKey = "transaction_processing_{$transaction->id}";
-        
-        return Cache::lock($lockKey, 10)->block(5, function() use ($request, $transaction) {
+
+        return Cache::lock($lockKey, 10)->block(5, function () use ($request, $transaction) {
             $totalAmount = 0;
             $totalPoints = 0;
             $transactionDetails = [];
             $now = now();
-    
+
             // Pre-fetch all sampah data at once
             $sampahItems = Sampah::whereIn('id', $request->sampah_id)
                 ->get()
                 ->keyBy('id');
-    
+
             foreach ($request->sampah_id as $key => $sampahId) {
                 $sampah = $sampahItems[$sampahId];
                 $berat = $request->berat[$key];
-    
+
                 // Calculate values
                 $subtotal = $berat * $sampah->harga;
                 $points = $berat * $sampah->points;
-    
+
                 // Build transaction detail record
                 $transactionDetails[] = [
                     'transaction_id' => $transaction->id,
@@ -193,15 +194,15 @@ class TransactionFrontendController extends Controller
                     'created_at' => $now,
                     'updated_at' => $now
                 ];
-    
+
                 // Update running totals
                 $totalAmount += $subtotal;
                 $totalPoints += $points;
             }
-    
+
             // Bulk insert all transaction details
             TransactionDetail::insert($transactionDetails);
-    
+
             return [
                 'totalAmount' => $totalAmount,
                 'totalPoints' => $totalPoints
@@ -262,7 +263,7 @@ class TransactionFrontendController extends Controller
             $wasteDeposits = $wasteDeposits->where('type', $jenisTransactions);
         }
 
-
+        // <a href='" . route('transaction-details', $transaction->id) . "' class='text-decoration-none text-dark'>
         // Gabungkan dan urutkan
         $transactions = $withdrawals->concat($pointExchanges)->concat($wasteDeposits)->sortByDesc('created_at');
 
@@ -296,52 +297,59 @@ class TransactionFrontendController extends Controller
             $icon = $icons[$transaction->type] ?? 'default-icon.png';
             $title = $titles[$transaction->type] ?? 'Transaksi';
 
-            $html .= "<div class='card p-1 mb-2 shadow-sm'>
-            <div class='d-flex align-items-center'>
-            <a href='" . route('transaction-details', $transaction->id) . "' class='text-decoration-none text-dark'>
-                <img src='$icon' alt='icon' class='me-3' width='40'>
-                <div class='flex-grow-1'>
-                    <h5 class='mb-1'>$title</h5>
-                    <small class='text-muted d-block'>" . \Carbon\Carbon::parse($transaction->created_at)->format('d-m-Y') . "</small>
-                    <small class='$badgeClass'>" . ucfirst($transaction->status) . "</small>
+            $html .= "<a href='" . route('transaction-details', $transaction->id) . "'  class='text-decoration-none text-reset'>
+            <div class='card border-0 shadow-sm mb-3 shadowed' style='background-color: #f5f6f8;'>
+            <div class='card-body p-2'>
+                <div class='d-flex align-items-center'>
+                   <div class='icon-wrapper p-1 bg-black w-10 imaged rounded d-flex align-items-center justify-content-center me-3'>
+    <img src='$icon' alt='icon' width='24' class='img-fluid'>
+</div>
+                    <div class='flex-grow-1'>
+                        <div class='d-flex justify-content-between align-items-center'>
+                            <h5 class='mb-0 fw-semibold'>$title</h5>";
+                            
+        if ($transaction->type === 'tarik_tunai') {
+            $html .= "<span class='text-danger fw-medium'>- Rp. " . number_format($transaction->amount, 0, ',', '.') . "</span>";
+        } elseif ($transaction->type === 'setor_sampah') {
+            $html .= "<span class='text-success fw-medium'>+ Rp. " . number_format($transaction->total_amount, 0, ',', '.') . "</span>";
+        } elseif ($transaction->type === 'tukar_points') {
+            $html .= "<span class='text-danger fw-medium'>" . ($transaction->total_points > 0 ? '-' : '') . number_format($transaction->total_points, 0, ',', '.') . " poin</span>";
+        }
+        
+        $html .= "</div>
+                        <div class='d-flex justify-content-between align-items-center mt-1'>
+                            <small class='text-muted text-sm'>" . \Carbon\Carbon::parse($transaction->created_at)->format('d-m-Y') . "</small>
+                            <span class='$badgeClass' rounded-pill px-3'>" . ucfirst($transaction->status) . "</span>
+                        </div>
+                    </div>
                 </div>
-                <div class='text-end'>";
-
-            if ($transaction->type === 'tarik_tunai') {
-                $html .= "<small class='text-danger'>- Rp. " . number_format($transaction->amount, 0, ',', '.') . "</small>";
-            } elseif ($transaction->type === 'setor_sampah') {
-                $html .= "<small class='text-success'>+ Rp. " . number_format($transaction->total_amount, 0, ',', '.') . "</small>";
-            } elseif ($transaction->type === 'tukar_points') {
-                $html .= "<small class='d-block text-danger'>" . ($transaction->total_points > 0 ? '-' : '') . number_format($transaction->total_points, 0, ',', '.') . " poin</small>";
-            }
-
-            $html .= "  </div>
             </div>
-        </div>";
+        </div></a>";
         }
 
         return $html;
     }
 
-    public function listSampah(){
+    public function listSampah()
+    {
         $user = Auth::user();
         $nasabahDetail = NasabahDetail::where('user_id', $user->id)->first();
         $bsuId = $nasabahDetail ? $nasabahDetail->bsu_id : null;
         // Ambil semua sampah yang terkait dengan BSU
         $sampahs = Sampah::with('categories')->where('bsu_id', $bsuId)->get();
-        
-        return view('frontend.sampah.list',compact('sampahs'));
+
+        return view('frontend.sampah.list', compact('sampahs'));
     }
 
-    public function transactionDetails($id){
+    public function transactionDetails($id)
+    {
         $transaction = Transactions::with('details.sampah')->findOrFail($id);
         $transactionDetail = $transaction->details;
         $transactionCode = $transaction->transaction_code;
-        $transactionDate =Carbon::parse($transaction->tanggal)->format('d-m-y');
-     
-      
+        $transactionDate = $transaction->created_at;
 
-        return view('frontend.transaction.detail',compact('transactionDetail','transactionCode','transactionDate','transactionDate','transactionDate','transactionDate'));
+
+
+        return view('frontend.transaction.detail', compact('transactionDetail', 'transactionCode', 'transactionDate','transaction'));
     }
-    
 }

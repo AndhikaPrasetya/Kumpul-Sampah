@@ -19,7 +19,7 @@
         <h1 class="text-base font-medium">@yield('title', 'Default Title')</h1>
     </header>
 
-    <div class="p-4 bg-gray-50 min-h-screen max-w-screen-sm mx-auto">
+    <div class="p-4 min-h-screen max-w-screen-sm mx-auto" style="background-color: #f5f6f8;">
        @yield('content')
     </div>
     <script src={{ asset('/template/plugins/jquery/jquery.min.js') }}></script>

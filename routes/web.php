@@ -37,7 +37,7 @@ Route::middleware(['auth', 'verified', 'role:nasabah'])->group(function () {
     // routes/web.php
     Route::get('/setor-sampah', [TransactionFrontendController::class, 'setorSampah'])->name('setor-sampah');
     Route::post('/setor-sampah/store', [TransactionFrontendController::class, 'store']);
-    Route::get('/setor-sampah/detail/{id}', [TransactionFrontendController::class, 'transactionDetails'])->name('transaction-details');
+    Route::get('/transaksi/detail/{id}', [TransactionFrontendController::class, 'transactionDetails'])->name('transaction-details');
     Route::get('/list-sampah', [TransactionFrontendController::class, 'listSampah'])->name('sampahlist');
 });
 

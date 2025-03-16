@@ -41,7 +41,7 @@
         </div>
     </div>
     <!-- App Capsule -->
-    <div id="appCapsule" style="max-width: 640px; margin:0 auto; background-color:#f9fafb;">
+    <div id="appCapsule" style="max-width: 640px; margin:0 auto; background-color: #f5f6f8;">
 
         <!-- Wallet Card -->
         @php
@@ -109,7 +109,7 @@
             <div class="row mt-2">
                 <div class="col-12">
                     <a href="{{route('setor-sampah')}}">
-                        <div class="stat-box d-flex align-items-center justify-content-between"
+                        <div class="stat-box d-flex align-items-center justify-content-between shadowed"
                             style="padding: 10px 15px;">
                             <div class="d-flex align-items-center gap-3">
                                 <img src="{{ asset('template-fe/assets/img/box.png') }}" alt=""

@@ -1,4 +1,4 @@
-<div class="section full mb-3" >
+<div class="section full mb-3">
     <div class="section-heading padding">
         <h2 class="title">Transaksi</h2>
         <a href="{{ route('transaksiFrontend.index') }}" class="link">Lihat semua</a>
@@ -6,68 +6,73 @@
 
     @if ($transactions->isNotEmpty())
         @foreach ($transactions as $transaction)
-            <div class="card m-2 p-1 mb-2 shadow-sm">
+        @php
+        // Menentukan ikon dan judul berdasarkan jenis transaksi
+        $icons = [
+            'tarik_tunai' => asset('/template-fe/assets/img/withdraw.png'),
+            'tukar_points' => asset('/template-fe/assets/img/coin.png'),
+            'setor_sampah' => asset('/template-fe/assets/img/recycle.png'),
+        ];
+    
+        $titles = [
+            'tarik_tunai' => 'Tarik Tunai',
+            'tukar_points' => 'Tukar Points',
+            'setor_sampah' => 'Setor Sampah',
+        ];
+    
+        // Menentukan class badge berdasarkan status
+        $badgeClass = match ($transaction->status) {
+            'approved' => 'badge-success',
+            'rejected' => 'badge-danger',
+            'pending' => 'badge-warning',
+            default => 'bg-secondary',
+        };
+    
+        $icon = $icons[$transaction->type] ?? 'default-icon.png';
+        $title = $titles[$transaction->type] ?? 'Transaksi';
+    @endphp
+    
+    <a href="{{ route('transaction-details', $transaction->id) }}" class="text-decoration-none text-reset">
+        <div class="card m-2 p-1 mb-2 shadowed" >
+            <div class="card-body p-1">
                 <div class="d-flex align-items-center">
-                    {{-- Menentukan ikon dan judul berdasarkan jenis transaksi --}}
-                    @php
-                        $icons = [
-                            'tarik_tunai' => asset('/template-fe/assets/img/withdraw.png'),
-                            'tukar_points' => asset('/template-fe/assets/img/coin.png'),
-                            'setor_sampah' => asset('/template-fe/assets/img/recycle.png'),
-                        ];
-
-                        $titles = [
-                            'tarik_tunai' => 'Tarik Tunai',
-                            'tukar_points' => 'Tukar Points',
-                            'setor_sampah' => 'Setor Sampah',
-                        ];
-
-                        $badgeClass = match ($transaction->status) {
-                            'approved' => 'badge badge-success',
-                            'rejected' => 'badge badge-danger',
-                            'pending' => 'badge badge-warning',
-                            default => 'badge bg-secondary',
-                        };
-
-                        $icon = $icons[$transaction->type] ?? 'default-icon.png';
-                        $title = $titles[$transaction->type] ?? 'Transaksi';
-                    @endphp
-
-                    <img src="{{ $icon }}" alt="icon" class="me-3" width="40">
-                    <div class="flex-grow-1">
-                        <h5 class="mb-1">{{ $title }}</h5>
-                        <small class="text-muted d-block">
-                            {{ \Carbon\Carbon::parse($transaction->created_at)->format('d-m-Y') }}
-                        </small>
-                        <small class="{{ $badgeClass }}">{{ ucfirst($transaction->status) }}</small>
+                    <!-- Icon Wrapper -->
+                    <div class="icon-wrapper p-1 bg-black w-10 imaged rounded d-flex align-items-center justify-content-center me-3">
+                        <img src="{{ $icon }}" alt="icon" width="24" class="img-fluid">
                     </div>
-
-                    <div class="text-end">
-                        {{-- Untuk transaksi tarik_tunai --}}
-                        @if ($transaction->type == 'tarik_tunai')
-                            <small class="text-danger">
-                                - Rp. {{ number_format($transaction->amount, 0, ',', '.') }}
+    
+                    <!-- Konten -->
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 fw-semibold">{{ $title }}</h5>
+    
+                            <!-- Jumlah Transaksi -->
+                            @if ($transaction->type == 'tarik_tunai')
+                                <span class="text-danger fw-medium">- Rp. {{ number_format($transaction->amount, 0, ',', '.') }}</span>
+                            @elseif ($transaction->type == 'setor_sampah')
+                                <span class="text-success fw-medium">+ Rp. {{ number_format($transaction->total_amount, 0, ',', '.') }}</span>
+                            @elseif ($transaction->type == 'tukar_points')
+                                <span class="text-danger fw-medium">{{ $transaction->total_points > 0 ? '-' : '' }}{{ number_format($transaction->total_points, 0, ',', '.') }} poin</span>
+                            @endif
+                        </div>
+    
+                        <!-- Tanggal dan Status -->
+                        <div class="d-flex justify-content-between align-items-center mt-1">
+                            <small class="text-muted text-sm">
+                                {{ \Carbon\Carbon::parse($transaction->created_at)->format('d-m-Y') }}
                             </small>
-                        @endif
-
-                        {{-- Untuk transaksi setor_sampah --}}
-                        @if ($transaction->type == 'setor_sampah')
-                            <small class="text-success">
-                                + Rp. {{ number_format($transaction->total_amount, 0, ',', '.') }}
-                            </small>
-                        @endif
-
-                        {{-- Untuk transaksi tukar_points --}}
-                        @if ($transaction->type == 'tukar_points')
-                            <small class="d-block text-danger">
-                                {{ $transaction->total_points > 0 ? '-' : '' }}{{ $transaction->total_points }} poin
-                            </small>
-                        @endif
+                            <span class="badge {{ $badgeClass }} rounded-pill px-3 py-1">
+                                {{ ucfirst($transaction->status) }}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </a>
         @endforeach
     @else
         <div class="title p-3">Belum ada transaksi</div>
     @endif
 </div>
+
