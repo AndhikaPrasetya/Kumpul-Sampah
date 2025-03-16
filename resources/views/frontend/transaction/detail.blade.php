@@ -2,7 +2,7 @@
 @section('title', 'Transaksi Details')
 @section('content')
 
-    <div class="max-w-md mx-auto p-1">
+    <div class=" max-w-sm md:max-w-xl mx-auto p-1">
         <!-- Card Header -->
         <div class="bg-white rounded-t-2xl p-5 shadow-sm">
             <h1 class="text-xl font-bold text-gray-800">Transaksi Details</h1>
@@ -64,7 +64,7 @@
                 </div>
                 
                 <p class="text-gray-600 text-sm">Tanggal Proses</p>
-                @if (in_array($transaction->status, ["approved", "rejected", "pending"]))
+                @if (in_array($transaction->status, ["approved", "rejected"]))
                 <p class="text-right font-medium text-gray-800 text-xs sm:text-sm">{{ $transaction->updated_at }}</p>
             @else
                 <p class="text-right font-medium text-gray-800">-</p>

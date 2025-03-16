@@ -114,7 +114,7 @@ $icons = [
                     success: function(response) {
                         if (response.success) {
                             setTimeout(() => {
-                                window.location.href = '/transaksi';
+                                window.location.href = '/setor-sampah/waiting/'+ response.setorId;
                             }, 1000);
                         } else {
                             showToast('error', response.message);

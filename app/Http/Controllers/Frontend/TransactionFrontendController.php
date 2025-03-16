@@ -113,7 +113,7 @@ class TransactionFrontendController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Berhasil setor sampah',
-                'data' => $transaction
+                'setorId' => $transaction->id
             ], 200);
         } catch (Exception $e) {
             DB::rollBack();
@@ -351,5 +351,23 @@ class TransactionFrontendController extends Controller
 
 
         return view('frontend.transaction.detail', compact('transactionDetail', 'transactionCode', 'transactionDate','transaction'));
+    }
+
+    public function waiting($id)
+    {
+        $user=Auth::user()->id;
+        // Cari transaksi berdasarkan ID dan user_id dari user yang sedang login
+        $transaction = Transactions::where('id', $id)
+                                 ->where('user_id', $user)
+                                 ->first();
+        
+        // Jika transaksi tidak ditemukan, redirect ke halaman lain
+        if (!$transaction) {
+            return redirect()->route('transaksiFrontend.index')
+                            ->with('error', 'Transaksi tidak ditemukan.');
+        }
+        
+        // Kirim data transaksi ke view
+        return view('frontend.transaction.waiting', compact('transaction'));
     }
 }
