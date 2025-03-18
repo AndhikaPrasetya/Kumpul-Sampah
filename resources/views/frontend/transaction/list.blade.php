@@ -1,7 +1,7 @@
 @extends('layouts.layout-fe')
 @section('title', 'Riwayat transaksi')
 @section('content')
-    <div id="appCapsule" style="max-width: 640px; margin:0 auto; ">
+    <div id="appCapsule" style="max-width: 640px; margin:0 auto; background-color: #f5f6f8; ">
         <div class="d-flex gap-2 mt-2" style="overflow-x: auto; margin-left:5px;">
             <div class="dropdown-status">
                 <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="filterStatus"
@@ -43,7 +43,7 @@
 
         </div>
       
-        <div class="section mt-2" id="transaction-container">
+        <div class="section mt-2"  style="min-height: 520px;" i id="transaction-container">
             {{-- Data transaksi akan dimuat di sini --}}
            
         </div>

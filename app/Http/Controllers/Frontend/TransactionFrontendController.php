@@ -298,7 +298,7 @@ class TransactionFrontendController extends Controller
             $title = $titles[$transaction->type] ?? 'Transaksi';
 
             $html .= "<a href='" . route('transaction-details', $transaction->id) . "'  class='text-decoration-none text-reset'>
-            <div class='card border-0 shadow-sm mb-3 shadowed' style='background-color: #f5f6f8;'>
+            <div class='card border-0 shadow-sm mb-3 shadowed'>
             <div class='card-body p-2'>
                 <div class='d-flex align-items-center'>
                    <div class='icon-wrapper p-1 bg-black w-10 imaged rounded d-flex align-items-center justify-content-center me-3'>
@@ -341,9 +341,9 @@ class TransactionFrontendController extends Controller
         return view('frontend.sampah.list', compact('sampahs'));
     }
 
-    public function transactionDetails($id)
+    public function transactionDetails( Request $request)
     {
-        $transaction = Transactions::with('details.sampah')->findOrFail($id);
+        $transaction = Transactions::with('details.sampah')->findOrFail($request->user()->id);
         // dd($transaction);
         $transactionDetail = $transaction->details;
 

@@ -19,14 +19,14 @@ body {
 }
 
 a {
-  color: #25D076 ;
+  color: #16a34a ;
   outline: 0 !important;
   text-decoration: none;
 }
 
 a:hover, a:active, a:focus {
   outline: 0 !important;
-  color: #51D991;
+  color: #16a34a;
   text-decoration: none;
 }
 
@@ -46,8 +46,8 @@ a:hover, a:active, a:focus {
   left: 0;
   right: 0;
   z-index: 999;
-  background: #FFFFFF;
-  color: #25D076;
+  background: #f9fafb;
+  color: #16a34a;
   border-bottom: 1px solid #DCDCE9;
 }
 
@@ -304,13 +304,13 @@ a:hover, a:active, a:focus {
 }
 
 .appBottomMenu .item.active:before {
-  background: #25D076;
+  background: #16a34a;
 }
 
 .appBottomMenu .item.active .icon,
 .appBottomMenu .item.active ion-icon,
 .appBottomMenu .item.active strong {
-  color: #25D076 !important;
+  color: #16a34a !important;
   font-weight: 500;
 }
 
@@ -1167,7 +1167,7 @@ blockquote.blockquote .blockquote-footer {
   right: 0;
   bottom: 0;
   z-index: 99999;
-  background: #25D076;
+  background: #16a34a;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1789,14 +1789,14 @@ a.badge-dark {
 }
 
 .btn-primary {
-  background: #51D991 !important;
-  border-color: #51D991 !important;
+  background: #16a34a !important;
+  border-color: #16a34a !important;
   color: #FFFFFF !important;
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active {
-  background: #25D076 !important;
-  border-color: #25D076 !important;
+  background: #16a34a !important;
+  border-color: #16a34a !important;
 }
 
 .btn-primary.disabled, .btn-primary:disabled {
@@ -3002,7 +3002,7 @@ a.badge-dark {
 }
 
 .bg-primary {
-  background: #25D076 !important;
+  background: #16a34a !important;
   color: #FFF;
 }
 
@@ -5134,7 +5134,7 @@ textarea,
 }
 
 .section-heading .link {
-  color: #51D991;
+  color: #16a34a;
   font-size: 13px;
   font-weight: 500;
 }
@@ -5152,7 +5152,7 @@ textarea,
   display: block;
   height: 200px;
   border-radius: 0 0 40px 40px;
-  background: #25D076;
+  background: #16a34a;
 }
 
 .profile-wrapper{
@@ -5240,7 +5240,7 @@ textarea,
 }
 
 .wallet-card .wallet-footer .item .icon-wrapper {
-  background: #51D991;
+  background: #16a34a;
   width: 48px;
   height: 48px;
   display: inline-flex;

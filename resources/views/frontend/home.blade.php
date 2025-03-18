@@ -121,7 +121,7 @@
                                 </div>
                             </div>
                             <ion-icon name="arrow-forward-circle"
-                                style="width: 40px; height: 40px; color: #51D991;"></ion-icon>
+                                style="width: 40px; height: 40px; color: #16a34a;"></ion-icon>
                         </div>
                     </a>
                 </div>
