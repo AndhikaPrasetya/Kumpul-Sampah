@@ -22,7 +22,7 @@
     <div class="p-4 min-h-screen max-w-screen-sm mx-auto" style="background-color: #f5f6f8;">
        @yield('content')
     </div>
-    <script src={{ asset('/template/plugins/jquery/jquery.min.js') }}></script>
+    <script src={{ secure_asset('/template/plugins/jquery/jquery.min.js') }}></script>
     @yield('script')
 </body>
 
