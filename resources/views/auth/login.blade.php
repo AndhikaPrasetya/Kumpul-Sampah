@@ -21,7 +21,7 @@
       <a href="#" class="h1">Kumpul Sampah</a>
     </div>
     <div class="card-body">
-      <p class="login-box-msg">Sign in to start your session</p>
+      <p class="login-box-msg">Silahkan masukkan username dan password</p>
 
       <form method="POST" action="{{ route('login') }}">
         @csrf
