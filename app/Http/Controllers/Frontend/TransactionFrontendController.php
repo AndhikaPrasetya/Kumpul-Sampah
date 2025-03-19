@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Frontend;
 
 use Exception;
+use App\Models\Saldo;
 use App\Models\Sampah;
+use App\Models\Withdraw;
 use App\Models\Transactions;
 use Illuminate\Http\Request;
 use App\Models\NasabahDetail;
@@ -302,8 +304,8 @@ class TransactionFrontendController extends Controller
             <div class='card-body p-2'>
                 <div class='d-flex align-items-center'>
                    <div class='icon-wrapper p-1 bg-black w-10 imaged rounded d-flex align-items-center justify-content-center me-3'>
-    <img src='$icon' alt='icon' width='24' class='img-fluid'>
-</div>
+                        <img src='$icon' alt='icon' width='24' class='img-fluid'>
+                    </div>
                     <div class='flex-grow-1'>
                         <div class='d-flex justify-content-between align-items-center'>
                             <h5 class='mb-0 fw-semibold'>$title</h5>";
@@ -350,8 +352,6 @@ class TransactionFrontendController extends Controller
         $transactionCode = $transaction->transaction_code;
         $transactionDate = $transaction->created_at;
 
-
-
         return view('frontend.transaction.detail', compact('transactionDetail', 'transactionCode', 'transactionDate','transaction'));
     }
 
@@ -372,4 +372,57 @@ class TransactionFrontendController extends Controller
         // Kirim data transaksi ke view
         return view('frontend.transaction.waiting', compact('transaction'));
     }
+
+    public function withdraw(){
+        $user = Auth::user();
+        $saldoNasabah = Saldo::where('user_id', $user->id)->first();
+        $saldoTertahan = Withdraw::where('user_id', $user->id)->where('status','pending')->sum('amount');
+        return view('frontend.withdraw.create', get_defined_vars());
+    }
+
+    public function withdrawStore(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+        'amount' => 'required|numeric'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        DB::beginTransaction();
+        try{
+            $user = $request->user();
+            $nasabahDetail = NasabahDetail::where('user_id', $user->id)->first();
+            $bsuId = $nasabahDetail ? $nasabahDetail->bsu_id : null;
+            $saldo = Saldo::where('user_id', $user->id)->first();
+
+            if(!$saldo || $saldo->balance < $request->amount){
+                return response()->json(['error' => 'Saldo tidak cukup'], 400);
+            }
+
+             // Simpan data ke tabel withdrawals
+        Withdraw::create([
+            'user_id' => $user->id,
+            'bsu_id' => $bsuId,
+            'amount' => $request->amount,
+            'tanggal' => now(),
+            'status' => 'pending'
+        ]);
+        DB::commit();
+        return response()->json(['message' => 'Permintaan penarikan berhasil, menunggu persetujuan'], 200);
+
+        }catch(Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal melakukan penarikan',
+                'errors' => $e->getMessage()
+            ],500);
+        }
+    }
+
 }

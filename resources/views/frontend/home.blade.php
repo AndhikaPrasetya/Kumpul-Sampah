@@ -75,7 +75,7 @@
                 <!-- Wallet Footer -->
                 <div class="wallet-footer">
                     <div class="item">
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#withdrawActionSheet">
+                        <a href="{{route('tarik-tunai')}}">
                             <div class="icon-wrapper bg-outline-success">
                                 <ion-icon name="swap-vertical"></ion-icon>
                             </div>
