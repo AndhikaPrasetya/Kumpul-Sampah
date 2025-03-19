@@ -12,7 +12,7 @@
     <meta name="description" content="Bank imam">
     <link rel="icon" type="image/png" href="assets/img/favicon.png" sizes="32x32">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
-    <link rel="stylesheet" href="{{secure_asset('template-fe/assets/css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('template-fe/assets/css/style.css')}}">
     @livewireStyles
 </head>
 
@@ -20,7 +20,7 @@
 
     <!-- loader -->
     <div id="loader">
-        <img src="{{secure_asset('template-fe/assets/img/bank.svg')}}" alt="icon" class="loading-icon">
+        <img src="{{asset('template-fe/assets/img/bank.svg')}}" alt="icon" class="loading-icon">
     </div>
     <!-- * loader -->
 
@@ -128,14 +128,14 @@
     </div>
 
     <!-- ========= JS Files =========  -->
-    <script src="{{secure_asset('/template/plugins/jquery/jquery.min.js')}}"></script>
-    <script src="{{secure_asset('template-fe/assets/js/lib/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{asset('/template/plugins/jquery/jquery.min.js')}}"></script>
+    <script src="{{asset('template-fe/assets/js/lib/bootstrap.bundle.min.js')}}"></script>
     <!-- Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <!-- Splide -->
-    <script src="{{secure_asset('template-fe/assets/js/plugins/splide/splide.min.js')}}"></script>
+    <script src="{{asset('template-fe/assets/js/plugins/splide/splide.min.js')}}"></script>
     <!-- Base Js File -->
-    <script src="{{secure_asset('template-fe/assets/js/base.js')}}"></script>
+    <script src="{{asset('template-fe/assets/js/base.js')}}"></script>
 
     <script>
         // Add to Home with 2 seconds delay.

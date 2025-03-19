@@ -34,6 +34,8 @@ class HomeController extends Controller
         return view('frontend.home', compact('user', 'articles', 'rewards'));
     }
 
+    
+
     public function listRewards()
     {
         $user = Auth::user();

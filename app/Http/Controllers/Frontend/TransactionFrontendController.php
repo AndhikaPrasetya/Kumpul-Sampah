@@ -289,6 +289,13 @@ class TransactionFrontendController extends Controller
                 'setor_sampah' => 'Setor Sampah',
             ];
 
+            $routes = [
+                'tarik_tunai' => route('transaction.withdraw', $transaction->id),
+                'tukar_points' => route('transaction.exchange', $transaction->id),
+                'setor_sampah' => route('transaction-details', $transaction->id),
+            ];
+            
+
             $badgeClass = match ($transaction->status) {
                 'approved' => 'badge badge-success',
                 'rejected' => 'badge badge-danger',
@@ -298,8 +305,9 @@ class TransactionFrontendController extends Controller
 
             $icon = $icons[$transaction->type] ?? 'default-icon.png';
             $title = $titles[$transaction->type] ?? 'Transaksi';
+            $url = $routes[$transaction->type] ?? '#';
 
-            $html .= "<a href='" . route('transaction-details', $transaction->id) . "'  class='text-decoration-none text-reset'>
+            $html .= "<a href='$url'  class='text-decoration-none text-reset'>
             <div class='card border-0 shadow-sm mb-3 shadowed'>
             <div class='card-body p-2'>
                 <div class='d-flex align-items-center'>
@@ -343,17 +351,22 @@ class TransactionFrontendController extends Controller
         return view('frontend.sampah.list', compact('sampahs'));
     }
 
-    public function transactionDetails( Request $request)
+    public function transactionDetails(Request $request, $id)
     {
-        $transaction = Transactions::with('details.sampah')->findOrFail($request->user()->id);
-        // dd($transaction);
+        $transaction = Transactions::with('details.sampah')->findOrFail($id);
+    
         $transactionDetail = $transaction->details;
-
         $transactionCode = $transaction->transaction_code;
         $transactionDate = $transaction->created_at;
-
-        return view('frontend.transaction.detail', compact('transactionDetail', 'transactionCode', 'transactionDate','transaction'));
+    
+        return view('frontend.transaction.detail', compact('transactionDetail', 'transactionCode', 'transactionDate', 'transaction'));
     }
+
+    public function withdrawDetail(Request $request, $id){
+        $withdraw = Withdraw::findOrFail($id);
+        return view('frontend.withdraw.detail', compact('withdraw'));
+    }
+    
 
     public function waiting($id)
     {

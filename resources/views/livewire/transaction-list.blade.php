@@ -27,12 +27,18 @@
             'pending' => 'badge-warning',
             default => 'bg-secondary',
         };
-    
+
+        $routes = [
+                'tarik_tunai' => route('transaction.withdraw', $transaction->id),
+                'tukar_points' => route('transaction.exchange', $transaction->id),
+                'setor_sampah' => route('transaction-details', $transaction->id),
+            ];
+            $url = $routes[$transaction->type] ?? '#';
         $icon = $icons[$transaction->type] ?? 'default-icon.png';
         $title = $titles[$transaction->type] ?? 'Transaksi';
     @endphp
     
-    <a href="{{ route('transaction-details', $transaction->id) }}" class="text-decoration-none text-reset">
+    <a href="{{$url}}" class="text-decoration-none text-reset">
         <div class="card m-2 p-1 mb-2 shadowed" >
             <div class="card-body p-1">
                 <div class="d-flex align-items-center">
