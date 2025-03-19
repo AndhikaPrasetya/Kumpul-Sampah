@@ -25,8 +25,8 @@
        @yield('content')
     </div>
 
-    <script src={{ secure_asset('/template/plugins/jquery/jquery.min.js') }}></script>
-     <script src="{{secure_asset('template/plugins/toastr/toastr.min.js')}}"></script>
+    <script src="{{ asset('/template/plugins/jquery/jquery.min.js') }}"></script>
+     <script src="{{asset('template/plugins/toastr/toastr.min.js')}}"></script>
 
     @yield('script')
 </body>
