@@ -333,7 +333,7 @@
 <!-- Bootstrap 4 -->
 <script src="{{asset('/template/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- ChartJS -->
-<script src="{{asset('/template/plugins/chart.js/Chart.min.js')}}></script>
+<script src="{{asset('/template/plugins/chart.js/Chart.min.js')}}"></script>
 <!-- daterangepicker -->
 <script src="{{asset('/template/plugins/moment/moment.min.js')}}"></script>
 <script src="{{asset('/template/plugins/daterangepicker/daterangepicker.js')}}"></script>

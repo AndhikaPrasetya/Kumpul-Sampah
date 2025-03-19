@@ -102,32 +102,27 @@ class DashboardController extends Controller
         });
 
         $nasabahPerBulan = Cache::remember("nasabah_per_bulan_" . ($isAdmin ? 'all' : $bsu_id), $cacheTime, function () use ($bsu_id, $isAdmin) {
-            return User::whereHas('roles', function ($query) {
-                    $query->where('name', 'nasabah');
-                })
+            return Transactions::whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
                 ->when(!$isAdmin, function ($query) use ($bsu_id) {
-                    $query->whereHas('nasabahs', function ($subQuery) use ($bsu_id) {
+                    $query->whereHas('users.nasabahs', function ($subQuery) use ($bsu_id) {
                         $subQuery->where('bsu_id', $bsu_id);
                     });
                 })
-                ->selectRaw('MONTH(created_at) as bulan, COUNT(*) as jumlah')
-                ->groupBy('bulan')
-                ->orderBy('bulan')
-                ->get();
+                ->selectRaw('COUNT(DISTINCT user_id) as jumlah')
+                ->first();
         });
         
-        // Konversi data ke format yang bisa digunakan di frontend
+        // Ambil jumlah nasabah yang setor bulan ini
+        $jumlahNasabahBulanIni = $nasabahPerBulan->jumlah ?? 0;
+        
+        // Format data untuk frontend
         $bulanLabels = [
             1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
             5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
             9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
         ];
-        
-        // Mapping hasil query agar sesuai dengan urutan bulan
-        $nasabahData = array_fill(1, 12, 0); // Inisialisasi semua bulan dengan 0
-        foreach ($nasabahPerBulan as $data) {
-            $nasabahData[$data->bulan] = $data->jumlah;
-        }
+
     
         return view('dashboard.index', get_defined_vars());
     }
