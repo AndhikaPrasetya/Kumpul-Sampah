@@ -39,10 +39,13 @@ class HomeController extends Controller
     public function listRewards()
     {
         $user = Auth::user();
-        $nasabahDetail = NasabahDetail::where('user_id',$user)->first();
-        $bsuid = $nasabahDetail ? $nasabahDetail->bsu_id : null;
-        $rewards = Rewards::where('bsu_id',$bsuid)->get();
-        return view('frontend.rewards', compact('rewards'));
+        $bsuId = $this->getBsuId($user);
+        $rewards = Rewards::where('bsu_id', $bsuId)->get();
+
+        return view('frontend.rewards.list', [
+            'rewards' => $rewards,
+            'route' => route('home')
+        ]);
     }
 
     public function listBlog()
@@ -62,5 +65,11 @@ class HomeController extends Controller
     {
         $article = Article::with('user')->where('slug', $slug)->first();
         return view('frontend.blog.detail', compact('article'));
+    }
+
+    private function getBsuId($user){
+        $nasabahDetail = NasabahDetail::where('user_id',$user->id)->first();
+        $bsuid = $nasabahDetail ? $nasabahDetail->bsu_id : null;
+        return $bsuid;
     }
 }

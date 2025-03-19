@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
 use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\PenukaranPoints;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
@@ -74,7 +75,9 @@ class TransactionFrontendController extends Controller
             }
             $groupedSampahs[$categoryId][] = $sampah;
         }
-        return view('frontend.transaction.setor', compact('kategoriSampah', 'groupedSampahs'));
+        return view('frontend.transaction.setor', compact('kategoriSampah', 'groupedSampahs'),[
+            'route'=>route('home')
+        ]);
     }
     public function store(Request $request)
     {
@@ -359,12 +362,22 @@ class TransactionFrontendController extends Controller
         $transactionCode = $transaction->transaction_code;
         $transactionDate = $transaction->created_at;
     
-        return view('frontend.transaction.detail', compact('transactionDetail', 'transactionCode', 'transactionDate', 'transaction'));
+        return view('frontend.transaction.detail', compact('transactionDetail', 'transactionCode', 'transactionDate', 'transaction'),[
+            'route'=>route('transaksiFrontend.index')
+        ]);
     }
 
     public function withdrawDetail(Request $request, $id){
         $withdraw = Withdraw::findOrFail($id);
-        return view('frontend.withdraw.detail', compact('withdraw'));
+        return view('frontend.withdraw.detail', compact('withdraw'),[
+            'route'=>route('transaksiFrontend.index')
+        ]);
+    }
+    public function tukarPoints(Request $request, $id){
+        $tukarPoints = PenukaranPoints::findOrFail($id);
+        return view('frontend.rewards.detail-tukar-points', compact('tukarPoints'),[
+            'route'=>route('transaksiFrontend.index')
+        ]);
     }
     
 
@@ -390,7 +403,9 @@ class TransactionFrontendController extends Controller
         $user = Auth::user();
         $saldoNasabah = Saldo::where('user_id', $user->id)->first();
         $saldoTertahan = Withdraw::where('user_id', $user->id)->where('status','pending')->sum('amount');
-        return view('frontend.withdraw.create', get_defined_vars());
+        return view('frontend.withdraw.create', get_defined_vars(),[
+            'route'=>route('home')
+        ]);
     }
 
     public function withdrawStore(Request $request)

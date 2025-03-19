@@ -83,7 +83,7 @@
                         </a>
                     </div>
                     <div class="item">
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#sendActionSheet">
+                        <a href="{{route('listRewards')}}">
                             <div class="icon-wrapper">
                                 <ion-icon name="sync"></ion-icon>
                             </div>
@@ -91,7 +91,7 @@
                         </a>
                     </div>
                     <div class="item">
-                        <a href="app-cards.html">
+                        <a href="{{route('transaksiFrontend.index')}}">
                             <div class="icon-wrapper ">
                                 <ion-icon name="time"></ion-icon>
                             </div>

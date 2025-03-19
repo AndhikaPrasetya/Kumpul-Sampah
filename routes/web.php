@@ -5,6 +5,7 @@ use App\Http\Controllers\BsuController;
 use App\Http\Controllers\CategorySampahController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\PenukaranPoinFeController;
 use App\Http\Controllers\Frontend\SetorSampahController;
 use App\Http\Controllers\Frontend\TransactionFrontendController;
 use App\Http\Controllers\LaporanKeuanganController;
@@ -26,22 +27,28 @@ use App\Http\Controllers\WithdrawController;
 Route::middleware(['auth', 'verified', 'role:nasabah'])->group(function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
+
     Route::get('/rewards', [HomeController::class, 'listRewards'])->name('listRewards');
+    Route::get('/rewards/detail/{id}', [PenukaranPoinFeController::class, 'detailReward'])->name('detailReward');
+    Route::post('/rewards', [PenukaranPoinFeController::class, 'rewardStore'])->name('rewardStore');
+
     Route::get('/blog', [HomeController::class, 'listBlog'])->name('listBlog');
     Route::get('/blog/{slug}', [HomeController::class, 'detailBlog'])->name('detailBlog');
+
     Route::get('/transaksi', [TransactionFrontendController::class, 'index'])->name('transaksiFrontend.index');
     Route::get('/transaksi/filter', [TransactionFrontendController::class, 'filter'])->name('transaksiFrontend.filter');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    // routes/web.php
+  
     Route::get('/setor-sampah', [TransactionFrontendController::class, 'setorSampah'])->name('setor-sampah');
     Route::post('/setor-sampah/store', [TransactionFrontendController::class, 'store']);
     Route::get('/setor-sampah/waiting/{id}', [TransactionFrontendController::class, 'waiting'])->name('setor-sampah.waiting');
-    Route::get('/transaksi/tarik-tunai/{id}', [TransactionFrontendController::class, 'withdrawDetail'])->name('transaction.withdraw');
-Route::get('/transaksi/setor-sampah/{id}', [TransactionFrontendController::class, 'transactionDetails'])->name('transaction-details');
-Route::get('/transaksi/tukar-points/{id}', [TransactionFrontendController::class, 'exchangeDetail'])->name('transaction.exchange');
 
+    Route::get('/transaksi/tarik-tunai/{id}', [TransactionFrontendController::class, 'withdrawDetail'])->name('transaction.withdraw');
+    Route::get('/transaksi/setor-sampah/{id}', [TransactionFrontendController::class, 'transactionDetails'])->name('transaction-details');
+    Route::get('/transaksi/tukar-points/{id}', [TransactionFrontendController::class, 'tukarPoints'])->name('transaction.exchange');
 
     Route::get('/list-sampah', [TransactionFrontendController::class, 'listSampah'])->name('sampahlist');
 
