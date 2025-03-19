@@ -36,8 +36,8 @@
     <meta name="theme-color" content="#000000">
     <title>Lupa Password</title>
     <meta name="description" content="Lupa password Bank Imam">
-    <link rel="stylesheet" href="{{ asset('template-fe/assets/css/style.css') }}">
-    <link rel="stylesheet" href={{asset('/template/plugins/fontawesome-free/css/all.min.css')}}>
+    <link rel="stylesheet" href="{{ secure_asset('template-fe/assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{secure_asset('/template/plugins/fontawesome-free/css/all.min.css')}}">
 
 
 
@@ -68,7 +68,7 @@
 
     <!-- App Capsule -->
     <div id="appCapsule" style="max-width: 400px; margin:0 auto;">
-        <img src="{{ asset('template-fe/assets/img/lupa-password.png') }}" alt="Announcement"
+        <img src="{{ secure_asset('template-fe/assets/img/lupa-password.png') }}" alt="Announcement"
         style="width: 50%; max-width: 110px; height: auto; display: block; margin: 0 auto;">
 
         <div class="section text-center" style="margin-top:1em;">
