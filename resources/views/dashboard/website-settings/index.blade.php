@@ -24,7 +24,7 @@
                                 <div class="img-wrapper mb-3">
 
                                     @if ($settings && $settings->logo)
-                                    <img src="{{ asset('storage/' . $settings->logo) }}" alt="logo" width="100">
+                                    <img src="{{ secure_asset('storage/' . $settings->logo) }}" alt="logo" width="100">
                                     @else
                                         <p><i>Anda belum mengupload logo</i></p>
                                     @endif
@@ -44,7 +44,7 @@
                                 <label for="favicon">favicon</label>
                                 <div class="img-wrapper mb-3">
                                     @if ($settings && $settings->favicon)
-                                    <img src="{{ asset('storage/' . $settings->favicon) }}" alt="favicon" width="100">
+                                    <img src="{{ secure_asset('storage/' . $settings->favicon) }}" alt="favicon" width="100">
                                     @else
                                         <p><i>Anda belum mengupload favicon</i></p>
                                     @endif

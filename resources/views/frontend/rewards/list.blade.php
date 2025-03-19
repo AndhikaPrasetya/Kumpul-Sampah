@@ -8,7 +8,7 @@
         <div class="reward-item {{ $index >= 6 ? 'hidden sm:block' : '' }}">
             <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full">
                 <div class="flex justify-center pt-4 pb-2">
-                    <img src="{{ asset($reward->image) }}" alt="{{ $reward->name }}" class="h-20 sm:h-24 w-auto object-contain">
+                    <img src="{{ secure_asset($reward->image) }}" alt="{{ $reward->name }}" class="h-20 sm:h-24 w-auto object-contain">
                 </div>
                 <div class="p-3 sm:p-4 text-center">
                     <h5 class="text-base sm:text-lg font-medium text-gray-800 mb-1 line-clamp-1">{{ $reward->name }}</h5>

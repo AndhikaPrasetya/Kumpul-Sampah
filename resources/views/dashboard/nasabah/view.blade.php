@@ -40,7 +40,7 @@
                                 <label for="photo">Foto Profile</label>
                                 <div class="img-wrapper mb-3">
                                     @if (!empty($data->photo))
-                                        <img src="{{ asset($data->photo) }}" alt="image" width="100px">
+                                        <img src="{{ secure_asset($data->photo) }}" alt="image" width="100px">
                                     @else
                                         <p><i>Anda belum mengupload foto</i></p>
                                     @endif

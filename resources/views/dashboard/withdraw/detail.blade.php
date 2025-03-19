@@ -44,8 +44,8 @@
                                   <label for="image">Bukti pencairan</label>
                                   <div class="img-wrapper">
                                       @if ($data->image)
-                                      <a href="{{ asset('storage/' . $data->image) }}" target="_blank">
-                                          <img src="{{ asset('storage/' . $data->image) }}" alt="Bukti Transfer" width="100">
+                                      <a href="{{ secure_asset('storage/' . $data->image) }}" target="_blank">
+                                          <img src="{{ secure_asset('storage/' . $data->image) }}" alt="Bukti Transfer" width="100">
                                       </a>
                                   @else
                                       <span class="text-danger">Belum ada bukti</span>

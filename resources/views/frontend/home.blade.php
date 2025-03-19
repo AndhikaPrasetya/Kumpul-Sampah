@@ -12,7 +12,7 @@
     <meta name="description" content="Bank imam">
     <link rel="icon" type="image/png" href="assets/img/favicon.png" sizes="32x32">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
-    <link rel="stylesheet" href="{{ asset('template-fe/assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('template-fe/assets/css/style.css') }}">
     {{-- <link rel="manifest" href="{{asset('template-fe/__manifest.json')}}"> --}}
 
 </head>
@@ -21,7 +21,7 @@
 
     <!-- loader -->
     <div id="loader">
-        <img src="{{ asset('template-fe/assets/img/bank.svg') }}" alt="icon" class="loading-icon">
+        <img src="{{ secure_asset('template-fe/assets/img/bank.svg') }}" alt="icon" class="loading-icon">
     </div>
     <!-- * loader -->
 
@@ -112,7 +112,7 @@
                         <div class="stat-box d-flex align-items-center justify-content-between shadowed"
                             style="padding: 10px 15px;">
                             <div class="d-flex align-items-center gap-3">
-                                <img src="{{ asset('template-fe/assets/img/box.png') }}" alt=""
+                                <img src="{{ secure_asset('template-fe/assets/img/box.png') }}" alt=""
                                     style="max-width: 50px;">
                                 <div class="mt-2">
                                     <h2 class="title">Setor Sampah</h2>
@@ -147,7 +147,7 @@
                                         <div class="card" style="width: 100%; height: 300px;">
                                             <div class="image-wrapper-blog">
 
-                                                <img src="{{ asset($article->image) }}" class="card-img-top"
+                                                <img src="{{ secure_asset($article->image) }}" class="card-img-top"
                                                     alt="image">
                                             </div>
                                             <div class="card-body">
@@ -190,7 +190,7 @@
 
                                         <div class="blog-card">
                                             <div class="image-wrapper d-flex justify-content-center">
-                                                <img src="{{ asset($reward->image) }}" alt="image"
+                                                <img src="{{ secure_asset($reward->image) }}" alt="image"
                                                     class="imaged w86">
                                             </div>
                                             <div class="text-wrapper p-2">
@@ -216,7 +216,7 @@
                 <div class="single-reward text-center">
                     <div class="blog-card mx-auto" style="max-width: 140px;">
                         <div class="image-wrapper d-flex justify-content-center">
-                            <img src="{{ asset($rewards->first()->image) }}" alt="image" class="imaged w86">
+                            <img src="{{ secure_asset($rewards->first()->image) }}" alt="image" class="imaged w86">
                         </div>
                         <div class="text-wrapper p-2">
                             <div class="mb-1 text-center">
@@ -272,7 +272,7 @@
 
 
 
-    <!-- Android Add to Home Action Sheet -->
+    {{-- <!-- Android Add to Home Action Sheet -->
     <div class="modal inset fade action-sheet android-add-to-home" id="android-add-to-home-screen" tabindex="-1"
         role="dialog">
         <div class="modal-dialog" role="document">
@@ -286,7 +286,7 @@
                 <div class="modal-body">
                     <div class="action-sheet-content text-center">
                         <div class="mb-1">
-                            <img src="assets/img/icon/192x192.png" alt="image" class="imaged w64 mb-2">
+                            <img src="secure_assets/img/icon/192x192.png" alt="image" class="imaged w64 mb-2">
                         </div>
                         <div>
                             Install <strong>Finapp</strong> on your Android's home screen.
@@ -302,20 +302,20 @@
             </div>
         </div>
     </div>
-    <!-- * Android Add to Home Action Sheet -->
+    <!-- * Android Add to Home Action Sheet --> --}}
 
 
 
 
     <!-- ========= JS Files =========  -->
     <!-- Bootstrap -->
-    <script src="{{ asset('template-fe/assets/js/lib/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ secure_asset('template-fe/assets/js/lib/bootstrap.bundle.min.js') }}"></script>
     <!-- Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <!-- Splide -->
-    <script src="{{ asset('template-fe/assets/js/plugins/splide/splide.min.js') }}"></script>
+    <script src="{{ secure_asset('template-fe/assets/js/plugins/splide/splide.min.js') }}"></script>
     <!-- Base Js File -->
-    <script src="{{ asset('template-fe/assets/js/base.js') }}"></script>
+    <script src="{{ secure_asset('template-fe/assets/js/base.js') }}"></script>
 
 
     <script>

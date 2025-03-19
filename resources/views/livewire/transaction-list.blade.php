@@ -9,9 +9,9 @@
         @php
         // Menentukan ikon dan judul berdasarkan jenis transaksi
         $icons = [
-            'tarik_tunai' => asset('/template-fe/assets/img/withdraw.png'),
-            'tukar_points' => asset('/template-fe/assets/img/coin.png'),
-            'setor_sampah' => asset('/template-fe/assets/img/recycle.png'),
+            'tarik_tunai' => secure_asset('/template-fe/assets/img/withdraw.png'),
+            'tukar_points' => secure_asset('/template-fe/assets/img/coin.png'),
+            'setor_sampah' => secure_asset('/template-fe/assets/img/recycle.png'),
         ];
     
         $titles = [

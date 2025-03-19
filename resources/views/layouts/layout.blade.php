@@ -9,24 +9,24 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{ $settings->website_name ?? 'Kumpul Sampah' }}</title>
   <meta name="description" content="{{ $settings->website_description ?? 'Default Website Description' }}">
-  <link rel="icon" href="{{ $settings->favicon ? asset('storage/' . $settings->favicon) : asset('template/assets/3135715.png') }}"  type="image/x-icon">
+  <link rel="icon" href="{{ $settings->favicon ? secure_asset('storage/' . $settings->favicon) : secure_asset('template/assets/3135715.png') }}"  type="image/x-icon">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{asset('/template/plugins/fontawesome-free/css/all.min.css')}}">
+  <link rel="stylesheet" href="{{secure_asset('/template/plugins/fontawesome-free/css/all.min.css')}}">
   <!-- Ionicons -->
-  <link rel="stylesheet" href="{{asset('/template/plugins/select2/css/select2.min.css')}}">
+  <link rel="stylesheet" href="{{secure_asset('/template/plugins/select2/css/select2.min.css')}}">
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.min.css"
         crossorigin="anonymous">
-        <link rel="stylesheet" href="{{asset('/template/plugins/daterangepicker/daterangepicker.css')}}">
-        <link rel="stylesheet" href="{{asset('template/plugins/toastr/toastr.min.css')}}">
-  <link rel="stylesheet" href="{{asset('/template/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
-  <link rel="stylesheet" href="{{asset('/template/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
-  <link rel="stylesheet" href="{{asset('/template/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
+        <link rel="stylesheet" href="{{secure_asset('/template/plugins/daterangepicker/daterangepicker.css')}}">
+        <link rel="stylesheet" href="{{secure_asset('template/plugins/toastr/toastr.min.css')}}">
+  <link rel="stylesheet" href="{{secure_asset('/template/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
+  <link rel="stylesheet" href="{{secure_asset('/template/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
+  <link rel="stylesheet" href="{{secure_asset('/template/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css" integrity="sha512-EZSUkJWTjzDlspOoPSpUFR0o0Xy7jdzW//6qhUkoZ9c4StFkVsp9fbbd0O06p9ELS3H486m4wmrCELjza4JEog==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{asset('/template/dist/css/adminlte.min.css')}}">
+  <link rel="stylesheet" href="{{secure_asset('/template/dist/css/adminlte.min.css')}}">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed" style="background-color: #f4f6f9;">
 <div class="wrapper">
@@ -45,7 +45,7 @@
     <ul class="navbar-nav ml-auto">
       <li class="nav-item dropdown user-menu">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-          <img src="{{ Auth::user()->photo ? asset(Auth::user()->photo) : asset('template/assets/3135715.png') }}" 
+          <img src="{{ Auth::user()->photo ? secure_asset(Auth::user()->photo) : secure_asset('template/assets/3135715.png') }}" 
           class="img-circle elevation-2 user-image" 
           alt="User Image">
           <span class="d-none d-md-inline">{{Auth::user()->name}}</span>
@@ -53,7 +53,7 @@
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <!-- User image -->
           <li class="user-header bg-primary">
-            <img src="{{ Auth::user()->image ? asset(Auth::user()->image) : asset('template/assets/3135715.png') }}" 
+            <img src="{{ Auth::user()->image ? secure_asset(Auth::user()->image) : secure_asset('template/assets/3135715.png') }}" 
             class="img-circle elevation-2 user-image" 
             alt="User Image">
 
@@ -93,7 +93,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-         <img src="{{ Auth::user()->photo ? asset(Auth::user()->photo) : asset('template/assets/3135715.png') }}">
+         <img src="{{ Auth::user()->photo ? secure_asset(Auth::user()->photo) : secure_asset('template/assets/3135715.png') }}">
         </div>
         <div class="info">
           <a href="#" class="d-block">{{ Auth::user()->name }}</a>
@@ -316,9 +316,9 @@
 
 <!-- jQuery -->
 
-<script src="{{asset('/template/plugins/jquery/jquery.min.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/jquery/jquery.min.js')}}"></script>
 <!-- jQuery UI 1.11.4 -->
-<script src="{{asset('/template/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
   $.widget.bridge('uibutton', $.ui.button)
@@ -328,34 +328,34 @@
   bsCustomFileInput.init();
 });
 </script>
-<script src="{{asset('/template/plugins/bs-custom-file-input/bs-custom-file-input.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/bs-custom-file-input/bs-custom-file-input.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Bootstrap 4 -->
-<script src="{{asset('/template/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- ChartJS -->
-<script src="{{asset('/template/plugins/chart.js/Chart.min.js')}}></script>
+<script src="{{secure_asset('/template/plugins/chart.js/Chart.min.js')}}></script>
 <!-- daterangepicker -->
-<script src="{{asset('/template/plugins/moment/moment.min.js')}}"></script>
-<script src="{{asset('/template/plugins/daterangepicker/daterangepicker.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/moment/moment.min.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/daterangepicker/daterangepicker.js')}}"></script>
 
 
-<script src="{{asset('/template/dist/js/index.js')}}"></script>
-<script src="{{ asset('/template/plugins/summernote/summernote-bs4.min.js') }}"></script>
-<script src="{{asset('/template/plugins/datatables/jquery.dataTables.min.js')}}"></script>
-<script src="{{asset('/template/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
-<script src="{{asset('/template/plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
-<script src="{{asset('/template/plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
-<script src="{{asset('/template/plugins/datatables-buttons/js/dataTables.buttons.min.js')}}"></script>
-<script src="{{asset('/template/plugins/datatables-buttons/js/buttons.bootstrap4.min.js')}}"></script>
-<script src="{{asset('/template/plugins/jszip/jszip.min.js')}}"></script>
-<script src="{{asset('/template/plugins/pdfmake/pdfmake.min.js')}}"></script>
-<script src="{{asset('/template/plugins/pdfmake/vfs_fonts.js')}}"></script>
-<script src="{{asset('/template/plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
-<script src="{{asset('/template/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
-<script src="{{asset('/template/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
-<script src="{{asset('template/plugins/toastr/toastr.min.js')}}"></script>
-<script src="{{asset('/template/dist/js/adminlte.js')}}"></script>
-<script src="{{asset('/template/plugins/select2/js/select2.full.min.js')}}"></script>
+<script src="{{secure_asset('/template/dist/js/index.js')}}"></script>
+<script src="{{ secure_asset('/template/plugins/summernote/summernote-bs4.min.js') }}"></script>
+<script src="{{secure_asset('/template/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/datatables-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/datatables-buttons/js/buttons.bootstrap4.min.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/jszip/jszip.min.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/pdfmake/pdfmake.min.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/pdfmake/vfs_fonts.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
+<script src="{{secure_asset('template/plugins/toastr/toastr.min.js')}}"></script>
+<script src="{{secure_asset('/template/dist/js/adminlte.js')}}"></script>
+<script src="{{secure_asset('/template/plugins/select2/js/select2.full.min.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js" integrity="sha512-8QFTrG0oeOiyWo/VM9Y8kgxdlCryqhIxVeRpWSezdRRAvarxVtwLnGroJgnVW9/XBRduxO/z1GblzPrMQoeuew==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 @yield('script')

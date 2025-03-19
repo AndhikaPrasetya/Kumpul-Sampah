@@ -4,7 +4,7 @@
 @section('content')
 <div class="relative w-full h-56 sm:h-64 md:h-72 rounded-lg overflow-hidden">
     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-green-900 opacity-70"></div>
-    <img src="{{ asset($rewards->image) }}"
+    <img src="{{ secure_asset($rewards->image) }}"
          alt="Voucher Starbucks" 
          class="w-full h-full object-cover object-center rounded-lg">
     <div class="absolute bottom-0 left-0 right-0 p-4 text-white">

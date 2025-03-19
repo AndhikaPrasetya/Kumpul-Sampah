@@ -35,7 +35,7 @@
                   <div class="col-12">
                       <div class="form-group">
                           <label for="image" class="required">Gambar sampah</label>
-                          <input type="file" class="dropify" name="image"  data-default-file="{{ asset($data->image) }}" readonly>
+                          <input type="file" class="dropify" name="image"  data-default-file="{{ secure_asset($data->image) }}" readonly>
                       </div>
                   </div>
                   <div class="col-12">

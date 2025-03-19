@@ -25,7 +25,7 @@
                       <div class="form-group">
                           <label for="image" class="required">Gambar barang</label>
   
-                          <input type="file" class="dropify shadow-sm" name="image" id="image" data-default-file="{{ asset($rewards->image) }}" disabled>
+                          <input type="file" class="dropify shadow-sm" name="image" id="image" data-default-file="{{ secure_asset($rewards->image) }}" disabled>
                       </div>
                   </div>
                   

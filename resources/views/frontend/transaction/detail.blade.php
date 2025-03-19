@@ -25,7 +25,7 @@
         <div class="grid grid-cols-4 items-center py-3 border-b border-gray-100">
             <div class="col-span-1">
                 <div class="w-10 h-10 xs:w-12 xs:h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-md flex items-center justify-center overflow-hidden">
-                    <img src="{{ asset($detail->sampah->image) }}" alt="image"
+                    <img src="{{ secure_asset($detail->sampah->image) }}" alt="image"
                         class="w-4/5 h-4/5 object-contain" />
                 </div>
             </div>

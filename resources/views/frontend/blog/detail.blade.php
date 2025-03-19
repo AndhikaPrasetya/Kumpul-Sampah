@@ -11,7 +11,7 @@
         </h1>
         <div class="blog-header-info mt-2 mb-2">
             <div>
-                <img src="{{ $article->user->photo ? asset($article->user->photo) : asset('template/assets/3135715.png') }}" alt="img" class="imaged w24 rounded me-05">
+                <img src="{{ $article->user->photo ? secure_asset($article->user->photo) : secure_asset('template/assets/3135715.png') }}" alt="img" class="imaged w24 rounded me-05">
                 by <a href="#">{{$article->user->name}}</a>
             </div>
             <div>
@@ -25,7 +25,7 @@
            {{$article->content}}
         </p>
         <figure>
-            <img src="{{asset($article->image)}}" alt="image" class="imaged img-fluid">
+            <img src="{{secure_asset($article->image)}}" alt="image" class="imaged img-fluid">
         </figure>
     </div>
     <div class="section">

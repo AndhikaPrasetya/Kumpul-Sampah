@@ -49,7 +49,7 @@
                                 <label for="photo">Foto Profile</label>
                                 <div class="img-wrapper mb-3">
                                     @if (!empty($nasabahDetail->photo))
-                                        <img src="{{ asset($nasabahDetail->photo) }}" alt="image" width="100px">
+                                        <img src="{{ secure_asset($nasabahDetail->photo) }}" alt="image" width="100px">
                                     @else
                                         <p><i>Anda belum mengupload foto</i></p>
                                     @endif

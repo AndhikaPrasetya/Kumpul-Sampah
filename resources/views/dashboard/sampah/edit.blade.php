@@ -48,7 +48,7 @@
                             <div class="form-group">
                                 <label for="image" class="required">Gambar sampah</label>
                                 <input type="file" class="dropify" name="image"
-                                    data-default-file="{{ asset($data->image) }}" />
+                                    data-default-file="{{ secure_asset($data->image) }}" />
                             </div>
                         </div>
                         <div class="col-12">

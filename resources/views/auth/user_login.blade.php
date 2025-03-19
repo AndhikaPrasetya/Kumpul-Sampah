@@ -9,7 +9,7 @@
     <title>Login</title>
     <!-- Swiper.js -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-    <link rel="stylesheet" href="{{ asset('template-fe/assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('template-fe/assets/css/style.css') }}">
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.css" integrity="sha512-pmAAV1X4Nh5jA9m+jcvwJXFQvCBi3T17aZ1KWkqXr7g/O2YMvO8rfaa5ETWDuBvRq6fbDjlw4jHL44jNTScaKg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -127,7 +127,7 @@
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
                     <div class="illustration-container">
-                        <img src="{{ asset('template-fe/assets/img/tukar_sampah.svg') }}" alt="Announcement"
+                        <img src="{{ secure_asset('template-fe/assets/img/tukar_sampah.svg') }}" alt="Announcement"
                         style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
                     </div>
                     <div class="content-container">
@@ -141,7 +141,7 @@
                 </div>
                 <div class="swiper-slide">
                     <div class="illustration-container">
-                        <img src="{{ asset('template-fe/assets/img/tukar.svg') }}" alt="Announcement"
+                        <img src="{{ secure_asset('template-fe/assets/img/tukar.svg') }}" alt="Announcement"
                             style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
                     </div>
                     <div class="content-container">
@@ -156,7 +156,7 @@
                 </div>
                 <div class="swiper-slide">
                     <div class="illustration-container">
-                        <img src="{{ asset('template-fe/assets/img/langkah_mudah.svg') }}" alt="Announcement"
+                        <img src="{{ secure_asset('template-fe/assets/img/langkah_mudah.svg') }}" alt="Announcement"
                             style="width: 78%; max-width: 300px; height: auto; display: block; margin: 0 auto;">
                     </div>
                     <div class="content-container">
@@ -190,7 +190,7 @@
     <!-- Form Login -->
     <div id="appCapsule" style="max-width: 400px;  margin: 0 auto;">
         
-            <img src="{{ asset('template-fe/assets/img/login.svg') }}" alt="Announcement"
+            <img src="{{ secure_asset('template-fe/assets/img/login.svg') }}" alt="Announcement"
                 style="width: 78%; max-width: 300px; height: 350px; display: block; margin: 0 auto;">
 
 
@@ -246,16 +246,16 @@
 
     </div>
 
-    <script src={{ asset('/template/plugins/jquery/jquery.min.js') }}></script>
+    <script src={{ secure_asset('/template/plugins/jquery/jquery.min.js') }}></script>
     <!-- ========= JS Files =========  -->
     <!-- Bootstrap -->
-    <script src="{{ asset('template-fe/assets/js/lib/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ secure_asset('template-fe/assets/js/lib/bootstrap.bundle.min.js') }}"></script>
     <!-- Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <!-- Splide -->
-    <script src="{{ asset('template-fe/assets/js/plugins/splide/splide.min.js') }}"></script>
+    <script src="{{ secure_asset('template-fe/assets/js/plugins/splide/splide.min.js') }}"></script>
     <!-- Base Js File -->
-    <script src="{{ asset('template-fe/assets/js/base.js') }}"></script>
+    <script src="{{ secure_asset('template-fe/assets/js/base.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js" integrity="sha512-Ysw1DcK1P+uYLqprEAzNQJP+J4hTx4t/3X2nbVwszao8wD+9afLjBQYjz7Uk4ADP+Er++mJoScI42ueGtQOzEA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>

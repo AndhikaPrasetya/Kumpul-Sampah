@@ -81,7 +81,7 @@
                         if ($.trim(data) === "" || data.length === 0) {
                             $("#transaction-container").html(`
                         <div class="text-center">
-                           <img src="{{ asset('template-fe/assets/img/empty-box.png') }}" alt="No Data" style="max-width: 200px;">
+                           <img src="{{ secure_asset('template-fe/assets/img/empty-box.png') }}" alt="No Data" style="max-width: 200px;">
                             <p class="mt-3 text-muted">Tidak ada transaksi ditemukan.</p>
                         </div>
                     `);

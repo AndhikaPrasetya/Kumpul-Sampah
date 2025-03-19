@@ -20,13 +20,13 @@
                 <div class="col-12 col-md-6">
                     <div class="form-group">
                         <label for="thumbnail" class="required">Thumbnail</label>
-                        <input type="file" class="dropify" name="thumbnail" data-default-file="{{ asset($data->thumbnail) }}" />
+                        <input type="file" class="dropify" name="thumbnail" data-default-file="{{ secure_asset($data->thumbnail) }}" />
                     </div>
                 </div>
                 <div class="col-12 col-md-6">
                     <div class="form-group">
                         <label for="image" class="required">image</label>
-                        <input type="file" class="dropify" name="image" data-default-file="{{ asset($data->image) }}" />
+                        <input type="file" class="dropify" name="image" data-default-file="{{ secure_asset($data->image) }}" />
                     </div>
                 </div>
                 <div class="col-12">
