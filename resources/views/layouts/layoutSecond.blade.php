@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('headTitle', 'Default Title')</title>
     @if(app()->environment('development'))
-    <link rel="stylesheet" href="{{ secure_asset('build/assets/app-DPSUHK2S.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('build/assets/app-tailwind.css') }}">
     <script src="{{ secure_asset('build/assets/app-CbEvcXly.js') }}" defer></script>
 @else
     @vite(['resources/css/app.css', 'resources/js/app.js'])
