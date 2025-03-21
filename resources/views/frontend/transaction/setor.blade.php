@@ -117,13 +117,17 @@
                 type: 'POST',
                 data: form.serialize(),
                 success: function(response) {
-                    if (response.success) {
-                        setTimeout(() => {
-                            window.location.href = '/setor-sampah/waiting/' + response.setorId;
-                        }, 1000);
-                    } else {
-                        console.log('Error:', response.message);
-                    }
+                    success: function(response) {
+    console.log("Response dari server:", response); // Cek respons server
+    if (response.success) {
+        setTimeout(() => {
+            window.location.href = '/setor-sampah/waiting/' + response.setorId;
+        }, 1000);
+    } else {
+        console.log("Kesalahan dalam response:", response);
+    }
+},
+
                 },
                 error: (xhr) => {
                     if (xhr.status === 422) {
