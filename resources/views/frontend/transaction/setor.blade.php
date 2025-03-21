@@ -94,7 +94,7 @@
     <script>
     $(document).ready(function() {
     // Inisialisasi
-    initCategoryToggle();
+   
     initFormSubmission();
     initWeightButtons();
 
