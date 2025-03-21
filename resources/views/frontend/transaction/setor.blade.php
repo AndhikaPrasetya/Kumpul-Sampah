@@ -31,7 +31,8 @@
                     <div class="flex justify-between items-center p-3 border-b border-gray-100">
                         <div class="flex items-center">
                             <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-3 text-red-500">
-                                <i class="fas {{ $icons[$kategori->nama] ?? 'fa-trash' }} text-sm"></i>
+                                <i class="fas {{ isset($icons[$kategori->nama]) ? $icons[$kategori->nama] : 'fa-trash' }} text-sm"></i>
+
                             </div>
                             <span class="font-medium">{{ $kategori->nama }}</span>
                         </div>
