@@ -43,7 +43,7 @@ Route::middleware(['auth', 'verified', 'role:nasabah'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
   
     Route::get('/setor-sampah', [TransactionFrontendController::class, 'setorSampah'])->name('setor-sampah');
-    Route::post('/setor-sampah/store', [TransactionFrontendController::class, 'store']);
+    Route::post('/setor-sampah/store', [TransactionFrontendController::class, 'store'])->name('setor-sampah.store');
     Route::get('/setor-sampah/waiting/{id}', [TransactionFrontendController::class, 'waiting'])->name('setor-sampah.waiting');
 
     Route::get('/transaksi/tarik-tunai/{id}', [TransactionFrontendController::class, 'withdrawDetail'])->name('transaction.withdraw');
