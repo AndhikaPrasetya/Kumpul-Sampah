@@ -218,27 +218,29 @@
 
     // Fungsi untuk menghitung total amount, points, dan berat
     function hitungTotalAmount() {
-        let totalAmount = 0;
-        let totalPoints = 0;
-        let totalBerat = 0;
+    let totalAmount = 0;
+    let totalPoints = 0;
+    let totalBerat = 0;
 
-        $('.berat-value').each(function() {
-            const berat = parseFloat($(this).text()) || 0;
-            const harga = parseFloat($(this).data('harga')) || 0;
-            const points = parseFloat($(this).data('points')) || 0;
+    $('.berat-value').each(function() {
+        const beratText = $(this).text().trim();
+        const berat = beratText ? parseFloat(beratText) : 0;
+        const harga = $(this).data('harga') ? parseFloat($(this).data('harga')) : 0;
+        const points = $(this).data('points') ? parseFloat($(this).data('points')) : 0;
 
-            if (!isNaN(berat) && berat > 0) {
-                totalAmount += harga * berat;
-                totalPoints += points * berat;
-                totalBerat += berat;
-            }
-        });
+        if (!isNaN(berat) && berat > 0) {
+            totalAmount += harga * berat;
+            totalPoints += points * berat;
+            totalBerat += berat;
+        }
+    });
 
-        // Update nilai di form
-        $('#total_amount_hidden').val(totalAmount);
-        $('#total_points_hidden').val(totalPoints);
-        $('.total-berat').text(totalBerat + "KG");
-    }
+    // Update nilai di form
+    $('#total_amount_hidden').val(totalAmount);
+    $('#total_points_hidden').val(totalPoints);
+    $('.total-berat').text(totalBerat + " KG");
+}
+
 });
     </script>
 
