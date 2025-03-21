@@ -96,15 +96,54 @@ $(document).on('click', '.toggle-icon', function () {
         }
     });
 
-    // Function to handle form submission
     function initFormSubmission() {
-        $('#createFormTransaction').on('submit', function(e) {
-            e.preventDefault();
-            const submitBtn = $('#submitBtn');
-            disableSubmitButton(submitBtn);
-            handleCreateForm('createFormTransaction');
-        });
+    $('#createFormTransaction').on('submit', function(e) {
+        e.preventDefault();
+        
+        const submitBtn = $('#submitBtn');
+        disableSubmitButton(submitBtn);
+
+        handleCreateForm('createFormTransaction');
+    });
+}
+
+function handleCreateForm(formId) {
+    const form = $(`#${formId}`);
+
+    if (!form.length) {
+        console.error(`Form dengan ID ${formId} tidak ditemukan.`);
+        return;
     }
+
+    // Pastikan removeZeroWeightInputs didefinisikan
+    if (typeof removeZeroWeightInputs === 'function') {
+        removeZeroWeightInputs(form);
+    } else {
+        console.warn('removeZeroWeightInputs tidak ditemukan.');
+    }
+
+    $.ajax({
+        url: 'setor-sampah/store',
+        type: 'POST',
+        data: form.serialize(),
+        success: function(response) {
+            if (response && response.success) {
+                if (response.setorId) {
+                    setTimeout(() => {
+                        window.location.href = `/setor-sampah/waiting/${response.setorId}`;
+                    }, 1000);
+                } else {
+                    console.error('setorId tidak ditemukan dalam response.');
+                }
+            } else {
+                console.error('Error:', response?.message || 'Response tidak valid');
+            }
+        },
+        error: function(xhr) {
+            handleAjaxError(xhr);
+        }
+    });
+}
 
     // Function for plus and minus buttons
     function initWeightButtons() {
@@ -133,29 +172,7 @@ $(document).on('click', '.toggle-icon', function () {
         hitungTotalAmount();
     }
 
-    // Function to handle AJAX form submission
-    function handleCreateForm(formId) {
-        const form = $(`#${formId}`);
-        removeZeroWeightInputs(form);
-
-        $.ajax({
-            url: 'setor-sampah/store',
-            type: 'POST',
-            data: form.serialize(),
-            success: function(response) {
-                if (response.success) {
-                    setTimeout(() => {
-                        window.location.href = `/setor-sampah/waiting/${response.setorId}`;
-                    }, 1000);
-                } else {
-                    console.log('Error:', response.message);
-                }
-            },
-            error: function(xhr) {
-                handleAjaxError(xhr);
-            }
-        });
-    }
+   
 
     // Function to remove inputs with weight 0
     function removeZeroWeightInputs(form) {
