@@ -95,13 +95,13 @@
     $(document).ready(function() {
         // Event listener untuk ikon chevron
         // $('.category-content').hide();
-        $('.category-card .fa-chevron-up').on('click', function() {
-            const categoryContent = $(this).closest('.category-card').find('.category-content');
-            if (categoryContent.length > 0) {
-                categoryContent.slideToggle('fast');
-                $(this).toggleClass('fa-chevron-up fa-chevron-down');
-            }
-        });
+        // $('.category-card .fa-chevron-up').on('click', function() {
+        //     const categoryContent = $(this).closest('.category-card').find('.category-content');
+        //     if (categoryContent.length > 0) {
+        //         categoryContent.slideToggle('fast');
+        //         $(this).toggleClass('fa-chevron-up fa-chevron-down');
+        //     }
+        // });
 
         const handleCreateForm = (formId) => {
             const form = $(`#${formId}`);
