@@ -12,12 +12,12 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        @if(app()->environment('production'))
-        <link rel="stylesheet" href="{{ secure_asset('build/assets/app.css') }}">
-        <script src="{{ secure_asset('build/assets/app.js') }}" defer></script>
-    @else
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @endif
+        @if(app()->environment('development'))
+    <link rel="stylesheet" href="{{ secure_asset('build/assets/app-CmeQu9Jz.css') }}">
+    <script src="{{ secure_asset('build/assets/app-CbEvcXly.js') }}" defer></script>
+@else
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+@endif
     
     </head>
     <body class="font-sans antialiased">

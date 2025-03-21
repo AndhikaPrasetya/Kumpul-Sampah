@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Order</title>
-    @if(app()->environment('production'))
-    <link rel="stylesheet" href="{{ secure_asset('build/assets/app.css') }}">
-    <script src="{{ secure_asset('build/assets/app.js') }}" defer></script>
+    @if(app()->environment('development'))
+    <link rel="stylesheet" href="{{ secure_asset('build/assets/app-CmeQu9Jz.css') }}">
+    <script src="{{ secure_asset('build/assets/app-CbEvcXly.js') }}" defer></script>
 @else
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 @endif
