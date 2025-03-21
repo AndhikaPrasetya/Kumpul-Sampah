@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('headTitle', 'Default Title')</title>
     
-    <link rel="stylesheet" href="{{ secure_asset('build/assets/app-CmeQu9Jz.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('build/assets/app-BRFadFC4') }}">
     <script src="{{ secure_asset('build/assets/app-CbEvcXly.js') }}" defer></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">

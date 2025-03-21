@@ -13,7 +13,7 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         @if(app()->environment('development'))
-    <link rel="stylesheet" href="{{ secure_asset('build/assets/app-CmeQu9Jz.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('build/assets/app-BRFadFC4') }}">
     <script src="{{ secure_asset('build/assets/app-CbEvcXly.js') }}" defer></script>
 @else
     @vite(['resources/css/app.css', 'resources/js/app.js'])
