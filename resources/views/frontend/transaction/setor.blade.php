@@ -80,8 +80,14 @@
 @section('script')
 <script>
  $(document).ready(function() {
-    // Initialize functions
-    initFormSubmission();
+    $('#createFormTransaction').on('submit', function(e) {
+        e.preventDefault();
+        
+        const submitBtn = $('#submitBtn');
+        disableSubmitButton(submitBtn);
+
+        handleCreateForm('createFormTransaction');
+    });
     initWeightButtons();
 });
 
@@ -96,16 +102,7 @@ $(document).on('click', '.toggle-icon', function () {
         }
     });
 
-    function initFormSubmission() {
-    $('#createFormTransaction').on('submit', function(e) {
-        e.preventDefault();
-        
-        const submitBtn = $('#submitBtn');
-        disableSubmitButton(submitBtn);
 
-        handleCreateForm('createFormTransaction');
-    });
-}
 
 function handleCreateForm(formId) {
     const form = $(`#${formId}`);
