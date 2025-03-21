@@ -50,13 +50,13 @@
                                         <div class="text-xs text-gray-400">Points: {{ $sampah->points }}/kg</div>
                                     </div>
                                     <div class="flex items-center">
-                                        <button
+                                        <button type="button"
                                             class="w-7 h-7 rounded-full border border-gray-200 flex items-center justify-center btn-minus">
                                             <i class="fas fa-minus text-xs text-gray-400"></i>
                                         </button>
                                         <span class="mx-3 text-sm min-w-8 text-center berat-value"
                                             data-harga="{{ $sampah->harga }}" data-points="{{ $sampah->points }}">0</span>
-                                        <button
+                                        <button type="button"
                                             class="w-7 h-7 rounded-full border border-gray-200 flex items-center justify-center btn-plus">
                                             <i class="fas fa-plus text-xs text-gray-400"></i>
                                         </button>
@@ -74,8 +74,6 @@
                     </div>
                 </div>
             @endforeach
-            <input type="hidden" name="total_amount_hidden" id="total_amount_hidden">
-            <input type="hidden" name="total_points_hidden" id="total_points_hidden">
             <div
                 class="max-w-screen-sm mx-auto fixed bottom-5 left-5 right-5 bg-green-600 text-white p-3 rounded-lg shadow-lg flex justify-between items-center">
                 <div class="text-sm">
@@ -96,13 +94,12 @@
             // Event listener untuk ikon chevron
             $('.category-content').hide();
             $('.category-card .fa-chevron-up').on('click', function() {
-                const categoryContent = $(this).closest('.category-card').find('.category-content');
-                if (categoryContent.length > 0) {
-                    categoryContent.slideToggle('fast');
-                    $(this).toggleClass('fa-chevron-up fa-chevron-down');
-                }
-            });
+                // Toggle class untuk membuka/menutup category-content
+                $(this).closest('.category-card').find('.category-content').slideToggle('fast');
 
+                // Toggle ikon chevron antara up dan down
+                $(this).toggleClass('fa-chevron-up fa-chevron-down');
+            });
 
             const handleCreateForm = (formId) => {
                 const form = $(`#${formId}`);
@@ -145,53 +142,72 @@
             };
 
             // Event submit form transaksi
+            // Event submit form transaksi
             $('#createFormTransaction').on('submit', function(e) {
                 e.preventDefault();
-                // Nonaktifkan tombol
-                const submitBtn = $('#submitBtn');
-                submitBtn.prop('disabled', true);
-                submitBtn.text('Memproses...');
-                submitBtn.addClass('opacity-70 cursor-not-allowed');
 
-                handleCreateForm('createFormTransaction');
+                try {
+                    // Nonaktifkan tombol
+                    const submitBtn = $('#submitBtn');
+                    if (submitBtn.length > 0) {
+                        submitBtn.prop('disabled', true);
+                        submitBtn.text('Memproses...');
+                        submitBtn.addClass('opacity-70 cursor-not-allowed');
+                    }
+
+                    // Ensure hidden fields have values
+                    if ($('#total_amount_hidden').length && $('#total_amount_hidden').val() === '') {
+                        $('#total_amount_hidden').val('0');
+                    }
+                    if ($('#total_points_hidden').length && $('#total_points_hidden').val() === '') {
+                        $('#total_points_hidden').val('0');
+                    }
+
+                    handleCreateForm('createFormTransaction');
+                } catch (error) {
+                    console.error("Error in form submission:", error);
+                    showToast('error', 'Terjadi kesalahan saat memproses form');
+                    $('#submitBtn').prop('disabled', false);
+                }
             });
-
             // Fungsi untuk menghitung total amount dan points
             const hitungTotalAmount = () => {
-    let totalAmount = 0;
-    let totalPoints = 0;
-    let totalBerat = 0;
+                let totalAmount = 0;
+                let totalPoints = 0;
+                let totalBerat = 0;
 
-    // Make sure we have elements before trying to iterate
-    const beratElements = $('.berat-value');
-    if (beratElements.length > 0) {
-        beratElements.each(function() {
-            const berat = parseFloat($(this).text()) || 0;
-            const harga = parseFloat($(this).data('harga')) || 0;
-            const points = parseFloat($(this).data('points')) || 0;
+                // Add defensive checks to avoid "undefined is not iterable" errors
+                try {
+                    // Loop melalui setiap span berat
+                    const beratElements = $('.berat-value');
+                    if (beratElements.length > 0) {
+                        beratElements.each(function() {
+                            const berat = parseFloat($(this).text()) || 0;
+                            const harga = parseFloat($(this).data('harga')) || 0;
+                            const points = parseFloat($(this).data('points')) || 0;
 
-            if (!isNaN(berat) && berat > 0) {
-                const subtotal = harga * berat;
-                const subPoints = points * berat;
-                totalAmount += subtotal;
-                totalPoints += subPoints;
-                totalBerat += berat;
-            }
+                            if (!isNaN(berat) && berat > 0) {
+                                const subtotal = harga * berat;
+                                const subPoints = points * berat;
+                                totalAmount += subtotal;
+                                totalPoints += subPoints;
+                                totalBerat += berat;
+                            }
+                        });
+                    }
+
+                    // Tampilkan total amount dan points - use ID checks
+                    $('#total_amount_hidden').val(totalAmount);
+                    $('#total_points_hidden').val(totalPoints);
+                    $('.total-berat').text(totalBerat + "KG");
+                } catch (error) {
+                    console.error("Error in hitungTotalAmount:", error);
+                }
+            };
+
         });
-    }
-
-    // Set values only if the elements exist
-    if ($('#total_amount').length) $('#total_amount').val(totalAmount.toLocaleString('id-ID'));
-    if ($('#total_amount_hidden').length) $('#total_amount_hidden').val(totalAmount);
-    if ($('#total_points').length) $('#total_points').val(totalPoints.toLocaleString('id-ID'));
-    if ($('#total_points_hidden').length) $('#total_points_hidden').val(totalPoints);
-    
-    const totalBeratEl = $('.total-berat');
-    if (totalBeratEl.length) totalBeratEl.text(totalBerat + "KG");
-};
-
-            // Event listener untuk tombol plus
-            $(document).on('click', '.btn-plus', function(e) {
+          // Event listener untuk tombol plus
+          $(document).on('click', '.btn-plus', function(e) {
                 e.preventDefault();
                 const beratValue = $(this).siblings('.berat-value');
                 const beratHidden = $(this).siblings('.berat-hidden');
@@ -215,8 +231,6 @@
                     hitungTotalAmount(); // Hitung ulang total
                 }
             });
-
-        });
     </script>
 
 @endsection
