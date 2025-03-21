@@ -79,139 +79,143 @@
 @endsection
 @section('script')
 <script>
-    $(document).ready(function() {
-        // Inisialisasi fungsi lain
-        initFormSubmission();
-        initWeightButtons();
+   $(document).ready(function() {
+    // Initialize functions
+    initFormSubmission();
+    initWeightButtons();
 
-        // Event toggle kategori langsung dengan event delegation
-        $(document).on('click', '.toggle-icon', function () {
-            const categoryId = $(this).data('category-id');
-            const categoryContent = $('#category-content-' + categoryId);
+    // Event toggle category with event delegation
+    $(document).on('click', '.toggle-icon', function () {
+        const categoryId = $(this).data('category-id');
+        const categoryContent = $('#category-content-' + categoryId);
 
-            if (categoryContent.length > 0) {
-                categoryContent.slideToggle('fast');
-                $(this).toggleClass('fa-chevron-up fa-chevron-down');
+        if (categoryContent.length > 0) {
+            categoryContent.slideToggle('fast');
+            $(this).toggleClass('fa-chevron-up fa-chevron-down');
+        }
+    });
+
+    // Function to handle form submission
+    function initFormSubmission() {
+        $('#createFormTransaction').on('submit', function(e) {
+            e.preventDefault();
+            const submitBtn = $('#submitBtn');
+            disableSubmitButton(submitBtn);
+            handleCreateForm('createFormTransaction');
+        });
+    }
+
+    // Function for plus and minus buttons
+    function initWeightButtons() {
+        $(document).on('click', '.btn-plus', function(e) {
+            e.preventDefault();
+            updateWeight($(this), 1);
+        });
+
+        $(document).on('click', '.btn-minus', function(e) {
+            e.preventDefault();
+            updateWeight($(this), -1);
+        });
+    }
+
+    // Function to update weight
+    function updateWeight(button, change) {
+        const beratValue = button.siblings('.berat-value');
+        const beratHidden = button.siblings('.berat-hidden');
+        let berat = parseFloat(beratValue.text()) || 0;
+
+        berat += change;
+        if (berat < 0) berat = 0;
+
+        beratValue.text(berat);
+        beratHidden.val(berat);
+        hitungTotalAmount();
+    }
+
+    // Function to handle AJAX form submission
+    function handleCreateForm(formId) {
+        const form = $(`#${formId}`);
+        removeZeroWeightInputs(form);
+
+        $.ajax({
+            url: 'setor-sampah/store',
+            type: 'POST',
+            data: form.serialize(),
+            success: function(response) {
+                if (response.success) {
+                    setTimeout(() => {
+                        window.location.href = '/setor-sampah/waiting/' + response.setorId;
+                    }, 1000);
+                } else {
+                    console.log('Error:', response.message);
+                }
+            },
+            error: function(xhr) {
+                handleAjaxError(xhr);
+            }
+        });
+    }
+
+    // Function to remove inputs with weight 0
+    function removeZeroWeightInputs(form) {
+        form.find('.berat-hidden').each(function() {
+            if (parseFloat($(this).val()) === 0) {
+                $(this).siblings('input[name="sampah_id[]"]').remove();
+                $(this).remove();
+            }
+        });
+    }
+
+    // Function to disable submit button
+    function disableSubmitButton(button) {
+        button.prop('disabled', true);
+        button.text('Memproses...');
+        button.addClass('opacity-70 cursor-not-allowed');
+    }
+
+    // Function to handle AJAX errors
+    function handleAjaxError(xhr) {
+        if (xhr.status === 422) {
+            const errors = xhr.responseJSON.errors || {};
+            $.each(errors, (field, messages) => {
+                if (Array.isArray(messages)) {
+                    messages.forEach(message => {
+                        console.log('Error:', message);
+                    });
+                } else {
+                    console.log('Error:', messages);
+                }
+            });
+        } else {
+            console.log('Error:', xhr.responseJSON.error || 'An error occurred');
+        }
+        $('#submitBtn').prop('disabled', false);
+    }
+
+    // Function to calculate total amount, points, and weight
+    function hitungTotalAmount() {
+        let totalAmount = 0;
+        let totalPoints = 0;
+        let totalBerat = 0;
+
+        $('.berat-value').each(function() {
+            const beratText = $(this).text().trim();
+            const berat = beratText ? parseFloat(beratText) : 0;
+            const harga = $(this).data('harga') ? parseFloat($(this).data('harga')) : 0;
+            const points = $(this).data('points') ? parseFloat($(this).data('points')) : 0;
+
+            if (!isNaN(berat) && berat > 0) {
+                totalAmount += harga * berat;
+                totalPoints += points * berat;
+                totalBerat += berat;
             }
         });
 
-        // Fungsi untuk handle form submission
-        function initFormSubmission() {
-            $('#createFormTransaction').on('submit', function(e) {
-                e.preventDefault();
-                const submitBtn = $('#submitBtn');
-                disableSubmitButton(submitBtn);
-                handleCreateForm('createFormTransaction');
-            });
-        }
-
-        // Fungsi untuk tombol plus dan minus
-        function initWeightButtons() {
-            $(document).on('click', '.btn-plus', function(e) {
-                e.preventDefault();
-                updateWeight($(this), 1);
-            });
-
-            $(document).on('click', '.btn-minus', function(e) {
-                e.preventDefault();
-                updateWeight($(this), -1);
-            });
-        }
-
-        // Fungsi untuk update berat
-        function updateWeight(button, change) {
-            const beratValue = button.siblings('.berat-value');
-            const beratHidden = button.siblings('.berat-hidden');
-            let berat = parseFloat(beratValue.text()) || 0;
-
-            berat += change;
-            if (berat < 0) berat = 0;
-
-            beratValue.text(berat);
-            beratHidden.val(berat);
-            hitungTotalAmount();
-        }
-
-        // Fungsi untuk handle AJAX form submission
-        function handleCreateForm(formId) {
-            const form = $(`#${formId}`);
-            removeZeroWeightInputs(form);
-
-            $.ajax({
-                url: 'setor-sampah/store',
-                type: 'POST',
-                data: form.serialize(),
-                success: function(response) {
-                    if (response.success) {
-                        setTimeout(() => {
-                            window.location.href = '/setor-sampah/waiting/' + response.setorId;
-                        }, 1000);
-                    } else {
-                        showToast('error', response.message);
-                    }
-                },
-                error: function(xhr) {
-                    handleAjaxError(xhr);
-                }
-            });
-        }
-
-        // Fungsi untuk menghapus input dengan berat 0
-        function removeZeroWeightInputs(form) {
-            form.find('.berat-hidden').each(function() {
-                if (parseFloat($(this).val()) === 0) {
-                    $(this).siblings('input[name="sampah_id[]"]').remove();
-                    $(this).remove();
-                }
-            });
-        }
-
-        // Fungsi untuk menonaktifkan tombol submit
-        function disableSubmitButton(button) {
-            button.prop('disabled', true);
-            button.text('Memproses...');
-            button.addClass('opacity-70 cursor-not-allowed');
-        }
-
-        // Fungsi untuk menangani error AJAX
-        function handleAjaxError(xhr) {
-            if (xhr.status === 422) {
-                const errors = xhr.responseJSON.errors;
-                $.each(errors, (field, messages) => {
-                    messages.forEach(message => {
-                        showToast('error', message);
-                    });
-                });
-            } else {
-                showToast('error', xhr.responseJSON.error);
-            }
-            $('#submitBtn').prop('disabled', false);
-        }
-
-        // Fungsi untuk menghitung total amount, points, dan berat
-        function hitungTotalAmount() {
-            let totalAmount = 0;
-            let totalPoints = 0;
-            let totalBerat = 0;
-
-            $('.berat-value').each(function() {
-                const beratText = $(this).text().trim();
-                const berat = beratText ? parseFloat(beratText) : 0;
-                const harga = $(this).data('harga') ? parseFloat($(this).data('harga')) : 0;
-                const points = $(this).data('points') ? parseFloat($(this).data('points')) : 0;
-
-                if (!isNaN(berat) && berat > 0) {
-                    totalAmount += harga * berat;
-                    totalPoints += points * berat;
-                    totalBerat += berat;
-                }
-            });
-
-            $('#total_amount_hidden').val(totalAmount);
-            $('#total_points_hidden').val(totalPoints);
-            $('.total-berat').text(totalBerat + " KG");
-        }
-    });
+        $('#total_amount_hidden').val(totalAmount);
+        $('#total_points_hidden').val(totalPoints);
+        $('.total-berat').text(totalBerat + " KG");
+    }
+});
 </script>
 
 
