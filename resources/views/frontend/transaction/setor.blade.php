@@ -63,9 +63,6 @@
                 </div>
             @endif
         @endforeach
-        
-            <input type="hidden" name="total_amount_hidden" id="total_amount_hidden">
-            <input type="hidden" name="total_points_hidden" id="total_points_hidden">
             <div
                 class="max-w-screen-sm mx-auto fixed bottom-5 left-5 right-5 bg-green-600 text-white p-3 rounded-lg shadow-lg flex justify-between items-center">
                 <div class="text-sm">
