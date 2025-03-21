@@ -94,7 +94,7 @@
 <script>
     $(document).ready(function() {
         // Event listener untuk ikon chevron
-        $('.category-content').hide();
+        // $('.category-content').hide();
         $('.category-card .fa-chevron-up').on('click', function() {
             const categoryContent = $(this).closest('.category-card').find('.category-content');
             if (categoryContent.length > 0) {
