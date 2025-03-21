@@ -60,7 +60,7 @@
 
             function fetchTransactions() {
                 $.ajax({
-                    url: "{{ url('/transaksi/filter') }}",
+                    url: "{{ secure_url('/transaksi/filter') }}",
                     type: "GET",
                     data: {
                         status: selectedStatus,
