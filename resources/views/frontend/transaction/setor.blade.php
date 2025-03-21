@@ -83,9 +83,10 @@
     // Initialize functions
     initFormSubmission();
     initWeightButtons();
+});
 
-    // Event toggle category with event delegation
-    $(document).on('click', '.toggle-icon', function () {
+// Event toggle category with event delegation
+$(document).on('click', '.toggle-icon', function () {
         const categoryId = $(this).data('category-id');
         const categoryContent = $(`#category-content-${categoryId}`);
 
@@ -227,7 +228,6 @@
         $('#total_points_hidden').val(totalPoints);
         $('.total-berat').text(`${totalBerat} KG`);
     }
-});
 
 </script>
 
