@@ -79,7 +79,7 @@
 @endsection
 @section('script')
 <script>
-   $(document).ready(function() {
+ $(document).ready(function() {
     // Initialize functions
     initFormSubmission();
     initWeightButtons();
@@ -87,7 +87,7 @@
     // Event toggle category with event delegation
     $(document).on('click', '.toggle-icon', function () {
         const categoryId = $(this).data('category-id');
-        const categoryContent = $('#category-content-' + categoryId);
+        const categoryContent = $(`#category-content-${categoryId}`);
 
         if (categoryContent.length > 0) {
             categoryContent.slideToggle('fast');
@@ -144,7 +144,7 @@
             success: function(response) {
                 if (response.success) {
                     setTimeout(() => {
-                        window.location.href = '/setor-sampah/waiting/' + response.setorId;
+                        window.location.href = `/setor-sampah/waiting/${response.setorId}`;
                     }, 1000);
                 } else {
                     console.log('Error:', response.message);
@@ -159,8 +159,14 @@
     // Function to remove inputs with weight 0
     function removeZeroWeightInputs(form) {
         form.find('.berat-hidden').each(function() {
-            if (parseFloat($(this).val()) === 0) {
-                $(this).siblings('input[name="sampah_id[]"]').remove();
+            const beratVal = parseFloat($(this).val());
+
+            if (!isNaN(beratVal) && beratVal === 0) {
+                const sampahIdInput = $(this).siblings('input[name="sampah_id[]"]');
+
+                if (sampahIdInput.length > 0) {
+                    sampahIdInput.remove();
+                }
                 $(this).remove();
             }
         });
@@ -175,28 +181,28 @@
 
     // Function to handle AJAX errors
     function handleAjaxError(xhr) {
-    if (xhr.status === 422) {
-        const errors = xhr.responseJSON.errors;
+        if (xhr.status === 422) {
+            const errors = xhr.responseJSON?.errors;
 
-        if (errors && typeof errors === 'object' && !Array.isArray(errors)) {
-            Object.entries(errors).forEach(([field, messages]) => {
-                if (Array.isArray(messages)) {
-                    messages.forEach(message => {
-                        showToast('error', message);
-                    });
-                } else {
-                    showToast('error', messages);
-                }
-            });
+            if (errors && typeof errors === 'object' && !Array.isArray(errors)) {
+                Object.entries(errors).forEach(([field, messages]) => {
+                    if (Array.isArray(messages)) {
+                        messages.forEach(message => {
+                            showToast('error', message);
+                        });
+                    } else {
+                        showToast('error', messages);
+                    }
+                });
+            } else {
+                showToast('error', 'Terjadi kesalahan validasi.');
+            }
         } else {
-            showToast('error', 'Terjadi kesalahan validasi.');
+            showToast('error', xhr.responseJSON?.error || 'Terjadi kesalahan tidak diketahui.');
         }
-    } else {
-        showToast('error', xhr.responseJSON?.error || 'Terjadi kesalahan tidak diketahui.');
-    }
-    $('#submitBtn').prop('disabled', false); // Aktifkan kembali tombol submit
-}
 
+        $('#submitBtn').prop('disabled', false); // Aktifkan kembali tombol submit
+    }
 
     // Function to calculate total amount, points, and weight
     function hitungTotalAmount() {
@@ -219,9 +225,10 @@
 
         $('#total_amount_hidden').val(totalAmount);
         $('#total_points_hidden').val(totalPoints);
-        $('.total-berat').text(totalBerat + " KG");
+        $('.total-berat').text(`${totalBerat} KG`);
     }
 });
+
 </script>
 
 
