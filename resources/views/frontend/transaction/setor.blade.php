@@ -99,28 +99,7 @@
     initWeightButtons();
 
     // Fungsi untuk toggle kategori
-    function initCategoryToggle() {
-    console.log('Menginisialisasi category toggle...');
-
-    // Menyembunyikan semua kategori awalnya
-    $('.category-content').hide();
-
-    // Event toggle untuk setiap chevron
-    $('.toggle-icon').on('click', function () {
-        console.log('Chevron diklik:', this);
-
-        const categoryId = $(this).data('category-id');
-        const categoryContent = $('#category-content-' + categoryId);
-
-        if (categoryContent.length > 0) {
-            console.log('Menampilkan/Menyembunyikan kategori:', categoryId);
-            categoryContent.slideToggle('fast');
-            $(this).toggleClass('fa-chevron-up fa-chevron-down');
-        } else {
-            console.warn('Tidak ada category-content untuk kategori ini.');
-        }
-    });
-}
+  
 
 
     // Fungsi untuk handle form submission
