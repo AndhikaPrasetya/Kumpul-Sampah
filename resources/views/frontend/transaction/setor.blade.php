@@ -100,15 +100,35 @@
 
     // Fungsi untuk toggle kategori
     function initCategoryToggle() {
-        $('.category-content').hide();
-        $('.category-card .fa-chevron-up').on('click', function() {
-            const categoryContent = $(this).closest('.category-card').find('.category-content');
-            if (categoryContent.length > 0) {
-                categoryContent.slideToggle('fast');
-                $(this).toggleClass('fa-chevron-up fa-chevron-down');
+    console.log('Menginisialisasi category toggle...');
+    const categoryContents = $('.category-content');
+    const chevronIcons = $('.category-card .fa-chevron-up');
+
+    console.log('Jumlah category-content:', categoryContents.length);
+    console.log('Jumlah chevron icons:', chevronIcons.length);
+
+    if (categoryContents.length > 0) {
+        categoryContents.hide();
+    }
+
+    if (chevronIcons.length > 0) {
+        chevronIcons.on('click', function() {
+            console.log('Chevron icon diklik');
+            const categoryCard = $(this).closest('.category-card');
+            console.log('Category card ditemukan:', categoryCard.length > 0);
+
+            if (categoryCard.length > 0) {
+                const categoryContent = categoryCard.find('.category-content');
+                console.log('Category content ditemukan:', categoryContent.length > 0);
+
+                if (categoryContent.length > 0) {
+                    categoryContent.slideToggle('fast');
+                    $(this).toggleClass('fa-chevron-up fa-chevron-down');
+                }
             }
         });
     }
+}
 
     // Fungsi untuk handle form submission
     function initFormSubmission() {
