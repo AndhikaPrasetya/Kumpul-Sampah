@@ -117,7 +117,6 @@
                 type: 'POST',
                 data: form.serialize(),
                 success: function(response) {
-                    success: function(response) {
     console.log("Response dari server:", response); // Cek respons server
     if (response.success) {
         setTimeout(() => {
@@ -128,7 +127,6 @@
     }
 },
 
-                },
                 error: (xhr) => {
                     if (xhr.status === 422) {
                         const errors = xhr.responseJSON.errors;
