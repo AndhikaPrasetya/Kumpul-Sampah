@@ -88,7 +88,7 @@
         </form>
     </div>
 @endsection
-{{-- @section('script')
+@section('script')
     <script>
         $(document).ready(function() {
             // Event listener untuk ikon chevron
@@ -233,4 +233,4 @@
             });
     </script>
 
-@endsection --}}
+@endsection
