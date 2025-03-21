@@ -158,32 +158,37 @@
 
             // Fungsi untuk menghitung total amount dan points
             const hitungTotalAmount = () => {
-                let totalAmount = 0;
-                let totalPoints = 0;
-                let totalBerat = 0;
+    let totalAmount = 0;
+    let totalPoints = 0;
+    let totalBerat = 0;
 
-                // Loop melalui setiap span berat
-                $('.berat-value').each(function() {
-                    const berat = parseFloat($(this).text()) || 0;
-                    const harga = parseFloat($(this).data('harga')) || 0;
-                    const points = parseFloat($(this).data('points')) || 0;
+    // Make sure we have elements before trying to iterate
+    const beratElements = $('.berat-value');
+    if (beratElements.length > 0) {
+        beratElements.each(function() {
+            const berat = parseFloat($(this).text()) || 0;
+            const harga = parseFloat($(this).data('harga')) || 0;
+            const points = parseFloat($(this).data('points')) || 0;
 
-                    if (!isNaN(berat) && berat > 0) {
-                        const subtotal = harga * berat;
-                        const subPoints = points * berat;
-                        totalAmount += subtotal;
-                        totalPoints += subPoints;
-                        totalBerat += berat;
-                    }
-                });
+            if (!isNaN(berat) && berat > 0) {
+                const subtotal = harga * berat;
+                const subPoints = points * berat;
+                totalAmount += subtotal;
+                totalPoints += subPoints;
+                totalBerat += berat;
+            }
+        });
+    }
 
-                // Tampilkan total amount dan points
-                $('#total_amount').val(totalAmount.toLocaleString('id-ID'));
-                $('#total_amount_hidden').val(totalAmount);
-                $('#total_points').val(totalPoints.toLocaleString('id-ID'));
-                $('#total_points_hidden').val(totalPoints);
-                $('.total-berat').text(totalBerat + "KG");
-            };
+    // Set values only if the elements exist
+    if ($('#total_amount').length) $('#total_amount').val(totalAmount.toLocaleString('id-ID'));
+    if ($('#total_amount_hidden').length) $('#total_amount_hidden').val(totalAmount);
+    if ($('#total_points').length) $('#total_points').val(totalPoints.toLocaleString('id-ID'));
+    if ($('#total_points_hidden').length) $('#total_points_hidden').val(totalPoints);
+    
+    const totalBeratEl = $('.total-berat');
+    if (totalBeratEl.length) totalBeratEl.text(totalBerat + "KG");
+};
 
             // Event listener untuk tombol plus
             $(document).on('click', '.btn-plus', function(e) {
