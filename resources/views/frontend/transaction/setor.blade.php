@@ -101,34 +101,27 @@
     // Fungsi untuk toggle kategori
     function initCategoryToggle() {
     console.log('Menginisialisasi category toggle...');
-    const categoryContents = $('.category-content');
-    const chevronIcons = $('.category-card .fa-chevron-up');
 
-    console.log('Jumlah category-content:', categoryContents.length);
-    console.log('Jumlah chevron icons:', chevronIcons.length);
+    // Menyembunyikan semua kategori awalnya
+    $('.category-content').hide();
 
-    if (categoryContents.length > 0) {
-        categoryContents.hide();
-    }
+    // Event toggle untuk setiap chevron
+    $('.toggle-icon').on('click', function () {
+        console.log('Chevron diklik:', this);
 
-    if (chevronIcons.length > 0) {
-        chevronIcons.on('click', function() {
-            console.log('Chevron icon diklik');
-            const categoryCard = $(this).closest('.category-card');
-            console.log('Category card ditemukan:', categoryCard.length > 0);
+        const categoryId = $(this).data('category-id');
+        const categoryContent = $('#category-content-' + categoryId);
 
-            if (categoryCard.length > 0) {
-                const categoryContent = categoryCard.find('.category-content');
-                console.log('Category content ditemukan:', categoryContent.length > 0);
-
-                if (categoryContent.length > 0) {
-                    categoryContent.slideToggle('fast');
-                    $(this).toggleClass('fa-chevron-up fa-chevron-down');
-                }
-            }
-        });
-    }
+        if (categoryContent.length > 0) {
+            console.log('Menampilkan/Menyembunyikan kategori:', categoryId);
+            categoryContent.slideToggle('fast');
+            $(this).toggleClass('fa-chevron-up fa-chevron-down');
+        } else {
+            console.warn('Tidak ada category-content untuk kategori ini.');
+        }
+    });
 }
+
 
     // Fungsi untuk handle form submission
     function initFormSubmission() {
