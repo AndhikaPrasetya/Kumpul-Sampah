@@ -175,22 +175,28 @@
 
     // Function to handle AJAX errors
     function handleAjaxError(xhr) {
-        if (xhr.status === 422) {
-            const errors = xhr.responseJSON.errors || {};
-            $.each(errors, (field, messages) => {
+    if (xhr.status === 422) {
+        const errors = xhr.responseJSON.errors;
+
+        if (errors && typeof errors === 'object' && !Array.isArray(errors)) {
+            Object.entries(errors).forEach(([field, messages]) => {
                 if (Array.isArray(messages)) {
                     messages.forEach(message => {
-                        console.log('Error:', message);
+                        showToast('error', message);
                     });
                 } else {
-                    console.log('Error:', messages);
+                    showToast('error', messages);
                 }
             });
         } else {
-            console.log('Error:', xhr.responseJSON.error || 'An error occurred');
+            showToast('error', 'Terjadi kesalahan validasi.');
         }
-        $('#submitBtn').prop('disabled', false);
+    } else {
+        showToast('error', xhr.responseJSON?.error || 'Terjadi kesalahan tidak diketahui.');
     }
+    $('#submitBtn').prop('disabled', false); // Aktifkan kembali tombol submit
+}
+
 
     // Function to calculate total amount, points, and weight
     function hitungTotalAmount() {
