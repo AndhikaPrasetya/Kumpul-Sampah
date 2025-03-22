@@ -2,7 +2,7 @@
 @section('title','')
 @section('route', 'listBlog')
 @section('content')
-<div id="appCapsule">
+<div id="appCapsule" style="max-width: 640px; margin:0 auto;">
 
 
     <div class="section mt-2">
@@ -24,8 +24,8 @@
         <p>
            {{$article->content}}
         </p>
-        <figure>
-            <img src="{{secure_asset($article->image)}}" alt="image" class="imaged img-fluid">
+        <figure class="text-center">
+            <img src="{{asset($article->image)}}" alt="image" class="imaged w-50 ">
         </figure>
     </div>
     <div class="section">

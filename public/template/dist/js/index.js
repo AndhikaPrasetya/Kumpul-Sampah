@@ -493,6 +493,7 @@ $('#exportPDF').click(function() {
         serverSide: true,
         searching: true,
         stateSave: true,
+        order: [[0, 'desc']], 
         ajax: {
             url: "/admin/transaction",
             type: "GET",

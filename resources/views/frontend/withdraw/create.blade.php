@@ -1,4 +1,4 @@
-@extends('layouts.layoutSecond')
+@extends('layouts.layoutMain',['noBottomMenu' => true])
 @section('headTitle', 'Tarik Tunai')
 @section('title', 'Tarik Tunai')
 @section('content')
@@ -44,98 +44,177 @@
     </div>
 @endsection
 @section('script')
-    <script>
-        $(document).ready(() => {
-            toastr.options = {
-                "closeButton": true,
-                "progressBar": true,
-                "positionClass": "toast-bottom-right",
-                "timeOut": "1000",
-            };
+<script>
+  (function() {
+    // Safety wrapper to avoid global namespace pollution
+    function initWithdrawApp() {
+        try {
+            // Only start when the DOM is fully loaded
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initOnReady);
+            } else {
+                initOnReady();
+            }
+        } catch (e) {
+            console.error('Error initializing app:', e);
+        }
+    }
 
-            const showToast = (icon, message) => {
-                if (icon === 'error') {
-                    toastr.error(message);
-                } else if (icon === 'success') {
-                    toastr.success(message);
-                } else if (icon === 'info') {
-                    toastr.info(message);
-                } else {
-                    toastr.warning(message);
+    function initOnReady() {
+        try {
+            // Wait for jQuery
+            var checkJQueryInterval = setInterval(function() {
+                if (window.jQuery) {
+                    clearInterval(checkJQueryInterval);
+                    setupEventHandlers();
                 }
-            };
-            $('#createFormWithdraw').on('submit', function(e) {
+            }, 100);
+
+            // Safety timeout
+            setTimeout(function() {
+                clearInterval(checkJQueryInterval);
+                if (!window.jQuery) {
+                    console.error('jQuery not found after timeout');
+                }
+            }, 5000);
+        } catch (e) {
+            console.error('Error in initOnReady:', e);
+        }
+    }
+
+    // Setup event handlers after jQuery is ready
+    function setupEventHandlers() {
+        try {
+            var $ = window.jQuery;
+
+            // Form submission
+            $('#createFormWithdraw').off('submit').on('submit', function(e) {
                 e.preventDefault();
-                const submitBtn = $('#submitBtn');
-                submitBtn.prop('disabled', true);
-                submitBtn.text('Memproses...');
-                submitBtn.addClass('opacity-70 cursor-not-allowed');
-                // Ambil nilai amount dan hapus format titik
-                const rawAmount = $('#amount').val();
-                const unformattedAmount = hapusFormatAngka(rawAmount);
-
-                // Update nilai amount di form sebelum dikirim
-                $('#amount').val(unformattedAmount);
-
-                $.ajax({
-                    url: '/tarik-tunai',
-                    type: 'POST',
-                    data: $(this).serialize(),
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        showToast('success', response.message);
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 2000);
-                    },
-                    error: (xhr) => {
-                        if (xhr.status === 422) {
-                            const errors = xhr.responseJSON.errors;
-                            for (const [field, messages] of Object.entries(errors)) {
-                                messages.forEach(message => {
-                                    showToast('error', message);
-
-                                });
-
-                            }
-
-                        } else {
-                            showToast('error', xhr.responseJSON.error);
-                            submitBtn.prop('disabled', false);
-                            submitBtn.text('Tarik Tunai');
-                            submitBtn.removeClass('opacity-70 cursor-not-allowed');
-                        }
-                    }
-                });
+                handleFormSubmission($(this));
             });
 
-            // Format angka dengan titik sebagai pemisah ribuan
-            function formatAngka(value) {
-                return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-            }
-
-            // Hapus format angka sebelum dikirim ke server
-            function hapusFormatAngka(value) {
-                return value.replace(/\./g, '');
-            }
-
-            // Event untuk input balance (format otomatis)
+            // Format amount input
             $('#amount').on('input', function() {
-                let unformattedValue = hapusFormatAngka($(this).val());
+                formatAmountInput($(this));
+            });
+        } catch (e) {
+            console.error('Error in setupEventHandlers:', e);
+        }
+    }
 
-                // Pastikan hanya angka yang diproses
-                if (unformattedValue !== '') {
-                    unformattedValue = parseInt(unformattedValue, 10);
-                    if (!isNaN(unformattedValue)) {
-                        $(this).val(formatAngka(unformattedValue));
+    // Handle form submission
+    function handleFormSubmission($form) {
+        try {
+            var $ = window.jQuery;
+            var $submitBtn = $('#submitBtn');
+
+            // Disable button
+            $submitBtn.prop('disabled', true)
+                      .text('Memproses...')
+                      .addClass('opacity-70 cursor-not-allowed');
+
+            // Unformat amount before submission
+            const rawAmount = $('#amount').val();
+            const unformattedAmount = hapusFormatAngka(rawAmount);
+            $('#amount').val(unformattedAmount);
+
+            // Submit form via AJAX
+            $.ajax({
+                url: '/tarik-tunai',
+                type: 'POST',
+                data: $form.serialize(),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    showToast('success', response.message);
+                    setTimeout(() => {
+                        window.location.href = '/withdraw/waiting/' + response.withdrawId;
+                    }, 2000);
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        const errors = xhr.responseJSON.errors;
+                        for (const [field, messages] of Object.entries(errors)) {
+                            messages.forEach(message => {
+                                showToast('error', message);
+                            });
+                        }
+                    } else {
+                        showToast('error', xhr.responseJSON.error);
                     }
-                } else {
-                    $(this).val('');
+                    resetSubmitButton($submitBtn);
                 }
             });
+        } catch (e) {
+            console.error('Error in handleFormSubmission:', e);
+            resetSubmitButton($('#submitBtn'));
+        }
+    }
 
-        });
-    </script>
+    // Format amount input with thousand separators
+    function formatAmountInput($input) {
+        try {
+            let unformattedValue = hapusFormatAngka($input.val());
+            if (unformattedValue !== '') {
+                unformattedValue = parseInt(unformattedValue, 10);
+                if (!isNaN(unformattedValue)) {
+                    $input.val(formatAngka(unformattedValue));
+                }
+            } else {
+                $input.val('');
+            }
+        } catch (e) {
+            console.error('Error formatting amount input:', e);
+        }
+    }
+
+    // Format number with thousand separators
+    function formatAngka(value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    // Remove thousand separators from number
+    function hapusFormatAngka(value) {
+        return value.replace(/\./g, '');
+    }
+
+    // Reset submit button to its initial state
+    function resetSubmitButton($btn) {
+        try {
+            if ($btn && $btn.length) {
+                $btn.prop('disabled', false)
+                    .text('Tarik Tunai')
+                    .removeClass('opacity-70 cursor-not-allowed');
+            }
+        } catch (e) {
+            console.error('Error resetting button:', e);
+        }
+    }
+
+    // Show toast message using SweetAlert2
+    function showToast(icon, message) {
+        try {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: icon,
+                    title: message,
+                    position: 'center',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            } else {
+                alert(message); // Fallback to alert if SweetAlert2 is not available
+            }
+        } catch (e) {
+            console.error('Error showing toast:', e);
+            alert(message); // Fallback to alert if an error occurs
+        }
+    }
+
+    // Start the app
+    initWithdrawApp();
+})();
+</script>
+
 @endsection

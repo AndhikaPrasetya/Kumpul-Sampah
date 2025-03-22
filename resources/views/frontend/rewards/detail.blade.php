@@ -1,4 +1,4 @@
-@extends('layouts.layoutSecond')
+@extends('layouts.layoutMain',['noBottomMenu' => true])
 @section('headTitle', 'Rewards')
 @section('title', 'Rewards')
 @section('content')
@@ -50,9 +50,6 @@
     <ul class="list-disc list-inside text-gray-600 text-sm space-y-1">
       <li>Berlaku hingga 30 Juni 2023</li>
       <li>Tidak dapat ditukar dengan uang tunai</li>
-      <li>Hanya berlaku untuk 1 kali penukaran</li>
-      <li>Voucher harus digunakan dalam sekali transaksi</li>
-      <li>Jika nilai transaksi kurang dari Rp50.000, sisa nilai tidak dapat dikembalikan</li>
     </ul>
   </div>
   
@@ -61,10 +58,9 @@
     <h3 class="text-lg font-medium text-gray-800 mb-2">Cara Menggunakan</h3>
     <ol class="list-decimal list-inside text-gray-600 text-sm space-y-3">
       <li>Tukarkan poin Anda dengan reward ini</li>
-      <li>Kode voucher digital akan dikirimkan ke email dan notifikasi aplikasi Anda</li>
-      <li>Tunjukkan kode voucher kepada kasir saat melakukan pemesanan</li>
-      <li>Kode voucher akan divalidasi oleh kasir</li>
-      <li>Nikmati minuman favoritmu!</li>
+      <li>Tunjukkan kode voucher ke BSU terdekat</li>
+      <li>Kode voucher akan oleh admin</li>
+      <li>Silahkan Membawa hadiah anda pulang!</li>
     </ol>
   </div>
 </div>
@@ -86,52 +82,148 @@
 @endsection
 @section('script')
 <script>
-$(document).ready(() => {
-    toastr.options = {
-        "closeButton": true,
-        "progressBar": true,
-        "positionClass": "toast-top-right",
-        "timeOut": "1000",
-    };
-
-    const showToast = (icon, message) => {
-        if (icon === 'error') {
-            toastr.error(message);
-        } else if (icon === 'success') {
-            toastr.success(message);
-        } else {
-            toastr.info(message);
-        }
-    };
-
-    $('#redeemRewardForm').on('submit', function(e) {
-        e.preventDefault();
-        const submitBtn = $('#submitBtn');
-        submitBtn.prop('disabled', true).text('Memproses...').addClass('opacity-70 cursor-not-allowed');
-
-        $.ajax({
-            url: '/rewards',
-            type: 'POST',
-            data: $(this).serialize(),
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(response) {
-                showToast('success', response.message);
-                setTimeout(() => window.location.reload(), 2000);
-            },
-            error: function(xhr) {
-                if (xhr.status === 422) {
-                    Object.values(xhr.responseJSON.errors).forEach(messages => {
-                        messages.forEach(message => showToast('error', message));
-                    });
-                } else {
-                    showToast('error', xhr.responseJSON.error || 'Terjadi kesalahan.');
-                }
-                submitBtn.prop('disabled', false).text('Tukar Reward').removeClass('opacity-70 cursor-not-allowed');
+(function() {
+    // Safety wrapper to avoid global namespace pollution
+    function initRewardApp() {
+        try {
+            // Only start when the DOM is fully loaded
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initOnReady);
+            } else {
+                initOnReady();
             }
-        });
-    });
-});
+        } catch (e) {
+            console.error('Error initializing app:', e);
+        }
+    }
+
+    function initOnReady() {
+        try {
+            // Wait for jQuery
+            var checkJQueryInterval = setInterval(function() {
+                if (window.jQuery) {
+                    clearInterval(checkJQueryInterval);
+                    setupEventHandlers();
+                    configureToastr();
+                }
+            }, 100);
+
+            // Safety timeout
+            setTimeout(function() {
+                clearInterval(checkJQueryInterval);
+                if (!window.jQuery) {
+                    console.error('jQuery not found after timeout');
+                }
+            }, 5000);
+        } catch (e) {
+            console.error('Error in initOnReady:', e);
+        }
+    }
+
+    // Configure Toastr options
+    function configureToastr() {
+        try {
+            toastr.options = {
+                closeButton: true,
+                progressBar: true,
+                positionClass: "toast-top-right",
+                timeOut: "1000",
+            };
+        } catch (e) {
+            console.error('Error configuring Toastr:', e);
+        }
+    }
+
+    // Setup event handlers after jQuery is ready
+    function setupEventHandlers() {
+        try {
+            var $ = window.jQuery;
+
+            // Form submission
+            $('#redeemRewardForm').off('submit').on('submit', function(e) {
+                e.preventDefault();
+                handleFormSubmission($(this));
+            });
+        } catch (e) {
+            console.error('Error in setupEventHandlers:', e);
+        }
+    }
+
+    // Handle form submission
+    function handleFormSubmission($form) {
+        try {
+            var $ = window.jQuery;
+            var $submitBtn = $('#submitBtn');
+
+            // Disable button
+            $submitBtn.prop('disabled', true)
+                      .text('Memproses...')
+                      .addClass('opacity-70 cursor-not-allowed');
+
+            // Submit form via AJAX
+            $.ajax({
+                url: '/rewards',
+                type: 'POST',
+                data: $form.serialize(),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    showToast('success', response.message);
+                    setTimeout(() => window.location.reload(), 2000);
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        Object.values(xhr.responseJSON.errors).forEach(messages => {
+                            messages.forEach(message => showToast('error', message));
+                        });
+                    } else {
+                        showToast('error', xhr.responseJSON.error || 'Terjadi kesalahan.');
+                    }
+                    resetSubmitButton($submitBtn);
+                }
+            });
+        } catch (e) {
+            console.error('Error in handleFormSubmission:', e);
+            resetSubmitButton($('#submitBtn'));
+        }
+    }
+
+    // Show toast message using Toastr
+    function showToast(icon, message) {
+        try {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: icon,
+                    title: message,
+                    position: 'center',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            } else {
+                alert(message); // Fallback to alert if SweetAlert2 is not available
+            }
+        } catch (e) {
+            console.error('Error showing toast:', e);
+            alert(message); // Fallback to alert if an error occurs
+        }
+    }
+
+    // Reset submit button to its initial state
+    function resetSubmitButton($btn) {
+        try {
+            if ($btn && $btn.length) {
+                $btn.prop('disabled', false)
+                    .text('Tukar Reward')
+                    .removeClass('opacity-70 cursor-not-allowed');
+            }
+        } catch (e) {
+            console.error('Error resetting button:', e);
+        }
+    }
+
+    // Start the app
+    initRewardApp();
+})();
 </script>
 @endsection

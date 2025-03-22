@@ -93,4 +93,8 @@ class PenukaranPoinFeController extends Controller
             ], 500);
         }
     }
+
+    public function waitingReward(){
+        return view('frontend.rewards.waiting');
+    }
 }

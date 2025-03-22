@@ -1,4 +1,4 @@
-@extends('layouts.layoutSecond')
+@extends('layouts.layoutMain')
 @section('title', 'Harga Sampah Terkini')
 @section('content')
 <div class="bg-white rounded-lg shadow-sm overflow-hidden">

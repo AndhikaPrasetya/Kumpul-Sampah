@@ -152,52 +152,54 @@
                 }
             });
 
-            // ============= Total Nasabah CHART ============================//
-            var nasabahData = @json(array_values($nasabahData)); // Data jumlah per bulan
-            var bulanLabels = @json(array_values($bulanLabels)); // Label bulan
+           // ============= Total Nasabah CHART ============================//
+var jumlahNasabahBulanIni = @json($jumlahNasabahBulanIni); // Jumlah nasabah bulan ini
+var bulanSaatIni = @json($bulanLabels[now()->month]); // Label bulan saat ini
 
-            var barChartCanvas = document.getElementById('nasabahChart').getContext('2d');
+var barChartCanvas = document.getElementById('nasabahChart').getContext('2d');
 
-            var barChartData = {
-                labels: bulanLabels,
-                datasets: [{
-                    label: 'Jumlah Nasabah per Bulan',
-                    data: nasabahData,
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            };
+var barChartData = {
+    labels: [bulanSaatIni], // Hanya bulan saat ini
+    datasets: [{
+        label: 'Jumlah Nasabah yang Setor',
+        data: [jumlahNasabahBulanIni], // Data untuk bulan saat ini
+        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+    }]
+};
 
-            new Chart(barChartCanvas, {
-                type: 'bar',
-                data: barChartData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'bottom'
-                        },
-                        tooltip: {
-                            enabled: true,
-                            callbacks: {
-                                label: function(tooltipItem) {
-                                    return tooltipItem.dataset.label + ': ' + tooltipItem.raw;
-                                }
-                            }
-                        }
-
+new Chart(barChartCanvas, {
+    type: 'bar',
+    data: barChartData,
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    precision: 0 // Agar angka tidak menjadi desimal
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom'
+            },
+            tooltip: {
+                enabled: true,
+                callbacks: {
+                    label: function(tooltipItem) {
+                        return tooltipItem.dataset.label + ': ' + tooltipItem.raw + ' Nasabah';
                     }
                 }
-            });
+            }
+        }
+    }
+});
+
         });
     </script>
 @endsection
