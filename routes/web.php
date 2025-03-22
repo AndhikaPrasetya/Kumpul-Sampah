@@ -9,6 +9,7 @@ use App\Http\Controllers\Frontend\PenukaranPoinFeController;
 use App\Http\Controllers\Frontend\SetorSampahController;
 use App\Http\Controllers\Frontend\TransactionFrontendController;
 use App\Http\Controllers\Frontend\WitdhrawFeController;
+
 use App\Http\Controllers\LaporanKeuanganController;
 use App\Http\Controllers\NasabahController;
 use App\Http\Controllers\PenukaranPoinController;
@@ -31,6 +32,7 @@ Route::middleware(['auth', 'verified', 'role:nasabah'])->group(function () {
 
     Route::get('/rewards', [HomeController::class, 'listRewards'])->name('listRewards');
     Route::get('/rewards/detail/{id}', [PenukaranPoinFeController::class, 'detailReward'])->name('detailReward');
+    Route::get('/rewards/waiting', [PenukaranPoinFeController::class, 'waitingReward'])->name('waitingReward');
     Route::post('/rewards', [PenukaranPoinFeController::class, 'rewardStore'])->name('rewardStore');
 
     Route::get('/blog', [HomeController::class, 'listBlog'])->name('listBlog');
@@ -47,7 +49,7 @@ Route::middleware(['auth', 'verified', 'role:nasabah'])->group(function () {
     Route::post('/setor-sampah/store', [TransactionFrontendController::class, 'store']);
     Route::get('/setor-sampah/waiting/{id}', [TransactionFrontendController::class, 'waiting'])->name('setor-sampah.waiting');
 
-    Route::get('/transaksi/tarik-tunai/{id}', [TransactionFrontendController::class, 'withdrawDetail'])->name('transaction.withdraw');
+    Route::get('/transaksi/tarik-tunai/{id}', [WitdhrawFeController::class, 'withdrawDetail'])->name('transaction.withdraw');
     Route::get('/transaksi/setor-sampah/{id}', [TransactionFrontendController::class, 'transactionDetails'])->name('transaction-details');
     Route::get('/transaksi/tukar-points/{id}', [TransactionFrontendController::class, 'tukarPoints'])->name('transaction.exchange');
 
@@ -59,7 +61,6 @@ Route::middleware(['auth', 'verified', 'role:nasabah'])->group(function () {
 
     Route::get('/leaderboard', [TransactionFrontendController::class, 'leaderboard'])->name('leaderboard');
 });
-
 
 
 

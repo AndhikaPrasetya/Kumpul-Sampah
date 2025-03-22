@@ -24,7 +24,7 @@
     </header>
     @endif
 
-    <div class="p-4 min-h-screen max-w-screen-sm mx-auto" style="background-color: #f5f6f8;">
+    <div class="p-1 min-h-screen max-w-screen-sm mx-auto" style="background-color: #f5f6f8;">
        @yield('content')
     </div>
 

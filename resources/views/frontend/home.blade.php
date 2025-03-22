@@ -224,10 +224,10 @@
         
         @elseif ($rewards->count() == 2)
             <!-- Tampilan khusus jika ada 3 reward -->
-            <div class="d-flex justify-content-center flex-wrap gap-3">
+            <div class="d-flex justify-content-center flex-wrap gap-3 ">
                 @foreach ($rewards as $reward)
                 <a href="{{route('detailReward',$reward->id)}}">
-                    <div class="blog-card" style="max-width: 180px;">
+                    <div class="blog-card" style="max-width: 200px; width: 140px;">
                         <div class="image-wrapper d-flex justify-content-center">
                             <img src="{{ asset($reward->image) }}" alt="image" class="imaged w86">
                         </div>
@@ -282,7 +282,7 @@
                 <strong>Info</strong>
             </div>
         </a>
-        <a href="app-components.html" class="item">
+        <a href="{{route('leaderboard')}}" class="item">
             <div class="col">
                 <ion-icon name="podium"></ion-icon>
                 <strong>Peringkat</strong>

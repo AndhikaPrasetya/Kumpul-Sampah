@@ -1,4 +1,4 @@
-@extends('layouts.layoutMain')
+@extends('layouts.layoutMain',  ['noBottomMenu' => true])
 @section('title', 'Transaksi Details')
 @section('content')
 

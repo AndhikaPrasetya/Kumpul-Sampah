@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Frontend;
 use Exception;
 use App\Models\Saldo;
 use App\Models\Withdraw;
-use App\Models\Transactions;
 use Illuminate\Http\Request;
 use App\Models\NasabahDetail;
 use Illuminate\Support\Facades\DB;

@@ -357,7 +357,7 @@ class TransactionFrontendController extends Controller
     public function transactionDetails(Request $request, $id)
     {
         $transaction = Transactions::with('details.sampah')->findOrFail($id);
-    
+        
         $transactionDetail = $transaction->details;
         $transactionCode = $transaction->transaction_code;
         $transactionDate = $transaction->created_at;
@@ -396,7 +396,7 @@ class TransactionFrontendController extends Controller
 
  
     public function leaderboard(){
-        return view('frontend.leaderboard.index');
+        return view('frontend.leaderboard.index',['route'=>route('home')]);
     }
 
   
