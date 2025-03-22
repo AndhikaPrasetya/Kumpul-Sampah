@@ -51,10 +51,11 @@ class HomeController extends Controller
     public function listBlog()
     {
         // Ambil berita terbaru sebagai hero berdasarkan created_at
-        $heroNews = Article::latest()->first();
+        $heroNews = Article::latest()->where('status', 'published')->first();
 
         // Ambil berita lainnya, kecuali hero
         $otherNews = Article::where('id', '!=', optional($heroNews)->id)
+            ->where('status', 'published')
             ->orderBy('created_at', 'desc')
             ->get();
 

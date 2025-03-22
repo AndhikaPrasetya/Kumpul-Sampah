@@ -8,6 +8,7 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\PenukaranPoinFeController;
 use App\Http\Controllers\Frontend\SetorSampahController;
 use App\Http\Controllers\Frontend\TransactionFrontendController;
+use App\Http\Controllers\Frontend\WitdhrawFeController;
 use App\Http\Controllers\LaporanKeuanganController;
 use App\Http\Controllers\NasabahController;
 use App\Http\Controllers\PenukaranPoinController;
@@ -52,8 +53,11 @@ Route::middleware(['auth', 'verified', 'role:nasabah'])->group(function () {
 
     Route::get('/list-sampah', [TransactionFrontendController::class, 'listSampah'])->name('sampahlist');
 
-    Route::get('/tarik-tunai', [TransactionFrontendController::class, 'withdraw'])->name('tarik-tunai');
-    Route::post('/tarik-tunai', [TransactionFrontendController::class, 'withdrawStore']);
+    Route::get('/tarik-tunai', [WitdhrawFeController::class, 'withdraw'])->name('tarik-tunai');
+    Route::post('/tarik-tunai', [WitdhrawFeController::class, 'withdrawStore']);
+    Route::get('/withdraw/waiting/{id}', [WitdhrawFeController::class, 'waitingWithdraw'])->name('waiting-withdraw');
+
+    Route::get('/leaderboard', [TransactionFrontendController::class, 'leaderboard'])->name('leaderboard');
 });
 
 

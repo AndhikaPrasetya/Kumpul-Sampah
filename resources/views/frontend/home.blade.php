@@ -136,8 +136,21 @@
                 <a href="{{ route('listBlog') }}" class="link">Lihat semua</a>
             </div>
 
-            <!-- carousel artikel -->
             @if ($articles->isNotEmpty())
+            @if ($articles->count() === 1)
+                @php $article = $articles->first(); @endphp
+                <div class="section full p-2 mt-2 mb-2">
+                    <a href="{{route('detailBlog',$article->slug)}}">
+                    <div class="card shadow-sm">
+                        <img src="{{ asset($article->thumbnail) }}" class="card-img-top img-fluid"  alt="Hero Image">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $article->title }}</h5>
+                            <p class="card-text">{{ Str::limit($article->content, 100) }}</p>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+            @else
                 <div class="carousel-single splide" id="splide02">
                     <div class="splide__track">
                         <ul class="splide__list">
@@ -146,9 +159,7 @@
                                     <a href="{{ route('detailBlog', $article->slug) }}">
                                         <div class="card" style="width: 100%; height: 300px;">
                                             <div class="image-wrapper-blog">
-
-                                                <img src="{{ asset($article->image) }}" class="card-img-top"
-                                                    alt="image">
+                                                <img src="{{ asset($article->thumbnail) }}" class="card-img-top" alt="image">
                                             </div>
                                             <div class="card-body">
                                                 <h5 class="card-title">{{ $article->title }}</h5>
@@ -161,9 +172,11 @@
                         </ul>
                     </div>
                 </div>
-            @else
-                <div class="title p-3">Tunggu berita yang akan datang</div>
             @endif
+        @else
+            <div class="title p-3">Tunggu berita yang akan datang</div>
+        @endif
+        
             <!-- * carousel artikel -->
         </div>
 
@@ -176,62 +189,79 @@
                 <a href="{{ route('listRewards') }}" class="link">Lihat semua</a>
             </div>
 
-            @if ($rewards->count() > 1)
-                <!-- carousel multiple -->
-                <div class="carousel-multiple splide splide--loop splide--ltr splide--draggable is-active"
-                    id="splide03" style="visibility: visible;">
-                    <div class="splide__track" id="splide03-track" style="padding-left: 16px; padding-right: 16px;">
-                        @if ($rewards->isNotEmpty())
-                            <ul class="splide__list" id="splide03-list" style="transform: translateX(-2224px);">
-
-                                @foreach ($rewards as $reward)
-                                    <li class="splide__slide splide__slide--clone" aria-hidden="true" tabindex="-1"
-                                        style="margin-right: 16px; width: 240px;">
-
-                                        <div class="blog-card">
-                                            <div class="image-wrapper d-flex justify-content-center">
-                                                <img src="{{ asset($reward->image) }}" alt="image"
-                                                    class="imaged w86">
-                                            </div>
-                                            <div class="text-wrapper p-2">
-                                                <div class="mb-1 text-center">
-                                                    <h5>{{ $reward->name }}</h5>
-                                                    <span
-                                                        class="badge badge-warning">{{ number_format($reward->points, 0, ',', '.') }}
-                                                        Poin</span>
-                                                </div>
+            @if ($rewards->count() > 3)
+            <!-- Carousel multiple -->
+            <div class="carousel-multiple splide splide--loop splide--ltr splide--draggable is-active" id="splide03"
+                style="visibility: visible;">
+                <div class="splide__track" id="splide03-track" style="padding-left: 16px; padding-right: 16px;">
+                    @if ($rewards->isNotEmpty())
+                        <ul class="splide__list" id="splide03-list" style="transform: translateX(-2224px);">
+                            @foreach ($rewards as $reward)
+                                <li class="splide__slide splide__slide--clone" aria-hidden="true" tabindex="-1"
+                                    style="margin-right: 16px; width: 240px;">
+                                    <a href="{{route('detailReward',$reward->id)}}">
+                                    <div class="blog-card">
+                                        <div class="image-wrapper d-flex justify-content-center">
+                                            <img src="{{ asset($reward->image) }}" alt="image" class="imaged w86">
+                                        </div>
+                                        <div class="text-wrapper p-2">
+                                            <div class="mb-1 text-center">
+                                                <h5>{{ $reward->name }}</h5>
+                                                <span class="badge badge-warning">{{ number_format($reward->points, 0, ',', '.') }} Poin</span>
                                             </div>
                                         </div>
-
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @else
-                            <div class="title p-3">Belum ada rewards yang tersedia</div>
-                        @endif
-                    </div>
+                                    </div>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <div class="title p-3">Belum ada rewards yang tersedia</div>
+                    @endif
                 </div>
-                <!-- * carousel multiple -->
-            @elseif ($rewards->count() == 1)
-                <div class="single-reward text-center">
-                    <div class="blog-card mx-auto" style="max-width: 140px;">
+            </div>
+            <!-- * Carousel multiple -->
+        
+        @elseif ($rewards->count() == 2)
+            <!-- Tampilan khusus jika ada 3 reward -->
+            <div class="d-flex justify-content-center flex-wrap gap-3">
+                @foreach ($rewards as $reward)
+                <a href="{{route('detailReward',$reward->id)}}">
+                    <div class="blog-card" style="max-width: 180px;">
                         <div class="image-wrapper d-flex justify-content-center">
-                            <img src="{{ asset($rewards->first()->image) }}" alt="image" class="imaged w86">
+                            <img src="{{ asset($reward->image) }}" alt="image" class="imaged w86">
                         </div>
-                        <div class="text-wrapper p-2">
-                            <div class="mb-1 text-center">
-                                <h5>{{ $rewards->first()->name }}</h5>
-                                <span
-                                    class="badge badge-warning">{{ number_format($rewards->first()->points, 0, ',', '.') }}
-                                    Poin</span>
-                            </div>
+                        <div class="text-wrapper p-2 text-center">
+                            <h5>{{ $reward->name }}</h5>
+                            <span class="badge badge-warning">{{ number_format($reward->points, 0, ',', '.') }} Poin</span>
+                        </div>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        
+        @elseif ($rewards->count() == 1)
+            <!-- Jika hanya ada 1 reward -->
+            <div class="single-reward text-center">
+                <a href="{{route('detailReward',$reward->id)}}">
+                <div class="blog-card mx-auto" style="max-width: 140px;">
+                    <div class="image-wrapper d-flex justify-content-center">
+                        <img src="{{ asset($rewards->first()->image) }}" alt="image" class="imaged w86">
+                    </div>
+                    <div class="text-wrapper p-2">
+                        <div class="mb-1 text-center">
+                            <h5>{{ $rewards->first()->name }}</h5>
+                            <span class="badge badge-warning">{{ number_format($rewards->first()->points, 0, ',', '.') }} Poin</span>
                         </div>
                     </div>
                 </div>
-            @else
-                <div class="title p-3">Belum ada rewards yang tersedia</div>
-            @endif
-
+                </a>
+            </div>
+        
+        @else
+            <div class="title p-3">Belum ada rewards yang tersedia</div>
+        @endif
+        
 
 
         </div>

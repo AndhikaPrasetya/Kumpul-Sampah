@@ -1,4 +1,4 @@
-@extends('layouts.layoutSecond')
+@extends('layouts.layoutMain',['noBottomMenu' => true])
 @section('title', 'Setor Sampah')
 @section('content')
     @php

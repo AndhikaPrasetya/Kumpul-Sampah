@@ -1,7 +1,7 @@
 @extends('layouts.layout-fe')
 @section('title', 'Berita')
 @section('content')
-<div id="appCapsule">
+<div id="appCapsule" style="max-width:640px; margin:0 auto;">
     @if($heroNews)
     <div class="section full p-2 mt-2 mb-2">
         <a href="{{route('detailBlog',$heroNews->slug)}}">

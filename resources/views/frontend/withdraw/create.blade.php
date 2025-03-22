@@ -1,4 +1,4 @@
-@extends('layouts.layoutSecond')
+@extends('layouts.layoutMain',['noBottomMenu' => true])
 @section('headTitle', 'Tarik Tunai')
 @section('title', 'Tarik Tunai')
 @section('content')
@@ -44,98 +44,84 @@
     </div>
 @endsection
 @section('script')
-    <script>
-        $(document).ready(() => {
-            toastr.options = {
-                "closeButton": true,
-                "progressBar": true,
-                "positionClass": "toast-bottom-right",
-                "timeOut": "1000",
-            };
+<script>
+    $(document).ready(() => {
+        const showToast = (icon, message) => {
+            Swal.fire({
+                icon: icon,
+                title: message,
+                position: 'center',
+                showConfirmButton: false,
+                timer: 1000,
+            });
+        };
 
-            const showToast = (icon, message) => {
-                if (icon === 'error') {
-                    toastr.error(message);
-                } else if (icon === 'success') {
-                    toastr.success(message);
-                } else if (icon === 'info') {
-                    toastr.info(message);
-                } else {
-                    toastr.warning(message);
-                }
-            };
-            $('#createFormWithdraw').on('submit', function(e) {
-                e.preventDefault();
-                const submitBtn = $('#submitBtn');
-                submitBtn.prop('disabled', true);
-                submitBtn.text('Memproses...');
-                submitBtn.addClass('opacity-70 cursor-not-allowed');
-                // Ambil nilai amount dan hapus format titik
-                const rawAmount = $('#amount').val();
-                const unformattedAmount = hapusFormatAngka(rawAmount);
+        $('#createFormWithdraw').on('submit', function(e) {
+            e.preventDefault();
+            const submitBtn = $('#submitBtn');
+            submitBtn.prop('disabled', true);
+            submitBtn.text('Memproses...');
+            submitBtn.addClass('opacity-70 cursor-not-allowed');
 
-                // Update nilai amount di form sebelum dikirim
-                $('#amount').val(unformattedAmount);
+            // Ambil nilai amount dan hapus format titik
+            const rawAmount = $('#amount').val();
+            const unformattedAmount = hapusFormatAngka(rawAmount);
+            $('#amount').val(unformattedAmount); // Update nilai sebelum dikirim
 
-                $.ajax({
-                    url: '/tarik-tunai',
-                    type: 'POST',
-                    data: $(this).serialize(),
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        showToast('success', response.message);
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 2000);
-                    },
-                    error: (xhr) => {
-                        if (xhr.status === 422) {
-                            const errors = xhr.responseJSON.errors;
-                            for (const [field, messages] of Object.entries(errors)) {
-                                messages.forEach(message => {
-                                    showToast('error', message);
-
-                                });
-
-                            }
-
-                        } else {
-                            showToast('error', xhr.responseJSON.error);
-                            submitBtn.prop('disabled', false);
-                            submitBtn.text('Tarik Tunai');
-                            submitBtn.removeClass('opacity-70 cursor-not-allowed');
+            $.ajax({
+                url: '/tarik-tunai',
+                type: 'POST',
+                data: $(this).serialize(),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    showToast('success', response.message);
+                    setTimeout(() => {
+                        window.location.href = '/withdraw/waiting/' + response.withdrawId;
+                    }, 2000);
+                },
+                error: (xhr) => {
+                    if (xhr.status === 422) {
+                        const errors = xhr.responseJSON.errors;
+                        for (const [field, messages] of Object.entries(errors)) {
+                            messages.forEach(message => {
+                                showToast('error', message);
+                            });
                         }
+                    } else {
+                        showToast('error', xhr.responseJSON.error);
                     }
-                });
-            });
-
-            // Format angka dengan titik sebagai pemisah ribuan
-            function formatAngka(value) {
-                return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-            }
-
-            // Hapus format angka sebelum dikirim ke server
-            function hapusFormatAngka(value) {
-                return value.replace(/\./g, '');
-            }
-
-            // Event untuk input balance (format otomatis)
-            $('#amount').on('input', function() {
-                let unformattedValue = hapusFormatAngka($(this).val());
-
-                // Pastikan hanya angka yang diproses
-                if (unformattedValue !== '') {
-                    unformattedValue = parseInt(unformattedValue, 10);
-                    if (!isNaN(unformattedValue)) {
-                        $(this).val(formatAngka(unformattedValue));
-                    }
-                } else {
-                    $(this).val('');
+                    submitBtn.prop('disabled', false);
+                    submitBtn.text('Tarik Tunai');
+                    submitBtn.removeClass('opacity-70 cursor-not-allowed');
                 }
             });
-
         });
-    </script>
+
+        // Format angka dengan titik sebagai pemisah ribuan
+        function formatAngka(value) {
+            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        // Hapus format angka sebelum dikirim ke server
+        function hapusFormatAngka(value) {
+            return value.replace(/\./g, '');
+        }
+
+        // Event untuk input balance (format otomatis)
+        $('#amount').on('input', function() {
+            let unformattedValue = hapusFormatAngka($(this).val());
+            if (unformattedValue !== '') {
+                unformattedValue = parseInt(unformattedValue, 10);
+                if (!isNaN(unformattedValue)) {
+                    $(this).val(formatAngka(unformattedValue));
+                }
+            } else {
+                $(this).val('');
+            }
+        });
+    });
+</script>
+
 @endsection

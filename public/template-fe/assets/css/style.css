@@ -1159,7 +1159,7 @@ blockquote.blockquote .blockquote-footer {
 }
 
 #loader {
-  max-width:500px;
+  max-width:640px;
   margin: 0 auto;
   position: fixed;
   left: 0;

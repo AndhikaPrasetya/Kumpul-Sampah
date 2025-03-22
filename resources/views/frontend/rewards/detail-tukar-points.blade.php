@@ -1,4 +1,4 @@
-@extends('layouts.layoutSecond')
+@extends('layouts.layoutMain',['noBottomMenu' => true])
 @section('headTitle', 'Tukar Points Details')
 @section('title', 'Tukar Points Details')
 @section('content')
