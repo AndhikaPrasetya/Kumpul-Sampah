@@ -212,87 +212,102 @@
 
             <!-- Carousel multiple -->
             <div class="carousel-full p-2 splide splide--loop splide--ltr splide--draggable is-active" id="splide03"
-            style="visibility: visible;">
-            <div class="splide__track" id="splide03-track" style="padding-left: 16px; padding-right: 16px;">
-                @if ($rewards->isEmpty())
-                    <div class="p-2 d-flex align-items-center justify-content-center">
-                        <div class="text-center text-secondary">
-                            <i class="fas fa-gift fs-1 mb-3 text-muted"></i>
-                            <p>Belum ada rewards yang tersedia</p>
+                style="visibility: visible;">
+                <div class="splide__track" id="splide03-track" style="padding-left: 16px; padding-right: 16px;">
+                    @if ($rewards->isEmpty())
+                        <div class="p-2 d-flex align-items-center justify-content-center">
+                            <div class="text-center text-secondary">
+                                <i class="fas fa-gift fs-1 mb-3 text-muted"></i>
+                                <p>Belum ada rewards yang tersedia</p>
+                            </div>
                         </div>
-                    </div>
-                @elseif ($rewards->count() == 1)
-                    @php 
-                        $reward = $rewards->first();
-                        $needPoints = max(0, $reward->points - $currentPoints);
-                        $progress = min(100, ($currentPoints / $reward->points) * 100);
-                    @endphp
-                   
+                    @elseif ($rewards->count() == 1)
+                        @php
+                            $reward = $rewards->first();
+                            $needPoints = max(0, $reward->points - $currentPoints);
+                            $progress = min(100, ($currentPoints / $reward->points) * 100);
+                        @endphp
+
                         <a href="{{ route('detailReward', $reward->id) }}" class="text-decoration-none">
                             <div class="card shadow-sm border w-full">
                                 <div class="position-relative">
-                                    <img src="{{ asset($reward->image) }}" alt="{{ $reward->name }}" 
+                                    <img src="{{ asset($reward->image) }}" alt="{{ $reward->name }}"
                                         class="card-img-top" style="height: 160px; object-fit: contain;">
                                 </div>
                                 <div class="card-body p-2">
                                     <h6 class="card-title fw-bold text-dark text-truncate">{{ $reward->name }}</h6>
                                     <div class="d-flex align-items-center mt-2">
-                                        <i class="fas fa-coins text-warning me-1"></i>
-                                        <span class="fw-bold text-dark small">{{ number_format($reward->points, 0, ',', '.') }} points</span>
-                                    </div>
-                                    <div class="mt-2 d-flex align-items-center justify-content-between">
-                                        <div class="progress w-75" style="height: 4px;">
-                                            <div class="progress-bar bg-success" style="width: {{ $progress }}%;"></div>
-                                        </div>
-                                        <span class="text-muted small">{{ round($progress, 2) }}% klaim</span>
-                                    </div>
-                                    <button class="btn btn-success w-100 p-2 btn-sm mt-2">Tukarkan</button>
-                                </div>
-                            </div>
-                        </a>
-                @else
-                <ul class="splide__list gap-3" id="splide03-list" style="transform: translateX(-2224px);">
-                    @foreach ($rewards as $reward)
-                        @php
-                            $needPoints = max(0, $reward->points - $currentPoints);
-                            $progress = min(100, ($currentPoints / $reward->points) * 100);
-                        @endphp
-                        <li class="splide__slide splide__slide--clone" aria-hidden="true" tabindex="-1"
-                            style="margin-right: 16px; width: 240px;">
-                            <a href="{{ route('detailReward', $reward->id) }}" class="text-decoration-none">
-                                <div class="card shadow-sm border w-full">
-                                    <div class="position-relative">
-                                        <img src="{{ asset($reward->image) }}" alt="{{ $reward->name }}"
-                                            class="card-img-top" style="height: 160px; object-fit: contain;">
-                                    </div>
-                                    <div class="card-body p-2">
-                                        <h6 class="card-title fw-bold text-dark text-truncate">
-                                            {{ $reward->name }}</h6>
-                                        <div class="d-flex align-items-center mt-2">
+                                        <div class="d-flex align-items-center">
                                             <i class="fas fa-coins text-warning me-1"></i>
                                             <span
                                                 class="fw-bold text-dark small">{{ number_format($reward->points, 0, ',', '.') }}
                                                 points</span>
                                         </div>
-                                        <div class="mt-2 d-flex align-items-center justify-content-between">
-                                            <div class="progress w-75" style="height: 4px;">
-                                                <div class="progress-bar bg-success"
-                                                    style="width: {{ $progress }}%;"></div>
-                                            </div>
-                                            <span class="text-muted small">{{ round($progress, 2) }}%
-                                                klaim</span>
-                                        </div>
-                                        <button class="btn btn-success w-100 p-2 btn-sm mt-2">Tukarkan</button>
+                                        <span class="text-muted small">Klaim:
+                                            {{ $currentPoints }}/{{ $reward->points }}</span>
                                     </div>
+                                    <div class="mt-2 d-flex align-items-center justify-content-between">
+                                        <div class="progress w-75" style="height: 4px;">
+                                            <div class="progress-bar bg-success"
+                                                style="width: {{ $progress }}%;"></div>
+                                        </div>
+                                        <p class="text-muted small">{{ round($progress, 2) }}% klaim</p>
+                                    </div>
+                                    <button class="btn btn-success w-100 p-2 btn-sm mt-2">Tukarkan</button>
                                 </div>
-                            </a>
-                        </li>
-                    @endforeach
+                            </div>
+                        </a>
+                    @else
+                        <ul class="splide__list gap-3" id="splide03-list" style="transform: translateX(-2224px);">
+                            @foreach ($rewards as $reward)
+                                @php
+                                    $needPoints = max(0, $reward->points - $currentPoints);
+                                    $progress = min(100, ($currentPoints / $reward->points) * 100);
+                                @endphp
+                                <li class="splide__slide splide__slide--clone" aria-hidden="true" tabindex="-1"
+                                    style="margin-right: 16px; width: 240px;">
+                                    <a href="{{ route('detailReward', $reward->id) }}" class="text-decoration-none">
+                                        <div class="card shadow-sm border w-full">
+                                            <div class="position-relative">
+                                                <img src="{{ asset($reward->image) }}" alt="{{ $reward->name }}"
+                                                    class="card-img-top" style="height: 160px; object-fit: contain;">
+                                            </div>
+                                            <div class="card-body p-2">
+                                                <h6 class="card-title fw-bold text-dark text-truncate">
+                                                    {{ $reward->name }}</h6>
+                                                <div class="d-flex align-items-center justify-content-between mt-2">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="fas fa-coins text-warning me-1"></i>
+                                                        <span
+                                                            class="fw-bold text-dark small">{{ number_format($reward->points, 0, ',', '.') }}
+                                                            points</span>
+                                                    </div>
+                                                    <span class="badge badge-success">Stok: 20</span>
+                                                </div>
+                                                <div class="mt-2 d-flex align-items-center justify-content-between">
+                                                    <div class="progress w-75" style="height: 4px;">
+                                                        <div class="progress-bar bg-success"
+                                                            style="width: {{ $progress }}%;"></div>
+                                                    </div>
+                                                    <span class="text-muted small">{{ round($progress, 2) }}%
+                                                        klaim</span>
+                                                </div>
+                                                <button class="btn btn-success w-100 p-2 btn-sm mt-2 btn-tukarkan"
+                                                    data-stock="{{ $reward->stock }}">
+                                                    Tukarkan
+                                                </button>
 
-                </ul>
-                @endif
+
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            @endforeach
+
+                        </ul>
+                    @endif
+                </div>
             </div>
-        </div>
         </div>
 
     </div>
@@ -373,6 +388,19 @@
     <!-- Base Js File -->
     <script src="{{ asset('template-fe/assets/js/base.js') }}"></script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".btn-tukarkan").forEach(button => {
+                let stock = parseInt(button.getAttribute("data-stock"));
+
+                if (stock === 0) {
+                    button.classList.add("btn-secondary", "disabled"); // Tambah kelas disabled
+                    button.classList.remove("btn-success"); // Hapus warna hijau
+                    button.innerText = "Habis"; // Ubah teks tombol
+                }
+            });
+        });
+    </script>
 
     <script>
         // Add to Home with 2 seconds delay.
