@@ -344,11 +344,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="action-sheet-content text-center">
-                        <div class="mb-1">
-                            <img src="assets/img/icon/192x192.png" alt="image" class="imaged w64 mb-2">
-                        </div>
                         <div>
-                            Install <strong>Finapp</strong> on your Android's home screen.
+                            Install <strong>Bank Imam</strong> on your Android's home screen.
                         </div>
                         <div>
                             Tap <ion-icon name="ellipsis-vertical"></ion-icon> and Add to homescreen.

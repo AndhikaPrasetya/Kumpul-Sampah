@@ -6793,7 +6793,7 @@ body.rtl-mode .form-group.boxed .form-control.custom-select {
   height: 100vh;
   min-height: 600px;
   margin: 0 auto;
-  display: flex;
+  display: none;
   flex-direction: column;
   background-color: white;
   position: relative;
