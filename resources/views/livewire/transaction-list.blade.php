@@ -78,7 +78,13 @@
     </a>
         @endforeach
     @else
-        <div class="title p-3">Belum ada transaksi</div>
+       <div class="p-2 d-flex align-items-center justify-content-center ">
+  <div class="text-center text-secondary">
+    <i class="fas fa-receipt fs-1 mb-3 text-muted"></i>
+    <p>Belum ada transaksi</p>
+  </div>
+</div>
+
     @endif
 </div>
 

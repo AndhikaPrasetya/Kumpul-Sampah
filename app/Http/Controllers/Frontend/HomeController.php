@@ -26,15 +26,16 @@ class HomeController extends Controller
         $articles = Article::where('status', 'published')->get();
 
         //list rewards for home
-        $rewards = Rewards::where('bsu_id',$bsuId)->get();
+        $rewards = Rewards::where('bsu_id', $bsuId)->get();
 
-        //list transaksi berddasarkan user_id
-        
 
-        return view('frontend.home', compact('user', 'articles', 'rewards'));
+        $currentPoints = Saldo::where('user_id', $user->id)->value('points') ?? 0;
+
+
+        return view('frontend.home', get_defined_vars());
     }
 
-    
+
 
     public function listRewards()
     {
@@ -68,8 +69,9 @@ class HomeController extends Controller
         return view('frontend.blog.detail', compact('article'));
     }
 
-    private function getBsuId($user){
-        $nasabahDetail = NasabahDetail::where('user_id',$user->id)->first();
+    private function getBsuId($user)
+    {
+        $nasabahDetail = NasabahDetail::where('user_id', $user->id)->first();
         $bsuid = $nasabahDetail ? $nasabahDetail->bsu_id : null;
         return $bsuid;
     }

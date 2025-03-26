@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('image')->nullable();
             $table->decimal('points',10, 2)->default(0);
+            $table->integer('jumlah');
+            $table->date('batas_waktu');
             $table->timestamps();
         });
     }

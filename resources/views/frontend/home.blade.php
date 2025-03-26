@@ -13,6 +13,7 @@
     <link rel="icon" type="image/png" href="assets/img/favicon.png" sizes="32x32">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <link rel="stylesheet" href="{{ asset('template-fe/assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('/template/plugins/fontawesome-free/css/all.min.css') }}">
     {{-- <link rel="manifest" href="{{asset('template-fe/__manifest.json')}}"> --}}
 
 </head>
@@ -33,11 +34,12 @@
         <div class="right">
             <form method="POST" action="{{ route('logout') }}" id="logout-form">
                 @csrf
-                <a href="#" class="headerButton" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <a href="#" class="headerButton"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <ion-icon name="exit-outline"></ion-icon>
                 </a>
             </form>
-           
+
         </div>
     </div>
     <!-- App Capsule -->
@@ -75,7 +77,7 @@
                 <!-- Wallet Footer -->
                 <div class="wallet-footer">
                     <div class="item">
-                        <a href="{{route('tarik-tunai')}}">
+                        <a href="{{ route('tarik-tunai') }}">
                             <div class="icon-wrapper bg-outline-success">
                                 <ion-icon name="swap-vertical"></ion-icon>
                             </div>
@@ -83,7 +85,7 @@
                         </a>
                     </div>
                     <div class="item">
-                        <a href="{{route('listRewards')}}">
+                        <a href="{{ route('listRewards') }}">
                             <div class="icon-wrapper">
                                 <ion-icon name="sync"></ion-icon>
                             </div>
@@ -91,7 +93,7 @@
                         </a>
                     </div>
                     <div class="item">
-                        <a href="{{route('transaksiFrontend.index')}}">
+                        <a href="{{ route('transaksiFrontend.index') }}">
                             <div class="icon-wrapper ">
                                 <ion-icon name="time"></ion-icon>
                             </div>
@@ -108,7 +110,7 @@
         <div class="section  mb-3">
             <div class="row mt-2">
                 <div class="col-12">
-                    <a href="{{route('setor-sampah')}}">
+                    <a href="{{ route('setor-sampah') }}">
                         <div class="stat-box d-flex align-items-center justify-content-between shadowed"
                             style="padding: 10px 15px;">
                             <div class="d-flex align-items-center gap-3">
@@ -137,46 +139,64 @@
             </div>
 
             @if ($articles->isNotEmpty())
-            @if ($articles->count() === 1)
-                @php $article = $articles->first(); @endphp
-                <div class="section full p-2 mt-2 mb-2">
-                    <a href="{{route('detailBlog',$article->slug)}}">
-                    <div class="card shadow-sm">
-                        <img src="{{ asset($article->thumbnail) }}" class="card-img-top img-fluid"  alt="Hero Image">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $article->title }}</h5>
-                            <p class="card-text">{{ Str::limit($article->content, 100) }}</p>
+                @if ($articles->count() === 1)
+                    <div class="px-2">
+                        @php $article = $articles->first(); @endphp
+                        <div class="bg-white rounded-3 shadow-sm border border-light overflow-hidden">
+                            <a href="{{ route('detailBlog', $article->slug) }}" class="text-decoration-none text-dark">
+                                <img src="{{ asset($article->thumbnail) }}" alt="{{ $article->title }}" class="w-100"
+                                    style="height: 160px; object-fit: cover;" />
+                                <div class="p-3">
+                                    <h5 class="fw-bold text-dark mt-2">{{ $article->title }}</h5>
+                                    <p class="text-muted small mt-1 text-truncate"
+                                        style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                        {{ Str::limit($article->content, 100) }}
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <span
+                                            class="text-muted small">{{ $article->created_at->format('d M Y') }}</span>
+                                        <button class="btn btn-link text-success p-0 fw-medium small">Baca
+                                            Selengkapnya</button>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
-                    </a>
-                </div>
+                @else
+                    <div class="carousel-full p-3 splide" id="splide02">
+                        <div class="splide__track">
+                            <ul class="splide__list gap-3">
+                                @foreach ($articles as $article)
+                                    <li class="splide__slide">
+                                        <a href="{{ route('detailBlog', $article->slug) }}">
+                                            <div class="card" style="width: 100%; height: 300px;">
+                                                <div style="height: 180px; overflow: hidden;">
+                                                    <img src="{{ asset($article->thumbnail) }}" class="card-img-top"
+                                                        alt="image"
+                                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                                </div>
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ $article->title }}</h5>
+                                                    <p class="card-text">{{ Str::limit($article->content, 100) }}</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+
+                @endif
             @else
-                <div class="carousel-single splide" id="splide02">
-                    <div class="splide__track">
-                        <ul class="splide__list">
-                            @foreach ($articles as $article)
-                                <li class="splide__slide">
-                                    <a href="{{ route('detailBlog', $article->slug) }}">
-                                        <div class="card" style="width: 100%; height: 300px;">
-                                            <div class="image-wrapper-blog">
-                                                <img src="{{ asset($article->thumbnail) }}" class="card-img-top" alt="image">
-                                            </div>
-                                            <div class="card-body">
-                                                <h5 class="card-title">{{ $article->title }}</h5>
-                                                <p class="card-text">{{ Str::limit($article->content, 100) }}</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
+                <div class="p-2 d-flex align-items-center justify-content-center ">
+                    <div class="text-center text-secondary">
+                        <i class="fas fa-newspaper fs-1 text-muted"></i>
+                        <p>Tunggu berita yang akan datang</p>
                     </div>
                 </div>
             @endif
-        @else
-            <div class="title p-3">Tunggu berita yang akan datang</div>
-        @endif
-        
+
             <!-- * carousel artikel -->
         </div>
 
@@ -189,81 +209,90 @@
                 <a href="{{ route('listRewards') }}" class="link">Lihat semua</a>
             </div>
 
-            @if ($rewards->count() > 3)
+
             <!-- Carousel multiple -->
-            <div class="carousel-multiple splide splide--loop splide--ltr splide--draggable is-active" id="splide03"
-                style="visibility: visible;">
-                <div class="splide__track" id="splide03-track" style="padding-left: 16px; padding-right: 16px;">
-                    @if ($rewards->isNotEmpty())
-                        <ul class="splide__list" id="splide03-list" style="transform: translateX(-2224px);">
-                            @foreach ($rewards as $reward)
-                                <li class="splide__slide splide__slide--clone" aria-hidden="true" tabindex="-1"
-                                    style="margin-right: 16px; width: 240px;">
-                                    <a href="{{route('detailReward',$reward->id)}}">
-                                    <div class="blog-card">
-                                        <div class="image-wrapper d-flex justify-content-center">
-                                            <img src="{{ asset($reward->image) }}" alt="image" class="imaged w86">
-                                        </div>
-                                        <div class="text-wrapper p-2">
-                                            <div class="mb-1 text-center">
-                                                <h5>{{ $reward->name }}</h5>
-                                                <span class="badge badge-warning">{{ number_format($reward->points, 0, ',', '.') }} Poin</span>
-                                            </div>
-                                        </div>
+            <div class="carousel-full p-2 splide splide--loop splide--ltr splide--draggable is-active" id="splide03"
+            style="visibility: visible;">
+            <div class="splide__track" id="splide03-track" style="padding-left: 16px; padding-right: 16px;">
+                @if ($rewards->isEmpty())
+                    <div class="p-2 d-flex align-items-center justify-content-center">
+                        <div class="text-center text-secondary">
+                            <i class="fas fa-gift fs-1 mb-3 text-muted"></i>
+                            <p>Belum ada rewards yang tersedia</p>
+                        </div>
+                    </div>
+                @elseif ($rewards->count() == 1)
+                    @php 
+                        $reward = $rewards->first();
+                        $needPoints = max(0, $reward->points - $currentPoints);
+                        $progress = min(100, ($currentPoints / $reward->points) * 100);
+                    @endphp
+                   
+                        <a href="{{ route('detailReward', $reward->id) }}" class="text-decoration-none">
+                            <div class="card shadow-sm border w-full">
+                                <div class="position-relative">
+                                    <img src="{{ asset($reward->image) }}" alt="{{ $reward->name }}" 
+                                        class="card-img-top" style="height: 160px; object-fit: contain;">
+                                </div>
+                                <div class="card-body p-2">
+                                    <h6 class="card-title fw-bold text-dark text-truncate">{{ $reward->name }}</h6>
+                                    <div class="d-flex align-items-center mt-2">
+                                        <i class="fas fa-coins text-warning me-1"></i>
+                                        <span class="fw-bold text-dark small">{{ number_format($reward->points, 0, ',', '.') }} points</span>
                                     </div>
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @else
-                        <div class="title p-3">Belum ada rewards yang tersedia</div>
-                    @endif
-                </div>
-            </div>
-            <!-- * Carousel multiple -->
-        
-        @elseif ($rewards->count() == 2)
-            <!-- Tampilan khusus jika ada 3 reward -->
-            <div class="d-flex justify-content-center flex-wrap gap-3 ">
-                @foreach ($rewards as $reward)
-                <a href="{{route('detailReward',$reward->id)}}">
-                    <div class="blog-card" style="max-width: 200px; width: 140px;">
-                        <div class="image-wrapper d-flex justify-content-center">
-                            <img src="{{ asset($reward->image) }}" alt="image" class="imaged w86">
-                        </div>
-                        <div class="text-wrapper p-2 text-center">
-                            <h5>{{ $reward->name }}</h5>
-                            <span class="badge badge-warning">{{ number_format($reward->points, 0, ',', '.') }} Poin</span>
-                        </div>
-                    </div>
-                </a>
-                @endforeach
-            </div>
-        
-        @elseif ($rewards->count() == 1)
-            <!-- Jika hanya ada 1 reward -->
-            <div class="single-reward text-center">
-                <a href="{{route('detailReward',$reward->id)}}">
-                <div class="blog-card mx-auto" style="max-width: 140px;">
-                    <div class="image-wrapper d-flex justify-content-center">
-                        <img src="{{ asset($rewards->first()->image) }}" alt="image" class="imaged w86">
-                    </div>
-                    <div class="text-wrapper p-2">
-                        <div class="mb-1 text-center">
-                            <h5>{{ $rewards->first()->name }}</h5>
-                            <span class="badge badge-warning">{{ number_format($rewards->first()->points, 0, ',', '.') }} Poin</span>
-                        </div>
-                    </div>
-                </div>
-                </a>
-            </div>
-        
-        @else
-            <div class="title p-3">Belum ada rewards yang tersedia</div>
-        @endif
-        
+                                    <div class="mt-2 d-flex align-items-center justify-content-between">
+                                        <div class="progress w-75" style="height: 4px;">
+                                            <div class="progress-bar bg-success" style="width: {{ $progress }}%;"></div>
+                                        </div>
+                                        <span class="text-muted small">{{ round($progress, 2) }}% klaim</span>
+                                    </div>
+                                    <button class="btn btn-success w-100 p-2 btn-sm mt-2">Tukarkan</button>
+                                </div>
+                            </div>
+                        </a>
+                @else
+                <ul class="splide__list gap-3" id="splide03-list" style="transform: translateX(-2224px);">
+                    @foreach ($rewards as $reward)
+                        @php
+                            $needPoints = max(0, $reward->points - $currentPoints);
+                            $progress = min(100, ($currentPoints / $reward->points) * 100);
+                        @endphp
+                        <li class="splide__slide splide__slide--clone" aria-hidden="true" tabindex="-1"
+                            style="margin-right: 16px; width: 240px;">
+                            <a href="{{ route('detailReward', $reward->id) }}" class="text-decoration-none">
+                                <div class="card shadow-sm border w-full">
+                                    <div class="position-relative">
+                                        <img src="{{ asset($reward->image) }}" alt="{{ $reward->name }}"
+                                            class="card-img-top" style="height: 160px; object-fit: contain;">
+                                    </div>
+                                    <div class="card-body p-2">
+                                        <h6 class="card-title fw-bold text-dark text-truncate">
+                                            {{ $reward->name }}</h6>
+                                        <div class="d-flex align-items-center mt-2">
+                                            <i class="fas fa-coins text-warning me-1"></i>
+                                            <span
+                                                class="fw-bold text-dark small">{{ number_format($reward->points, 0, ',', '.') }}
+                                                points</span>
+                                        </div>
+                                        <div class="mt-2 d-flex align-items-center justify-content-between">
+                                            <div class="progress w-75" style="height: 4px;">
+                                                <div class="progress-bar bg-success"
+                                                    style="width: {{ $progress }}%;"></div>
+                                            </div>
+                                            <span class="text-muted small">{{ round($progress, 2) }}%
+                                                klaim</span>
+                                        </div>
+                                        <button class="btn btn-success w-100 p-2 btn-sm mt-2">Tukarkan</button>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    @endforeach
 
-
+                </ul>
+                @endif
+            </div>
+        </div>
         </div>
 
     </div>
@@ -282,7 +311,7 @@
                 <strong>Info</strong>
             </div>
         </a>
-        <a href="{{route('leaderboard')}}" class="item">
+        <a href="{{ route('leaderboard') }}" class="item">
             <div class="col">
                 <ion-icon name="podium"></ion-icon>
                 <strong>Peringkat</strong>
