@@ -22,7 +22,7 @@ class SaldoInfo extends Component
         $user = Auth::user();
 
         $saldoData = Saldo::where('user_id', $user->id)->first();
-
+  
         $this->saldo = $saldoData ? number_format($saldoData->balance, 0, ',', '.') : '0';
         $this->points = $saldoData ? number_format($saldoData->points, 0, ',', '.') . ' Poin' : '0 Poin';
     }

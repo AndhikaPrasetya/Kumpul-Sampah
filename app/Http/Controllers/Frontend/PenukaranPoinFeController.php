@@ -52,7 +52,24 @@ class PenukaranPoinFeController extends Controller
             DB::beginTransaction();
             $nasabahDetail = NasabahDetail::where('user_id',$user)->first();
             $bsuid = $nasabahDetail ? $nasabahDetail->bsu_id : null;
-            $reward = Rewards::where('bsu_id', $bsuid)->findOrFail($request->reward_id);
+            $reward = Rewards::where('bsu_id', $bsuid)->lockForUpdate()->findOrFail($request->reward_id);
+
+            if ($reward->stok < 1) {
+                DB::rollBack();
+                return response()->json(['error' => 'Stok sudah habis'], 400);
+            }
+            
+            $updatedStok = Rewards::where('id', $reward->id)
+            ->where('stok', $reward->stok)
+            ->update([
+                'stok' => DB::raw('stok - 1'),
+                'updated_at' => now()
+            ]);
+
+            if ($updatedStok === 0) {
+                DB::rollBack();
+                return response()->json(['error' => 'Stok berubah, silakan coba lagi'], 400);
+            }
 
             //ambil points di saldo user 
             $saldo = Saldo::where('user_id', $user)->first();
@@ -66,7 +83,10 @@ class PenukaranPoinFeController extends Controller
             $saldo->points -= $reward->points;
             $saldo->save(); 
         
-            PenukaranPoints::create([
+            $reward->stok -= 1;
+            $reward->save();
+
+            $penukaran = PenukaranPoints::create([
                 'user_id' => $user,
                 'bsu_id'=>$bsuid,
                 'reward_id' => $request->reward_id,
@@ -78,7 +98,7 @@ class PenukaranPoinFeController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Penukaran poin berhasil',
-                'data' => $user
+                'penukaranId' => $penukaran->id
             ], 200);
         } catch (Exception $e) {
             DB::rollBack();

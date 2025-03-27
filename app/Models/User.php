@@ -29,6 +29,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(NasabahDetail::class, 'user_id');
     }
+    public function bsu()
+    {
+        return $this->belongsTo(BsuDetail::class, 'bsu_id');
+    }
 
     public function withdraw(){
         return $this->hasMany(Withdraw::class);

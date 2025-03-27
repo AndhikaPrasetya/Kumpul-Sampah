@@ -1,6 +1,5 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport"
@@ -13,6 +12,7 @@
     <link rel="icon" type="image/png" href="assets/img/favicon.png" sizes="32x32">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <link rel="stylesheet" href="{{secure_asset('template-fe/assets/css/style.css')}}">
+    <link rel="stylesheet" href="{{secure_asset('template\plugins\fontawesome-free\css\all.min.css')}}">
     @livewireStyles
 </head>
 
@@ -42,35 +42,37 @@
   @yield('content')
   @livewireScripts
 
-
-    <!-- App Bottom Menu -->
-    <div class="appBottomMenu" style="max-width: 640px; margin:0 auto;">
-        <a href="{{route('home')}}" class="item">
-            <div class="col">
-                <ion-icon name="home-outline"></ion-icon>
-                <strong>Home</strong>
-            </div>
-        </a>
-        <a href="{{route('leaderboard')}}" class="item  {{ Route::is('leaderboard') ? 'active' : '' }}">
-            <div class="col">
-                <ion-icon name="newspaper-outline"></ion-icon>
-                <strong>Info</strong>
-            </div>
-        </a>
-        <a href="app-components.html" class="item">
-            <div class="col">
-                <ion-icon name="podium"></ion-icon>
-                <strong>Peringkat</strong>
-            </div>
-        </a>
-        <a href="{{route('profile.edit')}}" class="item {{ Route::is('profile.edit') ? 'active' : '' }}">
-            <div class="col">
-                <ion-icon name="person-circle-outline"></ion-icon>
-                <strong>Profile</strong>
-            </div>
-        </a>
-    </div>
-    <!-- * App Bottom Menu -->
+  @if (!isset($noBottomMenu) || !$noBottomMenu)
+  <!-- App Bottom Menu -->
+  <div class="appBottomMenu" style="max-width: 640px; margin:0 auto;">
+      <a href="{{route('home')}}" class="item">
+          <div class="col">
+              <ion-icon name="home-outline"></ion-icon>
+              <strong>Home</strong>
+          </div>
+      </a>
+      <a href="{{route('leaderboard')}}" class="item  {{ Route::is('leaderboard') ? 'active' : '' }}">
+          <div class="col">
+              <ion-icon name="newspaper-outline"></ion-icon>
+              <strong>Info</strong>
+          </div>
+      </a>
+      <a href="app-components.html" class="item">
+          <div class="col">
+              <ion-icon name="podium"></ion-icon>
+              <strong>Peringkat</strong>
+          </div>
+      </a>
+      <a href="{{route('profile.edit')}}" class="item {{ Route::is('profile.edit') ? 'active' : '' }}">
+          <div class="col">
+              <ion-icon name="person-circle-outline"></ion-icon>
+              <strong>Profile</strong>
+          </div>
+      </a>
+  </div>
+  <!-- * App Bottom Menu -->
+    
+@endif
 
 
 

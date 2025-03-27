@@ -10,17 +10,35 @@
           @csrf
           <div class="card-body">
             <div class="row">
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="name" class="required">Nama barang</label>
                         <input type="text" class="form-control shadow-sm" name="name" id="name">
                     </div>
                 </div>
 
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="points" class="required">Jumlah poin</label>
                         <input type="text" class="form-control shadow-sm" name="points" id="points" placeholder="5000" required>
+                    </div>
+                </div>
+                <div class="col-12 col-md-3">
+                    <div class="form-group">
+                        <label for="stok" class="required">Jumlah Stok</label>
+                        <input type="number" class="form-control shadow-sm" name="stok" id="stok" required>
+                    </div>
+                </div>
+                <div class="col-12 col-md-3">
+                    <div class="form-group">
+                        <label for="tanggal_expired" class="required">Batas Waktu</label>
+                        <input type="date" class="form-control shadow-sm" name="tanggal_expired" id="tanggal_expired" required>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="deskripsi" class="required">Deskripsi</label>
+                       <textarea name="deskripsi" class="form-control"></textarea>
                     </div>
                 </div>
                 <div class="col-12">

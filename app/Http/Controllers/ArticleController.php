@@ -132,6 +132,7 @@ class ArticleController extends Controller
                 'tanggal' => Carbon::parse($request->tanggal)->format('Y-m-d'),
                 'image' => $fileData,
                 'tanggal' => now(),
+                'status' => $request->status,
                 'thumbnail' => $fileDataThumbnail,
                 'user_id' => Auth::user()->id,
             ]);

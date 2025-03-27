@@ -269,17 +269,20 @@
 
             // Cek jika user sudah melihat intro sebelumnya
             if (localStorage.getItem("introSeen")) {
-                $(".onboarding-container").hide();
-                $("#appCapsule").show();
-            }
+        console.log("Intro sudah pernah dilihat, langsung tampilkan app.");
+        $("#appCapsule").show();
+    } else {
+        console.log("Intro belum pernah dilihat, tampilkan onboarding.");
+        $(".onboarding-container").show();
+        $("#appCapsule").hide();
+    }
+});
 
-            // Saat tombol "Lewati" ditekan
-            $(".skip-intro").click(function() {
-                localStorage.setItem("introSeen", "true");
-                $(".onboarding-container").fadeOut(500, function() {
-                    $("#appCapsule").fadeIn(500);
-                });
-            });
+$(".skip-intro").click(function() {
+    localStorage.setItem("introSeen", "true");
+    $(".onboarding-container").fadeOut(500, function() {
+        $("#appCapsule").fadeIn(500);
+    });
         });
     </script>
 

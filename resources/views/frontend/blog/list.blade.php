@@ -1,4 +1,4 @@
-@extends('layouts.layout-fe')
+@extends('layouts.layout-fe',['noBottomMenu' => true])
 @section('title', 'Berita')
 @section('content')
 <div id="appCapsule" style="max-width:640px; margin:0 auto;">
@@ -6,7 +6,7 @@
     <div class="section full p-2 mt-2 mb-2">
         <a href="{{route('detailBlog',$heroNews->slug)}}">
         <div class="card shadow-sm">
-            <img src="{{ asset($heroNews->thumbnail) }}" class="card-img-top img-fluid"  alt="Hero Image">
+            <img src="{{ asset($heroNews->thumbnail) }}" class="card-img-top" style="height:250px; object-fit: cover;"  alt="Hero Image">
             <div class="card-body">
                 <h5 class="card-title">{{ $heroNews->title }}</h5>
                 <p class="card-text">{{ Str::limit($heroNews->content, 100) }}</p>
@@ -22,13 +22,14 @@
             @foreach ($otherNews as $news)
             <div class="col-12 mb-2">
                 <a href="{{route('detailBlog',$news->slug)}}">
-                    <div class="blog-card p-1 d-flex">
-                        <img src="{{ asset($news->thumbnail) }}" class="imaged w86">
-                        <div class="text">
+                    <div class="blog-card p-1 d-flex align-items-center">
+                        <img src="{{ asset($news->thumbnail) }}" class="img-fluid rounded" style="max-width: 60px; height: auto;">
+                        <div class="text ms-2">
                             <h5 class="card-title">{{ $news->title }}</h5>
                             <p class="card-text">{{ Str::limit($news->content, 80) }}</p>
                         </div>
                     </div>
+                    
                 </a>
             </div>
             @endforeach

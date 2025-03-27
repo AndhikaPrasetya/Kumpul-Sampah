@@ -10,7 +10,10 @@ class Rewards extends Model
         'name',
         'points',
         'image',
-        'bsu_id'
+        'bsu_id',
+        'stok',
+        'deskripsi',
+        'tanggal_expired'
     ];
     public function penukaranPoints(){
         return $this->hasMany(PenukaranPoints::class, 'reward_id');

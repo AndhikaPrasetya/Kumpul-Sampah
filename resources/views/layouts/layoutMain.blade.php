@@ -8,10 +8,10 @@
     <title>@yield('headTitle', 'Default Title')</title>
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="{{secure_asset('build/assets/app-yNVy3Sny.css')}}">
-    <script src="{{secure_asset('build/assets/app-CbEvcXly.js')}}"></script>
     <link rel="stylesheet" href="{{secure_asset('template/plugins/toastr/toastr.min.css')}}">
     <link rel="stylesheet" href="{{secure_asset('template/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
+    <link rel="stylesheet" href="{{secure_asset('template/plugins/swiper-11.2.6/package/swiper-bundle.min.css')}}">
+    
 </head>
 
 <body class="bg-gray-50 font-sans">
@@ -31,16 +31,16 @@
     </div>
 
     @if (!isset($noBottomMenu) || !$noBottomMenu)
-    <div class="max-w-screen-sm fixed bottom-0 left-0 right-0 w-full mx-auto bg-white border-t border-gray-300 flex items-center justify-around py-2">
+    <div class="max-w-screen-sm fixed bottom-0 left-0 right-0 z-50 w-full mx-auto bg-white border-t border-gray-300 flex items-center justify-around py-2">
         <a href="{{ route('home') }}" class="flex flex-col items-center text-gray-600 {{ Route::is('home') ? 'text-green-500 font-bold' : '' }}">
             <ion-icon name="home-outline" class="text-2xl"></ion-icon>
             <span class="text-xs">Home</span>
         </a>
-        <a href="{{ route('listBlog') }}" class="flex flex-col items-center text-gray-600">
+        <a href="{{ route('listBlog') }}" class="flex flex-col items-center text-gray-600 {{ Route::is('listBlog') ? 'text-green-500 font-bold' : '' }}"">
             <ion-icon name="newspaper-outline" class="text-2xl"></ion-icon>
             <span class="text-xs">Info</span>
         </a>
-        <a href="{{route('leaderboard')}}" class="flex flex-col items-center text-gray-600">
+        <a href="{{route('leaderboard')}}" class="flex flex-col items-center text-gray-600 {{ Route::is('leaderboard') ? 'text-green-500 font-bold' : '' }}"">
             <ion-icon name="podium" class="text-2xl"></ion-icon>
             <span class="text-xs">Peringkat</span>
         </a>
@@ -56,6 +56,7 @@
     <script src="{{ secure_asset('/template/plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ secure_asset('/template/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
      <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+     <script src="{{secure_asset('template-fe/assets/js/plugins/splide/splide.min.js')}}"></script>
 
     @yield('script')
 </body>

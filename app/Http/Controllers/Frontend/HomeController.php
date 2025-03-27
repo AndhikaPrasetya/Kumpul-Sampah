@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\NasabahDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\CategorySampah;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -26,24 +27,34 @@ class HomeController extends Controller
         $articles = Article::where('status', 'published')->get();
 
         //list rewards for home
-        $rewards = Rewards::where('bsu_id',$bsuId)->get();
+        $rewards = Rewards::where('bsu_id', $bsuId)->get();
 
-        //list transaksi berddasarkan user_id
-        
 
-        return view('frontend.home', compact('user', 'articles', 'rewards'));
+        $currentPoints = Saldo::where('user_id', $user->id)->value('points') ?? 0;
+
+        $categorySampah = CategorySampah::all();
+
+
+        return view('frontend.home', get_defined_vars());
     }
 
-    
+
 
     public function listRewards()
     {
         $user = Auth::user();
         $bsuId = $this->getBsuId($user);
-        $rewards = Rewards::where('bsu_id', $bsuId)->get();
-
+        
+        // Ambil rewards dengan stok > 0 dan urutkan berdasarkan poin/created_at sesuai kebutuhan
+        $rewards = Rewards::where('bsu_id', $bsuId)
+                         ->orderBy('points', 'asc') // Urutkan dari poin terkecil
+                         ->get();
+        
+        $currentPoints = Saldo::where('user_id', $user->id)->value('points') ?? 0;
+    
         return view('frontend.rewards.list', [
             'rewards' => $rewards,
+            'currentPoints' => $currentPoints, 
             'route' => route('home')
         ]);
     }
@@ -68,8 +79,9 @@ class HomeController extends Controller
         return view('frontend.blog.detail', compact('article'));
     }
 
-    private function getBsuId($user){
-        $nasabahDetail = NasabahDetail::where('user_id',$user->id)->first();
+    private function getBsuId($user)
+    {
+        $nasabahDetail = NasabahDetail::where('user_id', $user->id)->first();
         $bsuid = $nasabahDetail ? $nasabahDetail->bsu_id : null;
         return $bsuid;
     }

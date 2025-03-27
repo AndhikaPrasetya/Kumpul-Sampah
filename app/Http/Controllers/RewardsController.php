@@ -80,6 +80,9 @@ class RewardsController extends Controller
         $validator = Validator::make($request->all(), [
             'name'        => 'required|string|max:255',
             'points' => 'required',
+            'stok' => 'required',
+            'tanggal_expired' => 'required',
+            'deskripsi' => 'required',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
         ]);
 
@@ -105,6 +108,9 @@ class RewardsController extends Controller
                 'bsu_id' => $request->user()->id,
                 'name' => $request->name,
                 'points' => str_replace('.', '', $request->points ?? 0),
+                'stok' => $request->stok,
+                'tanggal_expired' => $request->tanggal_expired,
+                'deskripsi' => $request->deskripsi,
                 'image' => $fileData,
             ]);
 
@@ -148,6 +154,9 @@ class RewardsController extends Controller
             'name'        => 'sometimes|required|string|max:255',
             'points' => 'sometimes|required|integer',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
+            'stok' => 'sometimes|required',
+            'tanggal_expired' => 'sometimes|required',
+            'deskripsi' => 'sometimes|required',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -167,6 +176,15 @@ class RewardsController extends Controller
         
             if ($request->filled('name')) {
                 $updateData['name'] = $request->name;
+            }
+            if ($request->filled('stok')) {
+                $updateData['stok'] = $request->stok;
+            }
+            if ($request->filled('deskripsi')) {
+                $updateData['deskripsi'] = $request->deskripsi;
+            }
+            if ($request->filled('tanggal_expired')) {
+                $updateData['tanggal_expired'] = $request->tanggal_expired;
             }
             if ($request->filled('points')) {
                 $updateData['points'] = str_replace('.', '', $request->points ?? 0);

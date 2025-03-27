@@ -1,4 +1,4 @@
-@extends('layouts.layout-fe')
+@extends('layouts.layout-fe',['noBottomMenu' => true])
 @section('title','')
 @section('route', 'listBlog')
 @section('content')

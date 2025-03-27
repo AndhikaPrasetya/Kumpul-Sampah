@@ -6,6 +6,7 @@ use App\Http\Controllers\CategorySampahController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\PenukaranPoinFeController;
+use App\Http\Controllers\Frontend\PeringkatController;
 use App\Http\Controllers\Frontend\SetorSampahController;
 use App\Http\Controllers\Frontend\TransactionFrontendController;
 use App\Http\Controllers\Frontend\WitdhrawFeController;
@@ -32,7 +33,7 @@ Route::middleware(['auth', 'verified', 'role:nasabah'])->group(function () {
 
     Route::get('/rewards', [HomeController::class, 'listRewards'])->name('listRewards');
     Route::get('/rewards/detail/{id}', [PenukaranPoinFeController::class, 'detailReward'])->name('detailReward');
-    Route::get('/rewards/waiting', [PenukaranPoinFeController::class, 'waitingReward'])->name('waitingReward');
+    Route::get('/rewards/waiting/{id}', [PenukaranPoinFeController::class, 'waitingReward'])->name('waitingReward');
     Route::post('/rewards', [PenukaranPoinFeController::class, 'rewardStore'])->name('rewardStore');
 
     Route::get('/blog', [HomeController::class, 'listBlog'])->name('listBlog');
@@ -59,7 +60,7 @@ Route::middleware(['auth', 'verified', 'role:nasabah'])->group(function () {
     Route::post('/tarik-tunai', [WitdhrawFeController::class, 'withdrawStore']);
     Route::get('/withdraw/waiting/{id}', [WitdhrawFeController::class, 'waitingWithdraw'])->name('waiting-withdraw');
 
-    Route::get('/leaderboard', [TransactionFrontendController::class, 'leaderboard'])->name('leaderboard');
+    Route::get('/leaderboard', [PeringkatController::class, 'index'])->name('leaderboard');
 });
 
 

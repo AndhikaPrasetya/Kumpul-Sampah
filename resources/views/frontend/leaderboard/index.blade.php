@@ -1,4 +1,5 @@
-@extends('layouts.layoutMain',['noBottomMenu' => true])
+@extends('layouts.layoutMain')
+@section('headTitle', 'Peringkat')
 @section('title', 'Peringkat')
 @section('content')
 

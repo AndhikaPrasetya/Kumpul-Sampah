@@ -1,84 +1,91 @@
-<div class="section full mb-3">
-    <div class="section-heading padding">
-        <h2 class="title">Transaksi</h2>
-        <a href="{{ route('transaksiFrontend.index') }}" class="link">Lihat semua</a>
+<section class="mt-4">
+    <div class="flex justify-between items-center">
+        <h2 class="text-xl font-bold text-gray-800">Transaksi</h2>
+        <a href="{{ route('transaksiFrontend.index') }}" class="text-green-600 hover:text-green-700 transition text-sm font-medium">
+            Lihat Semua
+        </a>
     </div>
 
-    @if ($transactions->isNotEmpty())
-        @foreach ($transactions as $transaction)
-        @php
-        // Menentukan ikon dan judul berdasarkan jenis transaksi
-        $icons = [
-            'tarik_tunai' => secure_asset('/template-fe/assets/img/withdraw.png'),
-            'tukar_points' => secure_asset('/template-fe/assets/img/coin.png'),
-            'setor_sampah' => secure_asset('/template-fe/assets/img/recycle.png'),
-        ];
+    <div class="flex items-center justify-between p-4 ">
+      @if ($transactions->isNotEmpty())
+        <div class="w-full">
+          @foreach ($transactions as $transaction)
+            @php
+              $icons = [
+                'tarik_tunai' => secure_asset('/template-fe/assets/img/withdraw.png'),
+                'tukar_points' => secure_asset('/template-fe/assets/img/coin.png'),
+                'setor_sampah' => secure_asset('/template-fe/assets/img/recycle.png'),
+              ];
+          
+              $titles = [
+                'tarik_tunai' => 'Tarik Tunai',
+                'tukar_points' => 'Tukar Points',
+                'setor_sampah' => 'Setor Sampah',
+              ];
+          
+              $badgeClass = match ($transaction->status) {
+                'approved' => 'bg-green-100 text-green-800',
+                'rejected' => 'bg-red-100 text-red-800',
+                'pending' => 'bg-yellow-100 text-yellow-800',
+                default => 'bg-gray-100 text-gray-800',
+              };
     
-        $titles = [
-            'tarik_tunai' => 'Tarik Tunai',
-            'tukar_points' => 'Tukar Points',
-            'setor_sampah' => 'Setor Sampah',
-        ];
-    
-        // Menentukan class badge berdasarkan status
-        $badgeClass = match ($transaction->status) {
-            'approved' => 'badge-success',
-            'rejected' => 'badge-danger',
-            'pending' => 'badge-warning',
-            default => 'bg-secondary',
-        };
-
-        $routes = [
+              $routes = [
                 'tarik_tunai' => route('transaction.withdraw', $transaction->id),
                 'tukar_points' => route('transaction.exchange', $transaction->id),
                 'setor_sampah' => route('transaction-details', $transaction->id),
-            ];
-            $url = $routes[$transaction->type] ?? '#';
-        $icon = $icons[$transaction->type] ?? 'default-icon.png';
-        $title = $titles[$transaction->type] ?? 'Transaksi';
-    @endphp
+              ];
+              $url = $routes[$transaction->type] ?? '#';
+              $icon = $icons[$transaction->type] ?? 'default-icon.png';
+              $title = $titles[$transaction->type] ?? 'Transaksi';
+            @endphp
+          
+            <a href="{{ $url }}" class="block hover:bg-gray-50 transition-colors duration-150">
+              <div class="p-4 bg-white mb-3 rounded-lg shadow-lg">
+                <div class="flex items-center">
+                  <!-- Icon -->
+                  <div class="flex-shrink-0 bg-gray-800 rounded-full p-2 mr-3">
+                    <img src="{{ $icon }}" alt="icon" class="w-6 h-6">
+                  </div>
     
-    <a href="{{$url}}" class="text-decoration-none text-reset">
-        <div class="card m-2 p-1 mb-2 shadowed" >
-            <div class="card-body p-1">
-                <div class="d-flex align-items-center">
-                    <!-- Icon Wrapper -->
-                    <div class="icon-wrapper p-1 bg-black w-10 imaged rounded d-flex align-items-center justify-content-center me-3">
-                        <img src="{{ $icon }}" alt="icon" width="24" class="img-fluid">
+                  <!-- Content -->
+                  <div class="flex-1 min-w-0">
+                    <div class="flex justify-between items-center">
+                      <h3 class="text-base font-semibold text-gray-900 truncate">{{ $title }}</h3>
+                      
+                      @if ($transaction->type == 'tarik_tunai')
+                        <span class="text-red-600 font-medium">- Rp. {{ number_format($transaction->amount, 0, ',', '.') }}</span>
+                      @elseif ($transaction->type == 'setor_sampah')
+                        <span class="text-green-600 font-medium">+ Rp. {{ number_format($transaction->total_amount, 0, ',', '.') }}</span>
+                      @elseif ($transaction->type == 'tukar_points')
+                        <span class="text-red-600 font-medium">{{ $transaction->total_points > 0 ? '-' : '' }}{{ number_format($transaction->total_points, 0, ',', '.') }} poin</span>
+                      @endif
                     </div>
     
-                    <!-- Konten -->
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0 fw-semibold">{{ $title }}</h5>
-    
-                            <!-- Jumlah Transaksi -->
-                            @if ($transaction->type == 'tarik_tunai')
-                                <span class="text-danger fw-medium">- Rp. {{ number_format($transaction->amount, 0, ',', '.') }}</span>
-                            @elseif ($transaction->type == 'setor_sampah')
-                                <span class="text-success fw-medium">+ Rp. {{ number_format($transaction->total_amount, 0, ',', '.') }}</span>
-                            @elseif ($transaction->type == 'tukar_points')
-                                <span class="text-danger fw-medium">{{ $transaction->total_points > 0 ? '-' : '' }}{{ number_format($transaction->total_points, 0, ',', '.') }} poin</span>
-                            @endif
-                        </div>
-    
-                        <!-- Tanggal dan Status -->
-                        <div class="d-flex justify-content-between align-items-center mt-1">
-                            <small class="text-muted text-sm">
-                                {{ \Carbon\Carbon::parse($transaction->created_at)->format('d-m-Y') }}
-                            </small>
-                            <span class="badge {{ $badgeClass }} rounded-pill px-3 py-1">
-                                {{ ucfirst($transaction->status) }}
-                            </span>
-                        </div>
+                    <!-- Date and Status -->
+                    <div class="flex justify-between items-center mt-1">
+                      <span class="text-sm text-gray-500">
+                        {{ \Carbon\Carbon::parse($transaction->created_at)->format('d M Y') }}
+                      </span>
+                      <span class="text-xs px-2.5 py-0.5 rounded-full {{ $badgeClass }}">
+                        {{ ucfirst($transaction->status) }}
+                      </span>
                     </div>
+                  </div>
                 </div>
-            </div>
+              </div>
+            </a>
+          @endforeach
         </div>
-    </a>
-        @endforeach
-    @else
-        <div class="title p-3">Belum ada transaksi</div>
-    @endif
-</div>
-
+      @else
+        <!-- Empty State -->
+        <div class="p-6 text-center">
+          <div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-3">
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+          </div>
+          <p class="text-gray-500">Belum ada transaksi</p>
+        </div>
+      @endif
+  </section>
