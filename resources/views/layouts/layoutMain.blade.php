@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="{{secure_asset('template/plugins/toastr/toastr.min.css')}}">
     <link rel="stylesheet" href="{{secure_asset('template/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
     <link rel="stylesheet" href="{{secure_asset('template/plugins/swiper-11.2.6/package/swiper-bundle.min.css')}}">
-    
+    <link rel="stylesheet" href="{{secure_asset('build/assets/app-yNVy3Sny.css')}}">
+    <script src="{{secure_asset('build/assets/app-CbEvcXly.js')}}"></script>
 </head>
 
 <body class="bg-gray-50 font-sans">
@@ -56,7 +57,7 @@
     <script src="{{ secure_asset('/template/plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ secure_asset('/template/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
      <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-     <script src="{{secure_asset('template-fe/assets/js/plugins/splide/splide.min.js')}}"></script>
+     <script src="{{secure_asset('template/plugins/swiper-11.2.6/package/swiper-bundle.min.js')}}"></script>
 
     @yield('script')
 </body>
