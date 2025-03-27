@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="{{secure_asset('/template/plugins/fontawesome-free/css/all.min.css')}}">
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-        <link rel="stylesheet" href="{{secure_asset('build/assets/app-yNVy3Sny.css')}}">
+        <link rel="stylesheet" href="{{secure_asset('public/build/assets/app-BStMMe8b.css)}}">
         <script src="{{secure_asset('build/assets/app-CbEvcXly.js')}}"></script>
     
     </head>

@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="{{secure_asset('template/plugins/toastr/toastr.min.css')}}">
     <link rel="stylesheet" href="{{secure_asset('template/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
     <link rel="stylesheet" href="{{secure_asset('template/plugins/swiper-11.2.6/package/swiper-bundle.min.css')}}">
-    <link rel="stylesheet" href="{{secure_asset('build/assets/app-yNVy3Sny.css')}}">
+    <link rel="stylesheet" href="{{secure_asset('build/assets/app-BStMMe8b.css')}}">
     <script src="{{secure_asset('build/assets/app-CbEvcXly.js')}}"></script>
 </head>
 
