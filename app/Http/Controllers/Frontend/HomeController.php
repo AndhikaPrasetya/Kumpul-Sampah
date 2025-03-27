@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\NasabahDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\CategorySampah;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -31,6 +32,8 @@ class HomeController extends Controller
 
         $currentPoints = Saldo::where('user_id', $user->id)->value('points') ?? 0;
 
+        $categorySampah = CategorySampah::all();
+
 
         return view('frontend.home', get_defined_vars());
     }
@@ -41,10 +44,17 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         $bsuId = $this->getBsuId($user);
-        $rewards = Rewards::where('bsu_id', $bsuId)->get();
-
+        
+        // Ambil rewards dengan stok > 0 dan urutkan berdasarkan poin/created_at sesuai kebutuhan
+        $rewards = Rewards::where('bsu_id', $bsuId)
+                         ->orderBy('points', 'asc') // Urutkan dari poin terkecil
+                         ->get();
+        
+        $currentPoints = Saldo::where('user_id', $user->id)->value('points') ?? 0;
+    
         return view('frontend.rewards.list', [
             'rewards' => $rewards,
+            'currentPoints' => $currentPoints, 
             'route' => route('home')
         ]);
     }

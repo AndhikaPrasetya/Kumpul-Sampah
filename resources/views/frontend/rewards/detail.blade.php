@@ -40,7 +40,7 @@
  <div class="bg-white rounded-xl shadow-md p-5 mb-5">
     <h3 class="text-lg font-medium text-gray-800 mb-2">Deskripsi</h3>
     <p class="text-gray-600 text-sm">
-      Nikmati segelas kopi atau minuman favoritmu di Starbucks dengan voucher senilai Rp50.000. Voucher ini dapat digunakan di seluruh gerai Starbucks di Indonesia.
+     {{$rewards->deskripsi}}
     </p>
   </div>
   
@@ -48,7 +48,7 @@
   <div class="bg-white rounded-xl shadow-md p-5 mb-5">
     <h3 class="text-lg font-medium text-gray-800 mb-2">Syarat & Ketentuan</h3>
     <ul class="list-disc list-inside text-gray-600 text-sm space-y-1">
-      <li>Berlaku hingga 30 Juni 2023</li>
+      <li>Berlaku hingga {{\Carbon\Carbon::parse($rewards->tanggal_expired)->format('d M Y')}}</li>
       <li>Tidak dapat ditukar dengan uang tunai</li>
     </ul>
   </div>
@@ -59,7 +59,6 @@
     <ol class="list-decimal list-inside text-gray-600 text-sm space-y-3">
       <li>Tukarkan poin Anda dengan reward ini</li>
       <li>Tunjukkan kode voucher ke BSU terdekat</li>
-      <li>Kode voucher akan oleh admin</li>
       <li>Silahkan Membawa hadiah anda pulang!</li>
     </ol>
   </div>
@@ -170,7 +169,9 @@
                 },
                 success: function(response) {
                     showToast('success', response.message);
-                    setTimeout(() => window.location.reload(), 2000);
+                    setTimeout(function() {
+                            window.location.href = '/rewards/waiting/' + response.penukaranId;
+                        }, 1000);
                 },
                 error: function(xhr) {
                     if (xhr.status === 422) {

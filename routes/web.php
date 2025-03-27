@@ -32,7 +32,7 @@ Route::middleware(['auth', 'verified', 'role:nasabah'])->group(function () {
 
     Route::get('/rewards', [HomeController::class, 'listRewards'])->name('listRewards');
     Route::get('/rewards/detail/{id}', [PenukaranPoinFeController::class, 'detailReward'])->name('detailReward');
-    Route::get('/rewards/waiting', [PenukaranPoinFeController::class, 'waitingReward'])->name('waitingReward');
+    Route::get('/rewards/waiting/{id}', [PenukaranPoinFeController::class, 'waitingReward'])->name('waitingReward');
     Route::post('/rewards', [PenukaranPoinFeController::class, 'rewardStore'])->name('rewardStore');
 
     Route::get('/blog', [HomeController::class, 'listBlog'])->name('listBlog');

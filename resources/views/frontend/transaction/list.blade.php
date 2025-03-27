@@ -1,4 +1,4 @@
-@extends('layouts.layout-fe')
+@extends('layouts.layout-fe', ['noBottomMenu' => true])
 @section('title', 'Riwayat transaksi')
 @section('content')
     <div id="appCapsule" style="max-width: 640px; margin:0 auto; background-color: #f5f6f8; ">

@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('bsu_id')->constrained('users')->onDelete('cascade'); 
             $table->string('name');
+            $table->string('deskripsi');
             $table->string('image')->nullable();
             $table->decimal('points',10, 2)->default(0);
             $table->integer('stok');
-            $table->date('batas_waktu');
+            $table->date('tanggal_expired');
             $table->timestamps();
         });
     }

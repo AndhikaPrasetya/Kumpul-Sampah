@@ -34,6 +34,16 @@
                       <textarea name="content" class="form-control" id="content" cols="30" rows="10"></textarea>
                     </div>
                 </div>
+                <div class="col-12 col-md-3">
+                    <div class="form-group">
+                        <label for="status" class="required">Status</label>
+                        <select class="form-control shadow-sm" name="status" id="status">
+                        <option value="draft">Draft</option>
+                        <option value="published">Publish</option>
+                        <option value="archived">Archive</option>
+                        </select>
+                    </div>
+                </div>
             </div>
           </div>
   

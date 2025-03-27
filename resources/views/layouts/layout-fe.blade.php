@@ -1,6 +1,5 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport"
@@ -13,6 +12,7 @@
     <link rel="icon" type="image/png" href="assets/img/favicon.png" sizes="32x32">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon/192x192.png">
     <link rel="stylesheet" href="{{asset('template-fe/assets/css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('template\plugins\fontawesome-free\css\all.min.css')}}">
     @livewireStyles
 </head>
 
