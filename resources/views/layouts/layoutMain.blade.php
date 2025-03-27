@@ -36,11 +36,11 @@
             <ion-icon name="home-outline" class="text-2xl"></ion-icon>
             <span class="text-xs">Home</span>
         </a>
-        <a href="{{ route('listBlog') }}" class="flex flex-col items-center text-gray-600">
+        <a href="{{ route('listBlog') }}" class="flex flex-col items-center text-gray-600 {{ Route::is('listBlog') ? 'text-green-500 font-bold' : '' }}"">
             <ion-icon name="newspaper-outline" class="text-2xl"></ion-icon>
             <span class="text-xs">Info</span>
         </a>
-        <a href="{{route('leaderboard')}}" class="flex flex-col items-center text-gray-600">
+        <a href="{{route('leaderboard')}}" class="flex flex-col items-center text-gray-600 {{ Route::is('leaderboard') ? 'text-green-500 font-bold' : '' }}"">
             <ion-icon name="podium" class="text-2xl"></ion-icon>
             <span class="text-xs">Peringkat</span>
         </a>

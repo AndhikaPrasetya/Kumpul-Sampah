@@ -27,20 +27,8 @@
                 <div id="collapsible-section" class="transition-all duration-300 overflow-hidden">
                     <!-- Balance Cards -->
                     <div class="px-4 pb-2">
-                        <div class="flex gap-3">
-                            <!-- Saldo -->
-                            <div class="flex-1 bg-white/10 rounded-lg p-3 backdrop-blur-sm">
-                                <p class="text-xs text-white/80">Saldo</p>
-                                <p class="text-lg font-bold text-white">
-                                    Rp{{ number_format(Auth::user()->saldo->balance ?? 0, 0, ',', '.') }}</p>
-                            </div>
-                            <!-- Poin -->
-                            <div class="flex-1 bg-white/10 rounded-lg p-3 backdrop-blur-sm">
-                                <p class="text-xs text-white/80">Poin</p>
-                                <p class="text-lg font-bold text-white">
-                                    {{ number_format(Auth::user()->saldo->points ?? 0, 0, ',', '.') }}</p>
-                            </div>
-                        </div>
+                        @livewire('saldo-info')
+
                     </div>
 
                     <!-- Quick Actions -->
@@ -393,6 +381,7 @@
         });
         const newsSwiper = new Swiper(".newsSwiper", {
             slidesPerView: 1,
+            spaceBetween: 30,
             pagination: {
                 el: ".swiper-pagination",
                 clickable: true,
