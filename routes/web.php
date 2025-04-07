@@ -5,6 +5,7 @@ use App\Http\Controllers\BsuController;
 use App\Http\Controllers\CategorySampahController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\KategoriSampahController;
 use App\Http\Controllers\Frontend\PenukaranPoinFeController;
 use App\Http\Controllers\Frontend\PeringkatController;
 use App\Http\Controllers\Frontend\SetorSampahController;
@@ -54,7 +55,8 @@ Route::middleware(['auth', 'verified', 'role:nasabah'])->group(function () {
     Route::get('/transaksi/setor-sampah/{id}', [TransactionFrontendController::class, 'transactionDetails'])->name('transaction-details');
     Route::get('/transaksi/tukar-points/{id}', [TransactionFrontendController::class, 'tukarPoints'])->name('transaction.exchange');
 
-    Route::get('/list-sampah', [TransactionFrontendController::class, 'listSampah'])->name('sampahlist');
+    Route::get('/list-sampah', [KategoriSampahController::class, 'listSampah'])->name('sampahlist');
+    Route::get('/detail/{kategori}', [KategoriSampahController::class, 'detailKategori'])->name('detailKategori');
 
     Route::get('/tarik-tunai', [WitdhrawFeController::class, 'withdraw'])->name('tarik-tunai');
     Route::post('/tarik-tunai', [WitdhrawFeController::class, 'withdrawStore']);

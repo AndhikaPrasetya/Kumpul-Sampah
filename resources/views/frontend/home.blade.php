@@ -111,42 +111,63 @@
         <section>
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold text-gray-800">Kategori Sampah</h2>
-                <a href="{{ route('listRewards') }}"
+                <a href="{{ route('sampahlist') }}"
                     class="text-green-600 hover:text-green-700 transition text-sm font-medium">
                     Lihat Semua
                 </a>
             </div>
-
+            @php
+            $icons = [
+                'Plastik' => 'fa-recycle',
+                'Bodong A' => 'fa-trash-alt',
+                'Tutup Botol' => 'fa-wine-bottle',
+                'Tutup Galon' => 'fa-prescription-bottle',
+                'Ember Warna' => 'fa-box',
+                'Ember Hitam' => 'fa-box',
+                'Paralon' => 'fa-water',
+                'Naso' => 'fa-question-circle',
+                'Kresek' => 'fa-shopping-bag',
+                'Galon Aqua' => 'fa-tint',
+                'Akrilik' => 'fa-layer-group',
+                'Gelas Kotor' => 'fa-glass-whiskey',
+                'Inject' => 'fa-syringe',
+                'Mainan' => 'fa-puzzle-piece',
+            ];
+        @endphp
             @if ($categorySampah->isEmpty())
-                <div class="bg-white rounded-2xl p-6 text-center">
+                <div class="bg-white rounded-2xl p-6 text-center shadow-2xl">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-4" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                             d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
                     </svg>
-                    <p class="text-gray-600">Belum ada rewards yang tersedia</p>
+                    <p class="text-gray-600">Belum ada kategori sampah yang tersedia</p>
                 </div>
             @else
                 <div class="swiper sampahSwiper">
                     <div class="swiper-wrapper">
                         @foreach ($categorySampah as $item)
                         <div class="swiper-slide ">
-                            <div
-                                class="bg-white rounded-2xl w-28 shadow-md p-4 mb-4 flex flex-col items-center relative overflow-hidden">
+                            <a href="{{route('detailKategori',$item->nama)}}">
 
-                                <!-- Content Container -->
-                                <div class="flex flex-col items-center">
-                                    <!-- Image with Hover Effect -->
-                                    <div class="mb-3 transform transition-transform duration-300 hover:scale-110">
-                                        <img src="{{ asset('template-fe/assets/img/bottle.png') }}"
-                                            class="w-24 h-24 object-contain" alt="Botol Plastik">
+                                <div
+                                    class="bg-white rounded-2xl w-28 shadow-md p-4 mb-4 flex flex-col items-center relative overflow-hidden">
+    
+                                    <!-- Content Container -->
+                                    <div class="flex flex-col items-center justify-center">
+                                        <!-- Image with Hover Effect -->
+                                        <div class="mb-3 transform transition-transform duration-300 hover:scale-110">
+                                            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-700">
+                                                <i class="fas {{ $icons[$item->nama] ?? 'fa-trash' }} text-xl"></i>
+                                            </div>
+                                        </div>
+    
+                                        <!-- Title -->
+                                        <p class="text-xs font-bold text-gray-800 mb-2">{{$item->nama}}</p>
+    
                                     </div>
-
-                                    <!-- Title -->
-                                    <p class="text-xs font-bold text-gray-800 mb-2">{{$item->nama}}</p>
-
                                 </div>
-                            </div>
+                            </a>
                         </div>
                             
                         @endforeach
@@ -204,7 +225,7 @@
                     </div>
                 
             @else
-                <div class="bg-white rounded-2xl p-6 text-center">
+                <div class="bg-white rounded-2xl p-6 text-center shadow-2xl">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                     </svg>
@@ -223,7 +244,7 @@
             </div>
 
             @if ($rewards->isEmpty())
-                <div class="bg-white rounded-2xl p-6 text-center">
+                <div class="bg-white rounded-2xl p-6 text-center shadow-2xl">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-4" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"

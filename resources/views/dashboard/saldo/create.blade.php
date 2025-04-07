@@ -79,7 +79,8 @@
         };
         $('#createFormSaldo').on('submit', function(e) {
                 e.preventDefault();
-
+                let balanceInput = $('#balance');
+                balanceInput.val(hapusFormatAngka(balanceInput.val())); 
                 const formData = new FormData(this);
 
                 $.ajax({

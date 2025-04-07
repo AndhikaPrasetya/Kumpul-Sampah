@@ -17,12 +17,12 @@
 <body class="bg-gray-50 font-sans">
     <!-- Header -->
     @if (!isset($noHeader) || !$noHeader)
-    <header class="bg-gray-50 py-4 px-4 border-b border-gray-200 relative text-center max-w-screen-sm mx-auto">
+    <header class=  " bg-gray-50 py-4 px-4 border-b border-gray-200 relative text-center max-w-screen-sm mx-auto">
         <a href="{{ $route }}"
             class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-700">
             <i class="fas fa-chevron-left"></i>
         </a>
-        <h1 class="text-base font-medium">@yield('title', 'Default Title')</h1>
+        <h1 class="text-base font-medium">@yield('title', 'BangImam')</h1>
     </header>
     @endif
 

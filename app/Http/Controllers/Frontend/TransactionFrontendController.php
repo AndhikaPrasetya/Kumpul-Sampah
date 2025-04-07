@@ -343,17 +343,7 @@ class TransactionFrontendController extends Controller
         return $html;
     }
 
-    public function listSampah()
-    {
-        $user = Auth::user();
-        $nasabahDetail = NasabahDetail::where('user_id', $user->id)->first();
-        $bsuId = $nasabahDetail ? $nasabahDetail->bsu_id : null;
-        // Ambil semua sampah yang terkait dengan BSU
-        $sampahs = Sampah::with('categories')->where('bsu_id', $bsuId)->get();
-
-        return view('frontend.sampah.list', compact('sampahs'));
-    }
-
+  
     public function transactionDetails(Request $request, $id)
     {
         $transaction = Transactions::with('details.sampah')->findOrFail($id);
