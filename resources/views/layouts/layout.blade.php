@@ -115,7 +115,7 @@
           
           @if (auth()->user()->hasRole('super admin'))
           <li class="nav-item">
-            <a href="/website-settings" class="nav-link {{ Route::is('website-settings.*') ? 'active' : '' }}">
+            <a href="/admin/website-settings" class="nav-link {{ Route::is('website-settings.*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-cog"></i>
               <p>
                 Website Settings
