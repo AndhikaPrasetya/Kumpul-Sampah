@@ -1,5 +1,7 @@
 <?php
 
+use Barryvdh\Debugbar\Facade;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Intervention\Image\ImageServiceProvider;
 
 return [
@@ -125,6 +127,13 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-   
+//    'providers' => [
+//     // ...
+//     Barryvdh\DomPDF\ServiceProvider::class,
+// ],
 
+// 'aliases' => [
+//     // ...
+//     'PDF' => Pdf::class,
+// ],
 ];

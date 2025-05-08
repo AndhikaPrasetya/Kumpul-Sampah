@@ -1,7 +1,7 @@
 <table  class="table table-bordered table-hover ">
     <thead>
         <tr>
-            <th>#</th>
+            <th>No</th>
             <th>Nama Nasabah</th>
             <th>Jumlah Setor (KG)</th>
             <th>Pendapatan</th>

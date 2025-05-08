@@ -183,6 +183,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:super admin|bsu'])
 
     Route::get('/laporan-keuangan', [LaporanKeuanganController::class, 'index'])->name('laporan-keuangan.index');
     Route::get('/laporan-keuangan/report', [LaporanKeuanganController::class, 'getReport'])->name('laporan-keuangan.getReport');
+    Route::get('/laporan-keuangan/export', [LaporanKeuanganController::class, 'exportReportToPDF'])->name('laporan-keuangan.exportReport');
 });
 
 

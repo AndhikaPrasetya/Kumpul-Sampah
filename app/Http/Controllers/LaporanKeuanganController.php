@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BsuDetail;
 use App\Models\User;
 use App\Models\Withdraw;
 use App\Models\Transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\TransactionDetail;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class LaporanKeuanganController extends Controller
@@ -129,6 +132,68 @@ class LaporanKeuanganController extends Controller
 
     return response()->json(['error' => 'Invalid Report Type'], 400);
 }
+
+
+
+
+public function exportReportToPDF(Request $request)
+{
+    if(Auth::check()){
+        $userId = Auth::id();
+        $user = BsuDetail::with('user')->where('user_id', $userId)->first();
+    }
+    $reportType = $request->query('report_type');
+    $startDate = $request->query('start_date');
+    $endDate = $request->query('end_date');
+
+    if ($reportType == 'transaction') {
+        $data = Transactions::with(['users', 'details'])
+            ->where('bsu_id', $request->user()->id);
+
+        if ($startDate && $endDate) {
+            $data->whereBetween('created_at', [
+                Carbon::parse($startDate)->startOfDay(),
+                Carbon::parse($endDate)->endOfDay()
+            ]);
+        }
+
+        $data = $data->get();
+
+        $pdf = Pdf::loadView('dashboard.laporan-keuangan.pdf.transaction_pdf', [
+            'user' =>$user,
+            'data' => $data,
+            'startDate' => $startDate,
+            'endDate' => $endDate
+        ]);
+
+        return $pdf->download('laporan-transaksi.pdf');
+
+    } elseif ($reportType == 'withdraw') {
+        $data = Withdraw::with('user')
+            ->where('bsu_id', $request->user()->id);
+
+        if ($startDate && $endDate) {
+            $data->whereBetween('created_at', [
+                Carbon::parse($startDate)->startOfDay(),
+                Carbon::parse($endDate)->endOfDay()
+            ]);
+        }
+
+        $data = $data->get();
+
+        $pdf = Pdf::loadView('dashboard.laporan-keuangan.pdf.withdraw_pdf', [
+            'user' =>$user,
+            'data' => $data,
+            'startDate' => $startDate,
+            'endDate' => $endDate
+        ]);
+
+        return $pdf->download('laporan-penarikan.pdf');
+    }
+
+    return response()->json(['error' => 'Invalid Report Type'], 400);
+}
+
 
 
 }
