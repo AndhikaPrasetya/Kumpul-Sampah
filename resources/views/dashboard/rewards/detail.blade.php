@@ -30,7 +30,7 @@
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="tanggal_expired" class="required">Batas Waktu</label>
-                        <input type="date" class="form-control shadow-sm" name="tanggal_expired" id="tanggal_expired" value="{{ number_format($rewards->tanggal_expired, 0, ',', '.');}}" readonly>
+                        <input type="date" class="form-control shadow-sm" name="tanggal_expired" id="tanggal_expired" value={{ \Carbon\Carbon::parse($rewards->tanggal_expired)->format('d-m-Y')}} readonly>
                     </div>
                 </div>
                 <div class="col-12">

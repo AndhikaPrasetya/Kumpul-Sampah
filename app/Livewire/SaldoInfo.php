@@ -29,6 +29,12 @@ class SaldoInfo extends Component
 
     public function render()
     {
+        // Stop polling if not authenticated
+    if (!auth()->check()) {
+        return null;
+    }
         return view('livewire.saldo-info');
     }
+
+    
 }

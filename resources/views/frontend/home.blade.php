@@ -19,6 +19,14 @@
                                 Ayo kumpulkan sampah dan setorkan!
                             </p>
                         </div>
+                        <div>
+                            <form method="POST" action="{{ route('logout') }}" id="logout-form" class="w-100 d-flex justify-content-end">
+                                @csrf
+                                <a href="#" class="btn btn-danger w-100" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <ion-icon name="exit-outline" class="text-white text-2xl"></ion-icon>
+                                </a>
+                            </form>
+                        </div>
                      
                     </div>
                 </div>
@@ -428,5 +436,6 @@
                 },
             },
         });
+        
     </script>
 @endsection
