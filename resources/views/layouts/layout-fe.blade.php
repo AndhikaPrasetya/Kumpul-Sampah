@@ -51,13 +51,13 @@
               <strong>Home</strong>
           </div>
       </a>
-      <a href="{{route('leaderboard')}}" class="item  {{ Route::is('leaderboard') ? 'active' : '' }}">
+      <a href="{{route('listBlog')}}" class="item  {{ Route::is('listBlog') ? 'active' : '' }}">
           <div class="col">
               <ion-icon name="newspaper-outline"></ion-icon>
               <strong>Info</strong>
           </div>
       </a>
-      <a href="app-components.html" class="item">
+      <a href="{{route('leaderboard')}}" class="item {{ Route::is('listBlog') ? 'active' : '' }}">
           <div class="col">
               <ion-icon name="podium"></ion-icon>
               <strong>Peringkat</strong>

@@ -100,32 +100,74 @@ class DashboardController extends Controller
                 })
                 ->count(); // Hitung jumlah nasabah
         });
-
-        $nasabahPerBulan = Cache::remember("nasabah_per_bulan_" . ($isAdmin ? 'all' : $bsu_id), $cacheTime, function () use ($bsu_id, $isAdmin) {
-            return Transactions::whereMonth('created_at', now()->month)
-                ->whereYear('created_at', now()->year)
-                ->when(!$isAdmin, function ($query) use ($bsu_id) {
-                    $query->whereHas('users.nasabahs', function ($subQuery) use ($bsu_id) {
-                        $subQuery->where('bsu_id', $bsu_id);
-                    });
-                })
-                ->selectRaw('COUNT(DISTINCT user_id) as jumlah')
-                ->first();
-        });
-        
-        // Ambil jumlah nasabah yang setor bulan ini
-        $jumlahNasabahBulanIni = $nasabahPerBulan->jumlah ?? 0;
-        
-        // Format data untuk frontend
+        $nasabahPerBulan = Transactions::selectRaw('MONTH(created_at) as bulan, COUNT(DISTINCT user_id) as jumlah')
+        ->whereYear('created_at', now()->year)
+        ->when(!$isAdmin, function ($query) use ($bsu_id) {
+            $query->whereHas('users.nasabahs', function ($subQuery) use ($bsu_id) {
+                $subQuery->where('bsu_id', $bsu_id);
+            });
+        })
+        ->groupByRaw('MONTH(created_at)')
+        ->get()
+        ->keyBy('bulan');
         $bulanLabels = [
             1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
             5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
             9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
         ];
-
-    
+    // Pastikan semua bulan ada
+    $jumlahNasabahPerBulan = [];
+    for ($bulan = 1; $bulan <= 12; $bulan++) {
+        $jumlahNasabahPerBulan[] = [
+            'bulan' => $bulanLabels[$bulan],
+            'jumlah' => $nasabahPerBulan[$bulan]->jumlah ?? 0
+        ];
+    }
+   
         return view('dashboard.index', get_defined_vars());
     }
 
+    public function filterCharts(Request $request)
+    {
+        $year = $request->input('year');
+        $isAdmin = Auth::user()->hasRole('Admin');
+        $bsu_id = Auth::user()->nasabahs->first()->bsu_id ?? null;
+        
+        // Gunakan tahun dari filter jika ada, jika tidak gunakan tahun sekarang
+        $selectedYear = $year ? $year : now()->year;
+        
+        $nasabahPerBulan = Transactions::selectRaw('MONTH(created_at) as bulan, COUNT(DISTINCT user_id) as jumlah')
+            ->whereYear('created_at', $selectedYear) // Gunakan $selectedYear daripada hardcode now()->year
+            ->when(!$isAdmin, function ($query) use ($bsu_id) {
+                $query->whereHas('users.nasabahs', function ($subQuery) use ($bsu_id) {
+                    $subQuery->where('bsu_id', $bsu_id);
+                });
+            })
+            ->groupByRaw('MONTH(created_at)')
+            ->get()
+            ->keyBy('bulan');
+            
+        $bulanLabels = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+        ];
+        
+        // Pastikan semua bulan ada
+        $jumlahNasabahPerBulan = [];
+        for ($bulan = 1; $bulan <= 12; $bulan++) {
+            $jumlahNasabahPerBulan[] = [
+                'bulan' => $bulanLabels[$bulan],
+                'jumlah' => $nasabahPerBulan[$bulan]->jumlah ?? 0
+            ];
+        }
+        
+        // Hapus dd() untuk production
+        // dd($jumlahNasabahPerBulan);
+        
+        return response()->json([
+            'jumlahNasabahPerBulan' => $jumlahNasabahPerBulan
+        ]);
+    }
 
 }

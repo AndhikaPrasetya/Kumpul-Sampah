@@ -19,11 +19,9 @@ class KategoriSampahController extends Controller
         // Ambil semua sampah yang terkait dengan BSU
         $sampahs = Sampah::with('categories')
                     ->where('bsu_id', $bsuId)
-                    ->get()
-                    ->map(function ($item) {
-                        $item->kategori_nama = $item->categories->nama ?? 'Tanpa Kategori';
-                        return $item;
-                    });
+                    ->get();
+                    
+        dd($sampahs);
     
         return view('frontend.sampah.list', compact('sampahs'), [
             'route' => route('home')

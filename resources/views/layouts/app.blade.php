@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Profile') }}</title>
+    <title>Profile</title>
 
     <link rel="stylesheet" href="{{asset('/template/plugins/fontawesome-free/css/all.min.css')}}">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -19,7 +19,7 @@
                 class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-700">
                 <i class="fas fa-chevron-left"></i>
             </a>
-            <h1 class="text-base font-medium">{{ $title ?? 'Page' }}</h1>
+            <h1 class="text-base font-medium">{{ $title ?? 'Profile' }}</h1>
         </header>
 
         <main class="max-w-screen-sm">
@@ -32,11 +32,11 @@
                 <ion-icon name="home-outline" class="text-2xl"></ion-icon>
                 <span class="text-xs">Home</span>
             </a>
-            <a href="{{ route('listBlog') }}" class="flex flex-col items-center text-gray-600">
+            <a href="{{ route('listBlog') }}" class="flex flex-col items-center text-gray-600 {{ Route::is('listBlog') ? 'active' : '' }}">
                 <ion-icon name="newspaper-outline" class="text-2xl"></ion-icon>
                 <span class="text-xs">Info</span>
             </a>
-            <a href="app-components.html" class="flex flex-col items-center text-gray-600">
+            <a href="{{route('leaderboard')}}" class="flex flex-col items-center text-gray-600 {{ Route::is('leaderboard') ? 'active' : '' }}">
                 <ion-icon name="podium" class="text-2xl"></ion-icon>
                 <span class="text-xs">Peringkat</span>
             </a>

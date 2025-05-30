@@ -121,85 +121,129 @@
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let sampahData = @json($sampahData);
-
-            // Ambil labels dan jumlah dari data Laravel
-            let labels = sampahData.map(item => item.category_name || "Tidak Diketahui");
-            let values = sampahData.map(item => item.jumlah);
-
-            // Warna untuk setiap kategori (pastikan cukup untuk jumlah kategori)
-            let backgroundColors = ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de', '#ff6384',
-                '#36a2eb', '#cc65fe', '#ffce56'
-            ];
-
-            var donutChartCanvas = $('#sampahChart').get(0).getContext('2d');
-            var donutData = {
-                labels: labels,
-                datasets: [{
-                    data: values,
-                    backgroundColor: backgroundColors.slice(0, labels
-                        .length) // Ambil warna sesuai jumlah kategori
-                }]
-            };
-
-            new Chart(donutChartCanvas, {
-                type: 'doughnut',
-                data: donutData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
-            });
-
-           // ============= Total Nasabah CHART ============================//
-var jumlahNasabahBulanIni = @json($jumlahNasabahBulanIni); // Jumlah nasabah bulan ini
-var bulanSaatIni = @json($bulanLabels[now()->month]); // Label bulan saat ini
-
-var barChartCanvas = document.getElementById('nasabahChart').getContext('2d');
-
-var barChartData = {
-    labels: [bulanSaatIni], // Hanya bulan saat ini
-    datasets: [{
-        label: 'Jumlah Nasabah yang Setor',
-        data: [jumlahNasabahBulanIni], // Data untuk bulan saat ini
-        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 1
-    }]
-};
-
-new Chart(barChartCanvas, {
-    type: 'bar',
-    data: barChartData,
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    precision: 0 // Agar angka tidak menjadi desimal
-                }
+    document.addEventListener("DOMContentLoaded", function() {
+    // Definisikan variabel untuk menyimpan instance chart
+    let sampahChart;
+    let nasabahChart;
+    
+    // Data awal dari Laravel (seluruh data)
+    const initialSampahData = @json($sampahData);
+    const initialNasabahData = @json($jumlahNasabahPerBulan);
+    
+    // Fungsi untuk menginisialisasi chart sampah
+    function initSampahChart(filteredData) {
+        // Jika chart sudah ada, hancurkan dulu
+        if (sampahChart) {
+            sampahChart.destroy();
+        }
+        
+        // Ambil labels dan jumlah dari data
+        let sampahLabels = filteredData.map(item => item.category_name || "Tidak Diketahui");
+        let sampahValues = filteredData.map(item => item.jumlah);
+        
+        // Warna untuk setiap kategori
+        let backgroundColors = ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de', '#ff6384',
+            '#36a2eb', '#cc65fe', '#ffce56'
+        ];
+        
+        var donutChartCanvas = $('#sampahChart').get(0).getContext('2d');
+        var donutData = {
+            labels: sampahLabels,
+            datasets: [{
+                data: sampahValues,
+                backgroundColor: backgroundColors.slice(0, sampahLabels.length)
+            }]
+        };
+        
+        sampahChart = new Chart(donutChartCanvas, {
+            type: 'doughnut',
+            data: donutData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
             }
-        },
-        plugins: {
-            legend: {
-                display: true,
-                position: 'bottom'
-            },
-            tooltip: {
-                enabled: true,
-                callbacks: {
-                    label: function(tooltipItem) {
-                        return tooltipItem.dataset.label + ': ' + tooltipItem.raw + ' Nasabah';
+        });
+    }
+    
+    // Fungsi untuk menginisialisasi chart nasabah
+    function initNasabahChart(filteredData) {
+        // Jika chart sudah ada, hancurkan dulu
+        if (nasabahChart) {
+            nasabahChart.destroy();
+        }
+        
+        // Ekstrak label dan data dari array
+        var nasabahLabels = filteredData.map(item => item.bulan);
+        var nasabahData = filteredData.map(item => item.jumlah);
+        
+        var barChartCanvas = document.getElementById('nasabahChart').getContext('2d');
+        
+        var barChartData = {
+            labels: nasabahLabels,
+            datasets: [{
+                label: 'Jumlah Nasabah yang Setor',
+                data: nasabahData,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        };
+        
+        nasabahChart = new Chart(barChartCanvas, {
+            type: 'bar',
+            data: barChartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw + ' Nasabah';
+                            }
+                        }
                     }
                 }
             }
-        }
-    }
-});
-
         });
+    }
+    
+    // Inisialisasi awal kedua chart dengan semua data
+    initSampahChart(initialSampahData);
+    initNasabahChart(initialNasabahData);
+    
+    // Tambahkan event listener untuk filter tahun
+    $('#filterYear').on('change', function() {
+        const selectedYear = $(this).val();
+        
+        // Filter data berdasarkan tahun yang dipilih melalui AJAX
+        $.ajax({
+            url: '{{ route("filter.charts") }}', // Buat route ini di Laravel
+            type: 'GET',
+            data: {
+                year: selectedYear
+            },
+            success: function(response) {
+                initNasabahChart(response.jumlahNasabahPerBulan);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching filtered data:', error);
+            }
+        });
+    });
+});
     </script>
 @endsection
