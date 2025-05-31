@@ -157,10 +157,8 @@
                         @foreach ($categorySampah as $item)
                         <div class="swiper-slide ">
                             <a href="{{route('detailKategori',$item->nama)}}">
-
                                 <div
                                     class="bg-white rounded-2xl w-28 shadow-md p-4 mb-4 flex flex-col items-center relative overflow-hidden">
-    
                                     <!-- Content Container -->
                                     <div class="flex flex-col items-center justify-center">
                                         <!-- Image with Hover Effect -->
@@ -177,10 +175,7 @@
                                 </div>
                             </a>
                         </div>
-                            
                         @endforeach
-
-
                     </div>
                 </div>
             @endif
@@ -190,7 +185,7 @@
         @livewire('transaction-list')
 
         <!-- Latest News -->
-        <section class="mb-4">
+        <section class="">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold text-gray-800">Berita Terbaru</h2>
                 <a href="{{ route('listBlog') }}" class="text-green-600 hover:text-green-700 transition text-sm font-medium">
@@ -201,7 +196,7 @@
             @if ($articles->isNotEmpty())
                     <!-- Swiper container -->
                     <div class="swiper newsSwiper">
-                        <div class="swiper-wrapper pb-8">
+                        <div class="swiper-wrapper pb-4">
                             @foreach ($articles as $article)
                             <div class="swiper-slide">
                                 <a href="{{ route('detailBlog', $article->slug) }}" class="block h-full">

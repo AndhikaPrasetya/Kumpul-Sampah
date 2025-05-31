@@ -38,8 +38,6 @@ class HomeController extends Controller
         return view('frontend.home', get_defined_vars());
     }
 
-
-
     public function listRewards()
     {
         $user = Auth::user();
@@ -61,22 +59,26 @@ class HomeController extends Controller
 
     public function listBlog()
     {
-        // Ambil berita terbaru sebagai hero berdasarkan created_at
-        $heroNews = Article::latest()->where('status', 'published')->first();
+        // Ambil 3 berita terbaru sebagai hero berdasarkan created_at
+        $heroNews = Article::latest()->where('status', 'published')->take(3)->get();
 
-        // Ambil berita lainnya, kecuali hero
-        $otherNews = Article::where('id', '!=', optional($heroNews)->id)
+        $heroNewsIds = $heroNews->pluck('id')->toArray();
+
+        $otherNews = Article::whereNotIn('id', $heroNewsIds)
             ->where('status', 'published')
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('frontend.blog.list', compact('heroNews', 'otherNews'));
+        return view('frontend.blog.list', compact('heroNews', 'otherNews'),[
+            'route'=>route('home')
+        ]);
     }
-
     public function detailBlog($slug)
     {
         $article = Article::with('user')->where('slug', $slug)->first();
-        return view('frontend.blog.detail', compact('article'));
+        return view('frontend.blog.detail', compact('article'),[
+            'route'=>route('listBlog')
+        ]);
     }
 
     private function getBsuId($user)

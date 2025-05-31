@@ -6,7 +6,7 @@
         </a>
     </div>
 
-    <div class="flex items-center justify-between p-4 ">
+    <div class="flex items-center justify-between p-1 ">
       @if ($transactions->isNotEmpty())
         <div class="w-full">
           @foreach ($transactions as $transaction)

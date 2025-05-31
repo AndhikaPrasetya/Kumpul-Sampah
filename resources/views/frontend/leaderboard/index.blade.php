@@ -51,16 +51,6 @@
             @endforeach
            
         </div>
-        
-        <!-- Footer -->
-        <div class="p-4 border-t border-gray-200 flex justify-between items-center">
-            <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-lg font-medium text-sm transition flex items-center">
-                <i class="fas fa-calendar-week mr-2"></i> Jadwal
-            </button>
-            <button class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg font-medium text-sm transition flex items-center">
-                <i class="fas fa-share-alt mr-2"></i> Bagikan
-            </button>
-        </div>
     </div>
 </div>
 
