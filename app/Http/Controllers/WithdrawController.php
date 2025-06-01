@@ -125,6 +125,7 @@ class WithdrawController extends Controller
             'user_id' => $request->user_id,
             'bsu_id' => $request->user()->id,
             'amount' => $request->amount,
+            'metode_penarikan' => $request->metode_penarikan,
             'tanggal' => now(),
             'status' => 'pending'
         ]);

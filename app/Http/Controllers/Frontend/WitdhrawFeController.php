@@ -35,7 +35,8 @@ class WitdhrawFeController extends Controller
     public function withdrawStore(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'amount' => 'required|numeric'
+            'amount' => 'required|numeric',
+            'metode_penarikan' => 'required|in:transfer,cash'
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -61,6 +62,7 @@ class WitdhrawFeController extends Controller
                 'user_id' => $user->id,
                 'bsu_id' => $bsuId,
                 'amount' => $request->amount,
+                'metode_penarikan' =>$request->metode_penarikan,
                 'tanggal' => now(),
                 'status' => 'pending'
             ]);

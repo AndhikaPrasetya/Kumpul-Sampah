@@ -18,11 +18,7 @@
 
 <body>
 
-    <!-- loader -->
-    <div id="loader">
-        <img src="{{asset('template-fe/assets/img/bank.svg')}}" alt="icon" class="loading-icon">
-    </div>
-    <!-- * loader -->
+   
 
   
         <!-- App Header -->

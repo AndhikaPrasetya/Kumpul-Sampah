@@ -1,4 +1,4 @@
-<section class="mt-4">
+<section class="mt-4" wire:poll.5s="loadTransactions">
     <div class="flex justify-between items-center">
         <h2 class="text-xl font-bold text-gray-800">Transaksi</h2>
         <a href="{{ route('transaksiFrontend.index') }}" class="text-green-600 hover:text-green-700 transition text-sm font-medium">
@@ -31,9 +31,9 @@
               };
     
               $routes = [
-                'tarik_tunai' => route('transaction.withdraw', $transaction->id),
-                'tukar_points' => route('transaction.exchange', $transaction->id),
-                'setor_sampah' => route('transaction-details', $transaction->id),
+                'tarik_tunai' => route('transaction.withdraw', $transaction->transaction_code),
+                'tukar_points' => route('transaction.exchange', $transaction->transaction_code),
+                'setor_sampah' => route('transaction-details', $transaction->transaction_code),
               ];
               $url = $routes[$transaction->type] ?? '#';
               $icon = $icons[$transaction->type] ?? 'default-icon.png';
