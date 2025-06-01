@@ -20,17 +20,17 @@ class TransactionList extends Component
 
         // Mengambil data transaksi dari database
         $withdrawals = DB::table('withdraws')
-            ->select('id', 'user_id', 'status', 'amount', 'created_at')
+            ->select('id', 'transaction_code', 'user_id', 'status', 'amount', 'created_at')
             ->where('user_id', $user->id)
             ->get();
 
         $pointExchanges = DB::table('penukaran_points')
-            ->select('id', 'user_id', 'reward_id', 'status', 'total_points', 'created_at')
+            ->select('id', 'transaction_code', 'user_id', 'reward_id', 'status', 'total_points', 'created_at')
             ->where('user_id', $user->id)
             ->get();
 
         $wasteDeposits = DB::table('transactions')
-            ->select('id', 'transaction_code', 'user_id', 'status', 'total_amount', 'total_points', 'created_at')
+            ->select('id', 'transaction_code', 'transaction_code', 'user_id', 'status', 'total_amount', 'total_points', 'created_at')
             ->where('user_id', $user->id)
             ->get();
 

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('penukaran_points', function (Blueprint $table) {
             $table->id();
+            $table->string('transaction_code')->unique();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('bsu_id')->constrained('users')->onDelete('cascade'); 
             $table->foreignId('reward_id')->constrained('rewards')->onDelete('cascade');

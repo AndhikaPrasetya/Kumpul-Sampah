@@ -36,7 +36,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('bsu_id')->constrained('users')->onDelete('cascade');
             $table->string('photo')->nullable();
-            $table->string('alamat')->nullable(); // Alamat Nasabah
+            $table->string('rekening')->nullable();
+            $table->string('alamat')->nullable(); 
             $table->timestamps();
         });
 

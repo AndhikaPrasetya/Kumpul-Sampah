@@ -15,6 +15,7 @@ class Rewards extends Model
         'deskripsi',
         'tanggal_expired'
     ];
+    
     public function penukaranPoints(){
         return $this->hasMany(PenukaranPoints::class, 'reward_id');
     }

@@ -43,6 +43,12 @@
                                 </select>
                             </div>
                         </div>
+                         <div class="col-12 col-md-6">
+                              <div class="form-group">
+                                  <label for="status">Metode Penarikan</label>
+                                 <input type="text" class="form-control" value="{{$data->metode_penarikan}}">
+                              </div>
+                          </div>
                         <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label for="image" class="required">Bukti pencairan</label>

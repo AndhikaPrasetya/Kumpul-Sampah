@@ -24,7 +24,7 @@ class Transactions extends Model
             $sequence = base_convert(now()->format('His'), 10, 36);
             
             // Combine to create unique code
-            $transaction->transaction_code = "BS-{$date}-{$random}{$sequence}";
+            $transaction->transaction_code = "BS-SS-{$date}-{$random}{$sequence}";
         });
     }
     

@@ -23,13 +23,21 @@
         <form id="createFormWithdraw" method="POST">
             @csrf
             <div class="text-center mb-10">
-                <p class="text-gray-600 mb-2">Masukkan Nominal</p>
-                <div class="mb-6">
-                    <input type="text" name="amount" id="amount"
-                        class="text-center shadow-xl border-0 border-green-500 text-xl rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-4
-                        placeholder="Rp
-                        0">
-
+                <div class="nominal">
+                    <p class="text-gray-600 mb-2">Masukkan Nominal</p>
+                    <div class="mb-6">
+                        <input type="text" name="amount" id="amount"
+                            class="text-center shadow-xl border-0 border-green-500 text-xl rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-4
+                            "placeholder="Rp0">
+                    </div>
+                </div>
+                <div class="metode">
+                    <p class="text-gray-600 mb-2">Metode Penarikan</p>
+                    <select name="metode_penarikan" class="text-center shadow-xl border-0 border-green-500 text-xl rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-4" >
+                        <option value="" selected disabled>Pilih metode</option>
+                        <option value="transfer">Transfer</option>
+                        <option value="cash">Cash</option>
+                    </select>
                 </div>
             </div>
 

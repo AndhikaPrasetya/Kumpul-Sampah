@@ -26,9 +26,9 @@ class TransactionFrontendController extends Controller
         $user = Auth::user();
 
         // Using a collection instead for section transactions
-        $withdrawals = DB::table('withdraws')->select('id', 'user_id', 'status', 'amount', 'created_at')->where('user_id', $user->id)->get();
-        $pointExchanges = DB::table('penukaran_points')->select('id', 'user_id', 'reward_id', 'status', 'total_points', 'created_at')->where('user_id', $user->id)->get();
-        $wasteDeposits = DB::table('transactions')->select('id', 'transaction_code', 'user_id', 'status', 'total_amount', 'total_points', 'created_at')->where('user_id', $user->id)->get();
+        $withdrawals = DB::table('withdraws')->select('id','transaction_code', 'user_id', 'status', 'amount', 'created_at')->where('user_id', $user->id)->get();
+        $pointExchanges = DB::table('penukaran_points')->select('id','transaction_code', 'user_id', 'reward_id', 'status', 'total_points', 'created_at')->where('user_id', $user->id)->get();
+        $wasteDeposits = DB::table('transactions')->select('id','transaction_code', 'user_id', 'status', 'total_amount', 'total_points', 'created_at')->where('user_id', $user->id)->get();
 
         // Tambahkan properti type berdasarkan variabel yang digunakan
         $withdrawalsWithType = $withdrawals->map(function ($item) {
@@ -359,7 +359,7 @@ class TransactionFrontendController extends Controller
 
    
     public function tukarPoints(Request $request, $id){
-        $tukarPoints = PenukaranPoints::findOrFail($id);
+        $tukarPoints = PenukaranPoints::with('reward')->findOrFail($id);
         return view('frontend.rewards.detail-tukar-points', compact('tukarPoints'),[
             'route'=>route('transaksiFrontend.index')
         ]);
