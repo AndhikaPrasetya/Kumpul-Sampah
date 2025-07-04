@@ -1,4 +1,4 @@
-<section class="mt-4" wire:poll.5s="loadTransactions">
+<section class="mt-3 mb-3" wire:poll.5s="loadTransactions">
     <div class="flex justify-between items-center">
         <h2 class="text-xl font-bold text-gray-800">Transaksi</h2>
         <a href="{{ route('transaksiFrontend.index') }}" class="text-green-600 hover:text-green-700 transition text-sm font-medium">
@@ -16,20 +16,17 @@
                 'tukar_points' => asset('/template-fe/assets/img/coin.png'),
                 'setor_sampah' => asset('/template-fe/assets/img/recycle.png'),
               ];
-          
               $titles = [
                 'tarik_tunai' => 'Tarik Tunai',
                 'tukar_points' => 'Tukar Points',
                 'setor_sampah' => 'Setor Sampah',
               ];
-          
               $badgeClass = match ($transaction->status) {
                 'approved' => 'bg-green-100 text-green-800',
                 'rejected' => 'bg-red-100 text-red-800',
                 'pending' => 'bg-yellow-100 text-yellow-800',
                 default => 'bg-gray-100 text-gray-800',
               };
-    
               $routes = [
                 'tarik_tunai' => route('transaction.withdraw', $transaction->transaction_code),
                 'tukar_points' => route('transaction.exchange', $transaction->transaction_code),

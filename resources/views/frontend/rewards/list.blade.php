@@ -3,7 +3,7 @@
 @section('title', 'Rewards')
 @section('content')
 
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-3 md:gap-4 px-2">
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-3 md:gap-4 px-2">
     @foreach ($rewards as $index => $reward)
         @php
             // Hitung progress poin user terhadap poin reward
@@ -17,7 +17,7 @@
                     <img src="{{ asset($reward->image) }}" alt="{{ $reward->name }}" class="h-20 sm:h-24 w-auto object-contain">
                 </div>
                 <div class="p-3 sm:p-4 text-center flex-grow">
-                    <h5 class="text-base sm:text-lg font-medium text-gray-800 mb-1 line-clamp-1">{{ $reward->name }}</h5>
+                    <h5 class="text-sm sm:text-lg font-medium text-gray-800 mb-1 line-clamp-1">{{ $reward->name }}</h5>
                     
                     <!-- Informasi Poin -->
                     <div class="flex items-center justify-center mb-2">

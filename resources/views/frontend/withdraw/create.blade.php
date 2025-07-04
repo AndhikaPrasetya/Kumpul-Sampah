@@ -33,7 +33,7 @@
                 </div>
                 <div class="metode">
                     <p class="text-gray-600 mb-2">Metode Penarikan</p>
-                    <select name="metode_penarikan" class="text-center shadow-xl border-0 border-green-500 text-xl rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-4" >
+                    <select name="metode_penarikan" class="text-center shadow-xl border-0 border-green-500 text-xl rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-4 custom-select" >
                         <option value="" selected disabled>Pilih metode</option>
                         <option value="transfer">Transfer</option>
                         <option value="cash">Cash</option>
@@ -54,6 +54,7 @@
 @section('script')
 <script>
   (function() {
+
     // Safety wrapper to avoid global namespace pollution
     function initWithdrawApp() {
         try {
@@ -99,6 +100,10 @@
             $('#createFormWithdraw').off('submit').on('submit', function(e) {
                 e.preventDefault();
                 handleFormSubmission($(this));
+            });
+
+            $('.custom-select').select2({
+                 minimumResultsForSearch: Infinity
             });
 
             // Format amount input

@@ -58,7 +58,7 @@
             color: #343a40;
         }
         #appCapsule{
-            padding: 40px 0;
+            padding: 100px 0;
         }
         
     </style>
@@ -73,13 +73,13 @@
 
         <div class="section text-center" style="margin-top:1em;">
             <h2>Lupa Kata Sandi?</h2>
-            <p>Jangan khawatir! Masukkan email Anda untuk mendapatkan tautan reset kata sandi dan kembali mengakses akun Anda. 🌱</p>
+            <p>Untuk bantuan lebih lanjut terkait reset kata sandi, mohon hubungi BSU (Bank Sampah Unit) Anda. Mereka akan dengan senang hati membantu Anda mengakses kembali akun.</p>
         </div>
         <div class="section p-3" >
-            <form method="POST" action="{{ route('password.email') }}">
+            {{-- <form method="POST" action="{{ route('password.email') }}"> --}}
                 @csrf
                 <div>
-                    <div>
+                    {{-- <div>
                         <div class="form-group boxed">
                             <div class="input-wrapper">
                                 <label for="email" >Email</label>
@@ -89,13 +89,13 @@
                             </div>
                         </div>
 
-                    </div>
-                    <div class=" transparent d-flex justify-content-center" style="margin-top: 2em;">
-                        <button type="submit" class=" btn btn-primary btn-block btn-lg">Email Password Reset Link </button>
+                    </div> --}}
+                    <div class=" transparent d-flex justify-content-center" >
+                        <a href="{{route('login')}}" class=" btn btn-primary btn-block btn-lg"> Kembali ke Halaman Login </a>
                     </div>
                 </div>
 
-            </form>
+            {{-- </form> --}}
         </div>
 
     </div>

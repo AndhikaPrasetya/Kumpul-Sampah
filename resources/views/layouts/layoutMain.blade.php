@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{asset('template/plugins/toastr/toastr.min.css')}}">
     <link rel="stylesheet" href="{{asset('template/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
     <link rel="stylesheet" href="{{asset('template/plugins/swiper-11.2.6/package/swiper-bundle.min.css')}}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     
 </head>
 
@@ -58,6 +59,7 @@
     <script src="{{ asset('/template/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
      <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
      <script src="{{asset('template-fe/assets/js/plugins/splide/splide.min.js')}}"></script>
+     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     @yield('script')
 </body>

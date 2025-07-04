@@ -58,21 +58,22 @@ class HomeController extends Controller
     }
 
     public function listBlog()
-    {
-        // Ambil 3 berita terbaru sebagai hero berdasarkan created_at
-        $heroNews = Article::latest()->where('status', 'published')->take(3)->get();
+{
+    // Ambil 3 berita terbaru sebagai hero berdasarkan created_at
+    $heroNews = Article::latest()->where('status', 'published')->take(3)->get();
 
-        $heroNewsIds = $heroNews->pluck('id')->toArray();
+    $heroNewsIds = $heroNews->pluck('id')->toArray();
 
-        $otherNews = Article::whereNotIn('id', $heroNewsIds)
-            ->where('status', 'published')
-            ->orderBy('created_at', 'desc')
-            ->get();
+    // Gunakan paginate() dengan per_page 10 (atau sesuai kebutuhan)
+    $otherNews = Article::whereNotIn('id', $heroNewsIds)
+        ->where('status', 'published')
+        ->orderBy('created_at', 'desc')
+        ->paginate(4);
 
-        return view('frontend.blog.list', compact('heroNews', 'otherNews'),[
-            'route'=>route('home')
-        ]);
-    }
+    return view('frontend.blog.list', compact('heroNews', 'otherNews'), [
+        'route' => route('home')
+    ]);
+}
     public function detailBlog($slug)
     {
         $article = Article::with('user')->where('slug', $slug)->first();
