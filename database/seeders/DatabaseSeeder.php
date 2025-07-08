@@ -162,7 +162,7 @@ class DatabaseSeeder extends Seeder
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->command->error('Seeding failed: ' . $e->getMessage());
+            $this->command->error('Seeding failed permission: ' . $e->getMessage());
         }
 
         $dataBsu = [
@@ -191,12 +191,6 @@ class DatabaseSeeder extends Seeder
         // Create Super Admin user
         DB::beginTransaction();
         try {
-            $admin = User::create([
-                'name' => 'admin',
-                'email' => 'admin@gmail.com',
-                'password' => bcrypt('password'),
-            ],);
-
             $bsus = [];
             foreach ($dataBsu as $bsu) {
                 $emailBsu =strtolower(str_replace(' ', '', $bsu) . '@gmail.com');
@@ -225,25 +219,34 @@ class DatabaseSeeder extends Seeder
                 'email' => 'nasabah@gmail.com',
                 'password' => bcrypt('password'),
             ]);
-            $admin->assignRole('super admin');
-            $nasabah->assignRole('nasabah');
-
+          
             $nasabahDetail = new NasabahDetail();
             $nasabahDetail->user_id = $nasabah->id;
-            $nasabahDetail->bsu_id = $bsu[0]->id;
+            $nasabahDetail->bsu_id = $bsu->id;
             $nasabahDetail->alamat = 'jl.H.saaba';
             $nasabahDetail->save();
 
             $saldo = new Saldo();
             $saldo->user_id = $nasabah->id;
-            $saldo->bsu_id = $bsu[0]->id;
+            $saldo->bsu_id = $bsu->id;
             $saldo->balance = 0;
             $saldo->points = 0;
             $saldo->save();
+
+             $admin = User::create([
+                'name' => 'admin',
+                'email' => 'admin@gmail.com',
+                'password' => bcrypt('password'),
+            ],);
+
+              $admin->assignRole('super admin');
+            $nasabah->assignRole('nasabah');
+
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->command->error('Seeding failed: ' . $e->getMessage());
+            $this->command->error('Seeding failed nasabah: ' . $e->getMessage());
         }
 
         //DATA SETTING WEBSITE
@@ -295,5 +298,10 @@ class DatabaseSeeder extends Seeder
         } catch (Exception $e) {
             DB::rollBack();
         }
+
+        $this->call([
+            CategorySampahSeeder::class,
+            NasabahSeeder::class
+        ]);
     }
 }

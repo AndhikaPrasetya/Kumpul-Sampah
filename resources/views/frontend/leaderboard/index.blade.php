@@ -8,7 +8,6 @@
         <h1 class="text-xl font-bold text-gray-800">Pahlawan Lingkungan</h1>
     </div>
     
-    
     <!-- Card Container -->
     <div class="bg-white rounded-b-lg shadow mx-4 overflow-hidden">
         
@@ -30,32 +29,27 @@
             </div>
         </div>
         
-        <!-- List of other players -->
+        <!-- List of players -->
         <div class="px-4 py-2">
-            <!-- Player 4 -->
-            @foreach ($transactionsPerBSU as $i => $b)
-                
+            @foreach ($transactionsPerBSU as $index => $b)
             <div class="flex items-center bg-gray-50 p-3 rounded-lg mb-2 hover:bg-gray-100 transition">
-                <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center font-bold text-white mr-3">{{$i+1}}</div>
+                <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center font-bold text-white mr-3">
+                    {{ $index + 1 }}
+                </div>
                 <div class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-gray-200">
                     <i class="fas fa-seedling text-green-600 text-lg"></i>
                 </div>
                 <div class="ml-3 flex-grow">
-                    <p class="text-gray-800 font-medium">{{$b->bsu_name}}</p>
-                    
+                    <p class="text-gray-800 font-medium">{{ $b->bsu_name }}</p>
+                    <p class="text-xs text-gray-500">ID: {{ $b->bsu_id }}</p>
                 </div>
                 <div class="text-right">
                     <p class="text-green-600 font-semibold">{{ number_format($b->total_berat, 2, ',', '.') }} kg</p>
                 </div>
             </div>
             @endforeach
-           
         </div>
     </div>
 </div>
 
-            <!-- Header -->
-     
-        @endsection
-
-    
+@endsection

@@ -20,8 +20,6 @@ class KategoriSampahController extends Controller
         $sampahs = Sampah::with('categories')
                     ->where('bsu_id', $bsuId)
                     ->get();
-                    
-        dd($sampahs);
     
         return view('frontend.sampah.list', compact('sampahs'), [
             'route' => route('home')

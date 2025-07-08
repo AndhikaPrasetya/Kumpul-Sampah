@@ -14,7 +14,6 @@ class PeringkatController extends Controller
     public function index()
     {
         $bsu = BsuDetail::with('user')->get();
-
         // $transactions = collect();
         // foreach ($bsu as $b) {
         //     $transactions = $transactions->merge(
@@ -41,7 +40,7 @@ class PeringkatController extends Controller
                 })->sum('berat')
             ];
         })->sortByDesc('total_berat')->values();
-        
+      
         $topThree = $transactionsPerBSU->take(3); // peringkat 1-3
         $others = $transactionsPerBSU->slice(3)->values(); // sisanya dari peringkat 4
   
