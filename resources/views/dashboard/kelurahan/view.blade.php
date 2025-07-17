@@ -7,35 +7,25 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-12 col-md-3">
+                    <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label for="name">Name</label>
                             <input type="text" class="form-control shadow-sm" name="name" id="name"
                                 value="{{ $bsu->name }}" readonly>
                         </div>
                     </div>
-                    <div class="col-12 col-md-3">
+                    <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="email" class="form-control shadow-sm" name="email" id="email"
                                 value="{{ $bsu->email }}" readonly>
                         </div>
                     </div>
-                    <div class="col-12 col-md-3">
+                    <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label for="no_phone">Nomer Handphone</label>
                             <input type="text" class="form-control shadow-sm" name="no_phone" id="no_phone"
                                 placeholder="0812XXXXXX" value="{{$bsu->no_phone}}" readonly>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-3">
-                        <div class="form-group">
-                            <label for="status">Status</label>
-                              <select name="status" class="form-control shadow-sm" id="status" disabled>
-                                    <option value="approved" {{$bsuDetail->status ==='approved'?'selected' : ''}}>Approve</option>
-                                    <option value="hold" {{$bsuDetail->status ==='hold'?'selected' : ''}}>Hold</option>
-                                    <option value="reject" {{$bsuDetail->status ==='reject'?'selected' : ''}}>Reject</option>
-                                </select>
                         </div>
                     </div>
                     <div class="col-12 col-md-2">
@@ -53,7 +43,7 @@
                     <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label for="kelurahan">Kelurahan</label>
-                            <input type="text" class="form-control shadow-sm" name="kelurahan" id="kelurahan" value="{{$bsuDetail->kelurahan->user->name}}" readonly>
+                            <input type="text" class="form-control shadow-sm" name="kelurahan" id="kelurahan" value="{{$bsuDetail->kelurahan}}" readonly>
                         </div>
                     </div>
                     <div class="col-md-4">

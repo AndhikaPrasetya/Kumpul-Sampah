@@ -446,7 +446,7 @@ class TransactionsController extends Controller
             
             // Update transaction status if provided
             if ($request->has('status')) {
-                $transaction->update(['status' => $newStatus]);
+                $transaction->update(['status' => $newStatus, 'notes' => $request->notes]);
             }
              Cache::forget("total_sampah_{$bsu_id}");
              Cache::forget("grafik_sampah_{$bsu_id}");

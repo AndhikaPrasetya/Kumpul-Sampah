@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use App\Models\User;
 use App\Models\BsuDetail;
+use App\Models\KelurahanDetails;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -73,7 +74,9 @@ class BsuController extends Controller
     }
 
     public function create(){
-        return view('dashboard.bsu.create');
+        $kelurahans = KelurahanDetails::all();
+        
+        return view('dashboard.bsu.create',get_defined_vars());
     }
 
     public function store(Request $request){
@@ -84,7 +87,7 @@ class BsuController extends Controller
             'no_phone' =>'required|string|max:15',
             'rt' =>'required|string|max:15',
             'rw' =>'required|string|max:15',
-            'kelurahan' =>'required|string|max:15',
+            // 'kelurahan' =>'required|string|max:15',
             'alamat' =>'required|string|max:255',
         ]);
         if ($validator->fails()) {
@@ -109,7 +112,8 @@ class BsuController extends Controller
             $bsuDetail->user_id = $user->id;
             $bsuDetail->rt = $request->rt;
             $bsuDetail->rw = $request->rw;
-            $bsuDetail->kelurahan = $request->kelurahan;
+            $bsuDetail->status = $request->status;
+            $bsuDetail->kelurahan_id = $request->kelurahan_id;
             $bsuDetail->alamat = $request->alamat;
             $bsuDetail->save();
             DB::commit();
@@ -138,7 +142,21 @@ class BsuController extends Controller
         $bsuDetail = BsuDetail::where('user_id', $id)->first();
         return view('dashboard.bsu.view', compact('bsu', 'bsuDetail'));
     }
+/*************  ✨ Windsurf Command ⭐  *************/
+    /**
+     * Display the form for editing the specified BSU.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     *
+     * This method retrieves the BSU user and its details by the given ID.
+     * If the BSU is not found, it returns a 404 JSON response.
+     * Otherwise, it returns the edit view with the BSU and its details.
+     */
+
+/*******  e004b237-c3b0-483a-8dfc-b5b5f3b93de4  *******/
     public function edit($id){
+         $kelurahans = KelurahanDetails::all();
         $bsu = User::role('bsu')->findOrFail($id);
         if (!$bsu) {
             return response()->json([
@@ -147,7 +165,7 @@ class BsuController extends Controller
             ], 404);
         }
         $bsuDetail = BsuDetail::where('user_id', $id)->first();
-        return view('dashboard.bsu.edit', compact('bsu', 'bsuDetail'));
+        return view('dashboard.bsu.edit', compact('bsu', 'bsuDetail', 'kelurahans'));
     }
 
 
@@ -181,7 +199,8 @@ class BsuController extends Controller
             $bsuDetail = BsuDetail::where('user_id', $id)->first();
             $bsuDetail->rt = $request->rt;
             $bsuDetail->rw = $request->rw;
-            $bsuDetail->kelurahan = $request->kelurahan;
+            $bsuDetail->status = $request->status;
+            $bsuDetail->kelurahan_id = $request->kelurahan_id;
             $bsuDetail->alamat = $request->alamat;
             $bsuDetail->save();
             DB::commit();

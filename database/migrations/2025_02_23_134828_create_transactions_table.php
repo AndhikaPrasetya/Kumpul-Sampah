@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('status',['pending','approved','rejected'])->default('pending');
             $table->decimal('total_amount', 10, 2)->default(0); // Total dari transaction_details
             $table->integer('total_points')->default(0);
+            $table->string('notes')->nullable();
 
             $table->timestamps();
         });

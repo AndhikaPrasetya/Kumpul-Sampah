@@ -31,7 +31,7 @@ class User extends Authenticatable
     }
     public function bsu()
     {
-        return $this->belongsTo(BsuDetail::class, 'bsu_id');
+        return $this->hasOne(BsuDetail::class, 'user_id');
     }
 
     public function withdraw(){
@@ -64,4 +64,5 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    
 }

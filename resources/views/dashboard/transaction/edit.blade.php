@@ -99,6 +99,12 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="notes">Notes</label>
+                            <textarea name="notes" class="form-control shadow-sm" id="notes">{{$transaction->notes}}</textarea>
+                        </div>
+                    </div>
 
                 </div>
 

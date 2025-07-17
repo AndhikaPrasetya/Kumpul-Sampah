@@ -21,15 +21,31 @@ class NasabahController extends Controller
     {
         $title = "Data Nasabah";
         $breadcrumb = "Nasabah";
+
         if ($request->ajax()) {
-            $data = User::role('nasabah')
-            ->whereHas('nasabahs', function ($query) use ($request) {
-                $query->where('bsu_id', $request->user()->id);
-            });
+            $user = auth()->user(); // Dapatkan pengguna yang sedang login
+
+            // Mulai dengan query dasar: semua user dengan role 'nasabah'
+            $data = User::role('nasabah');
+
+            // Terapkan filter kondisional berdasarkan role pengguna
+            // Jika role-nya BSU, filter nasabahnya berdasarkan bsu_id pengguna yang login
+            if ($user->hasRole('bsu')) {
+                $data->whereHas('nasabahs', function ($query) use ($user) {
+                    $query->where('bsu_id', $user->id);
+                });
+            }
+            // Jika role-nya 'kelurahan', tidak perlu menambahkan filter 'whereHas'.
+            // Query akan tetap User::role('nasabah') yang artinya semua data nasabah
+            // akan ditampilkan (sesuai permintaan "all data").
+            // Untuk role lain yang mungkin ada, Anda bisa menambahkan kondisi 'else if'
+            // atau membiarkannya default (menampilkan semua nasabah jika bukan BSU).
+
+            // Terapkan filter pencarian (search)
             if ($search = $request->input('search.value')) {
-                $data->where(function ($data) use ($search) {
-                    $data->where('name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%");
+                $data->where(function ($query) use ($search) { // Menggunakan $query di sini
+                    $query->where('name', 'like', "%{$search}%")
+                          ->orWhere('email', 'like', "%{$search}%");
                 });
             }
 
@@ -50,24 +66,23 @@ class NasabahController extends Controller
                     if (Gate::allows('update nasabah')) {
                         $buttons .= '<a href="' . route('nasabah.edit', $data->id) . '" class="btn btn-sm btn-primary mr-1">
                                         <i class="fas fa-edit"></i>
-                                     </a>';
+                                    </a>';
                     }
                     
                     if (Gate::allows('delete nasabah')) {
                         $buttons .= '<button type="button" class="btn btn-sm btn-danger mr-1 delete-button" data-id="' . $data->id . '" data-section="nasabah">'.
-                                    '<i class="fas fa-trash-alt"></i>
-                                     </button>';
+                                        '<i class="fas fa-trash-alt"></i>
+                                    </button>';
                     }
                     
                     if (Gate::allows('read nasabah')) {
                         $buttons .= '<a href="' . route('nasabah.show', $data->id) . '" class="btn btn-sm btn-info btn-show-user">
-                    <i class="fas fa-eye"></i>
-                 </a>';
+                                    <i class="fas fa-eye"></i>
+                                </a>';
                     }
                     
                     $buttons .= '</div>';
                     
-
                     return $buttons;
                 })
                 ->rawColumns(['action'])

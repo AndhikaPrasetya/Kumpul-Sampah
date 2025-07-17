@@ -11,7 +11,7 @@ use App\Http\Controllers\Frontend\PeringkatController;
 use App\Http\Controllers\Frontend\SetorSampahController;
 use App\Http\Controllers\Frontend\TransactionFrontendController;
 use App\Http\Controllers\Frontend\WitdhrawFeController;
-
+use App\Http\Controllers\KelurahanController;
 use App\Http\Controllers\LaporanKeuanganController;
 use App\Http\Controllers\NasabahController;
 use App\Http\Controllers\PenukaranPoinController;
@@ -28,6 +28,9 @@ use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\WebsiteSettingController;
 use App\Http\Controllers\WithdrawController;
 
+Route::get('/waiting-bsu', function () {
+    return view('auth.waiting');
+})->name('waiting-bsu');
 Route::middleware(['auth', 'verified', 'role:nasabah'])->group(function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -67,7 +70,7 @@ Route::middleware(['auth', 'verified', 'role:nasabah'])->group(function () {
 
 
 
-Route::prefix('admin')->middleware(['auth', 'verified', 'role:super admin|bsu'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'verified', 'role:super admin|bsu|kelurahan'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'total'])->name('dashboard');
     Route::get('/get-nasabah-data', [DashboardController::class, 'getNasabahData'])->name('nasabah.data');
@@ -88,6 +91,9 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:super admin|bsu'])
     Route::put('/bsu/update/{id}', [BsuController::class, 'update'])->name('bsu.update');
     Route::delete('/bsu/delete/{id}', [BsuController::class, 'destroy'])->name('bsu.destroy');
     Route::get('/bsu/view/{id}', [BsuController::class, 'show'])->name('bsu.show');
+
+    Route::resource('kelurahan', KelurahanController::class);
+    Route::delete('/kelurahan/delete/{id}', [KelurahanController::class, 'delete'])->name('kelurahan.delete');
 
     Route::get('/nasabah', [NasabahController::class, 'index'])->name('nasabah.index');
     Route::get('/nasabah/create', [NasabahController::class, 'create'])->name('nasabah.create');

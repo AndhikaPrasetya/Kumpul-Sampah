@@ -15,115 +15,139 @@ class DashboardController extends Controller
     //hitung total sampah dari transactions 
     public function total(Request $request)
     {
-        $bsu_id = Auth::id();
+        $bsu_id = Auth::id(); // ID pengguna yang sedang login
+        $user = Auth::user(); // Objek pengguna yang sedang login
         $tahun = $request->query('year', date('Y')); // Ambil tahun dari request, default tahun ini
 
         // Set TTL (time to live) untuk cache dalam hitungan detik (misalnya 5 menit)
         $cacheTime = 300; // 300 detik = 5 menit
 
-        $isAdmin = Auth::user()->hasRole('super admin');
+        // Tentukan apakah filtering berdasarkan bsu_id diperlukan
+        // Filtering hanya dilakukan jika pengguna memiliki role 'bsu'
+        $shouldFilterByBsuId = $user->hasRole('bsu');
 
-        $totalSampah = Cache::remember("total_sampah_" . ($isAdmin ? 'all' : $bsu_id), $cacheTime, function () use ($bsu_id, $isAdmin) {
-            return TransactionDetail::whereHas('transaction', function ($query) use ($bsu_id, $isAdmin) {
-                $query->where('status', 'approved');
-        
-                if (!$isAdmin) {
-                    $query->where('bsu_id', $bsu_id); // Hanya filter jika bukan admin
+        // Tentukan suffix untuk kunci cache: 'all' jika tidak ada filtering bsu_id,
+        // atau ID bsu_id jika filtering aktif.
+        $cacheKeySuffix = $shouldFilterByBsuId ? $bsu_id : 'all';
+
+        // --- Total Sampah ---
+        $totalSampah = Cache::remember("total_sampah_" . $cacheKeySuffix . "_" . $tahun, $cacheTime, function () use ($user, $shouldFilterByBsuId, $tahun) {
+            return TransactionDetail::whereHas('transaction', function ($query) use ($user, $shouldFilterByBsuId, $tahun) {
+                $query->where('status', 'approved')
+                      ->whereYear('created_at', $tahun); // Tambahkan filter tahun
+
+                if ($shouldFilterByBsuId) {
+                    $query->where('bsu_id', $user->id); // Hanya filter jika role adalah BSU
                 }
             })->sum('berat');
         });
         
-        $totalSaldo = Cache::remember("total_saldo_" . ($isAdmin ? 'all' : $bsu_id), $cacheTime, function () use ($bsu_id, $isAdmin) {
-            $totalMasuk = Transactions::where('status', 'approved');
+        // --- Total Saldo ---
+        $totalSaldo = Cache::remember("total_saldo_" . $cacheKeySuffix . "_" . $tahun, $cacheTime, function () use ($user, $shouldFilterByBsuId, $tahun) {
+            $totalMasukQuery = Transactions::where('status', 'approved')
+                                            ->whereYear('created_at', $tahun); // Tambahkan filter tahun
         
-            if (!$isAdmin) {
-                $totalMasuk->where('bsu_id', $bsu_id);
+            if ($shouldFilterByBsuId) {
+                $totalMasukQuery->where('bsu_id', $user->id);
             }
+            $totalMasuk = $totalMasukQuery->sum('total_amount');
         
-            $totalMasuk = $totalMasuk->sum('total_amount');
+            $totalKeluarQuery = Withdraw::where('status', 'approved')
+                                        ->whereYear('created_at', $tahun); // Tambahkan filter tahun
         
-            $totalKeluar = Withdraw::where('status', 'approved');
-        
-            if (!$isAdmin) {
-                $totalKeluar->where('bsu_id', $bsu_id);
+            if ($shouldFilterByBsuId) {
+                $totalKeluarQuery->where('bsu_id', $user->id);
             }
-        
-            $totalKeluar = $totalKeluar->sum('amount');
+            $totalKeluar = $totalKeluarQuery->sum('amount');
         
             return $totalMasuk - $totalKeluar;
         });
         
-        $totalSaldoKeluar = Cache::remember("total_saldo_keluar_" . ($isAdmin ? 'all' : $bsu_id), $cacheTime, function () use ($bsu_id, $isAdmin) {
-            $query = Withdraw::where('status', 'approved');
+        // --- Total Saldo Keluar ---
+        $totalSaldoKeluar = Cache::remember("total_saldo_keluar_" . $cacheKeySuffix . "_" . $tahun, $cacheTime, function () use ($user, $shouldFilterByBsuId, $tahun) {
+            $query = Withdraw::where('status', 'approved')
+                             ->whereYear('created_at', $tahun); // Tambahkan filter tahun
         
-            if (!$isAdmin) {
-                $query->where('bsu_id', $bsu_id);
+            if ($shouldFilterByBsuId) {
+                $query->where('bsu_id', $user->id);
             }
         
             return $query->sum('amount');
         });
         
-        $transactions = Cache::remember("transactions_pending_" . ($isAdmin ? 'all' : $bsu_id), $cacheTime, function () use ($bsu_id, $isAdmin) {
-            $query = Transactions::with(['users', 'details'])->where('status', 'pending');
+        // --- Transaksi Pending ---
+        $transactions = Cache::remember("transactions_pending_" . $cacheKeySuffix . "_" . $tahun, $cacheTime, function () use ($user, $shouldFilterByBsuId, $tahun) {
+            $query = Transactions::with(['users', 'details'])
+                                 ->where('status', 'pending')
+                                 ->whereYear('created_at', $tahun); // Tambahkan filter tahun
         
-            if (!$isAdmin) {
-                $query->where('bsu_id', $bsu_id);
+            if ($shouldFilterByBsuId) {
+                $query->where('bsu_id', $user->id);
             }
 
             return $query->get();
         });
         
-        
-        $sampahData = Cache::remember("grafik_sampah_" . ($isAdmin ? 'all' : $bsu_id), $cacheTime, function () use ($bsu_id, $isAdmin) {
+        // --- Data Grafik Sampah per Kategori ---
+        $sampahData = Cache::remember("grafik_sampah_" . $cacheKeySuffix . "_" . $tahun, $cacheTime, function () use ($user, $shouldFilterByBsuId, $tahun) {
             return TransactionDetail::join('sampahs', 'transaction_details.sampah_id', '=', 'sampahs.id')
-            ->join('category_sampahs', 'sampahs.category_id', '=', 'category_sampahs.id')
-            ->whereHas('transaction', function ($query) use ($bsu_id, $isAdmin) {
-                $query->where('status', 'approved');
-        
-                if (!$isAdmin) {
-                    $query->where('bsu_id', $bsu_id);
-                }
-            })
-            ->selectRaw('category_sampahs.nama as category_name, COUNT(*) as jumlah')
-            ->groupBy('category_sampahs.nama')
-            ->get();
+                ->join('category_sampahs', 'sampahs.category_id', '=', 'category_sampahs.id')
+                ->whereHas('transaction', function ($query) use ($user, $shouldFilterByBsuId, $tahun) {
+                    $query->where('status', 'approved')
+                          ->whereYear('created_at', $tahun); // Tambahkan filter tahun
+            
+                    if ($shouldFilterByBsuId) {
+                        $query->where('bsu_id', $user->id);
+                    }
+                })
+                ->selectRaw('category_sampahs.nama as category_name, COUNT(*) as jumlah')
+                ->groupBy('category_sampahs.nama')
+                ->get();
         });
 
-        $totalNasabah = Cache::remember("total_nasabah" . ($isAdmin ? 'all' : $bsu_id), $cacheTime, function () use ($bsu_id, $isAdmin) {
+        // --- Total Nasabah ---
+        // Total nasabah tidak perlu filter tahun, kecuali jika nasabah dikaitkan dengan tahun tertentu
+        $totalNasabah = Cache::remember("total_nasabah_" . $cacheKeySuffix, $cacheTime, function () use ($user, $shouldFilterByBsuId) {
             return User::whereHas('roles', function ($query) {
-                    $query->where('name', 'nasabah');
-                })
-                ->when(!$isAdmin, function ($query) use ($bsu_id) {
-                    $query->whereHas('nasabahs', function ($subQuery) use ($bsu_id) {
-                        $subQuery->where('bsu_id', $bsu_id);
-                    });
-                })
-                ->count(); // Hitung jumlah nasabah
+                        $query->where('name', 'nasabah');
+                    })
+                    ->when($shouldFilterByBsuId, function ($query) use ($user) {
+                        $query->whereHas('nasabahs', function ($subQuery) use ($user) {
+                            $subQuery->where('bsu_id', $user->id);
+                        });
+                    })
+                    ->count();
         });
+
+        // --- Nasabah Per Bulan ---
+        // Ini sudah difilter by year dan role
         $nasabahPerBulan = Transactions::selectRaw('MONTH(created_at) as bulan, COUNT(DISTINCT user_id) as jumlah')
-        ->whereYear('created_at', now()->year)
-        ->when(!$isAdmin, function ($query) use ($bsu_id) {
-            $query->whereHas('users.nasabahs', function ($subQuery) use ($bsu_id) {
-                $subQuery->where('bsu_id', $bsu_id);
-            });
-        })
-        ->groupByRaw('MONTH(created_at)')
-        ->get()
-        ->keyBy('bulan');
+            ->whereYear('created_at', $tahun) // Menggunakan $tahun dari request
+            ->when($shouldFilterByBsuId, function ($query) use ($user) {
+                $query->whereHas('users.nasabahs', function ($subQuery) use ($user) {
+                    $subQuery->where('bsu_id', $user->id);
+                });
+            })
+            ->groupByRaw('MONTH(created_at)')
+            ->get()
+            ->keyBy('bulan');
+        
         $bulanLabels = [
             1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
             5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
             9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
         ];
-    // Pastikan semua bulan ada
-    $jumlahNasabahPerBulan = [];
-    for ($bulan = 1; $bulan <= 12; $bulan++) {
-        $jumlahNasabahPerBulan[] = [
-            'bulan' => $bulanLabels[$bulan],
-            'jumlah' => $nasabahPerBulan[$bulan]->jumlah ?? 0
-        ];
-    }
-   
+        
+        // Pastikan semua bulan ada, dengan jumlah 0 jika tidak ada data
+        $jumlahNasabahPerBulan = [];
+        for ($bulan = 1; $bulan <= 12; $bulan++) {
+            $jumlahNasabahPerBulan[] = [
+                'bulan' => $bulanLabels[$bulan],
+                'jumlah' => $nasabahPerBulan->get($bulan)->jumlah ?? 0 // Gunakan get($bulan)
+            ];
+        }
+        
+        // --- Lewatkan variabel ke view ---
         return view('dashboard.index', get_defined_vars());
     }
 

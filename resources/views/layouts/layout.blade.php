@@ -138,6 +138,12 @@
                       </a>
                   </li>
                   <li class="nav-item">
+                      <a href="{{ route('kelurahan.index') }}" class="nav-link {{ Route::is('kelurahan.*') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                          <p>Data Kelurahan</p>
+                      </a>
+                  </li>
+                  <li class="nav-item">
                       <a href="{{ route('bsu.index') }}" class="nav-link {{ Route::is('bsu.*') ? 'active' : '' }}">
                            <i class="far fa-circle nav-icon"></i>
                           <p>Data BSU</p>
@@ -162,6 +168,28 @@
               <i class="nav-icon fas fa-book"></i>
               <p>
               Article 
+              </p>
+            </a>
+          </li>
+          @endif
+          @if (auth()->user()->hasRole('kelurahan'))
+            <li class="nav-item">
+            <a href="{{ route('nasabah.index') }}" class="nav-link {{ Route::is('nasabah.*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Data nasabah</p>
+            </a>
+          </li>
+            <li class="nav-item">
+                      <a href="{{ route('bsu.index') }}" class="nav-link {{ Route::is('bsu.*') ? 'active' : '' }}">
+                           <i class="far fa-circle nav-icon"></i>
+                          <p>Data BSU</p>
+                      </a>
+                  </li>
+                     <li class="nav-item">
+            <a href="{{route('laporan-keuangan.index')}}" class="nav-link {{ Route::is('laporan-keuangan.index') ? 'active' : '' }}">
+              <i class="far fa-circle nav-icon"></i>
+              <p>
+              Laporan Bulanan 
               </p>
             </a>
           </li>

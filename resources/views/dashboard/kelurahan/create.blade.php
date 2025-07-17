@@ -4,86 +4,71 @@
     <section class="content m-5">
         <div class="card card-primary">
             <div class="card-header bg-primary">
-                <h3 class="card-title text-white">Tambah data baru BSU</h3>
+                <h3 class="card-title text-white">Tambah data baru Kelurahan</h3>
             </div>
-            <form id="createFormBsu" enctype="multipart/form-data">
+            <form id="createFormKelurahan">
                 @csrf
-                <div class="card-body">
+                  <div class="card-body">
                     <div class="row">
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="name">Name</label>
-                                <input type="text" class="form-control shadow-sm" name="name" id="name" placeholder="nama" required>
+                                <input type="text" class="form-control shadow-sm" name="name" id="name" required>
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control shadow-sm" name="email" id="email" placeholder="E-mail" required>
+                                <input type="email" class="form-control shadow-sm" name="email" id="email"
+                                   required>
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
-                                <label for="password">Password</label>
-                                <input type="text" class="form-control shadow-sm" name="password" id="password" placeholder="Password" required>
+                                <label for="password">password</label>
+                                <input type="text" class="form-control shadow-sm" name="password" id="password">
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="no_phone">Nomer Handphone</label>
-                                <input type="text" class="form-control shadow-sm" name="no_phone" id="no_phone" placeholder="0812XXXXXX" required>
+                                <input type="text" class="form-control shadow-sm" name="no_phone" id="no_phone"
+                                    placeholder="0812XXXXXX" required>
                             </div>
                         </div>
                         <div class="col-12 col-md-2">
                             <div class="form-group">
-                                <label for="rt">RT</label>
-                                <input type="text" class="form-control shadow-sm" name="rt" id="rt" required>
+                                <label for="kecamatan">kecamatan</label>
+                                <input type="text" class="form-control shadow-sm" name="kecamatan" id="kecamatan" required>
                             </div>
                         </div>
                         <div class="col-12 col-md-2">
                             <div class="form-group">
-                                <label for="rw">RW</label>
-                                <input type="text" class="form-control shadow-sm" name="rw" id="rw" required>
+                                <label for="kota">kota</label>
+                                <input type="text" class="form-control shadow-sm" name="kota" id="kota" required>
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
-                                <label for="kelurahan_id">Kelurahan</label>
-                                 <select name="kelurahan_id" class="form-control shadow-sm select-kelurahan" id="kelurahan_id">
-                                    <option value="" selected>Pilih Kelurahan</option>
-                                    @foreach ($kelurahans as $kelurahan)
-                                        <option value="{{$kelurahan->id}}">{{$kelurahan->user->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                         <div class="col-12 col-md-4">
-                            <div class="form-group">
-                                <label for="status">Status</label>
-                                <select name="status" class="form-control shadow-sm" id="status">
-                                     <option value="" selected>Pilih Status</option>
-                                    <option value="approved">Approve</option>
-                                    <option value="hold">Hold</option>
-                                    <option value="reject">Reject</option>
-                                </select>
+                                <label for="provinsi">provinsi</label>
+                                <input type="text" class="form-control shadow-sm" name="provinsi" id="provinsi" required>
                             </div>
                         </div>
                         <div class="col-12">
                             <label for="alamat">Alamat</label>
-                            <textarea name="alamat" class="form-control shadow-sm" id="alamat"></textarea>
+                            <textarea type="text" class="form-control shadow-sm" name="alamat" id="alamat"
+                            placeholder="Jl.kayu"></textarea>
                         </div>
                     </div>
                 </div>
 
-                <div class="card-footer bg-light">
+                <div class="cardoter bg-light">
                     <div class="d-flex justify-content-start">
                         <button type="submit" class="btn btn-primary px-4 mr-1">
                             <i class="fas fa-save mr-1"></i> Submit
                         </button>
                         <button type="button" 
-                                onclick="window.location.href='{{ route('bsu.index') }}'"
+                                onclick="window.location.href='{{ route('kelurahan.index') }}'"
                                 class="btn btn-warning px-4">
                             <i class="fas fa-arrow-left mr-1"></i> Back
                         </button>
@@ -97,9 +82,6 @@
 @section('script')
     <script>
         $(document).ready(() => {
-             $(document).ready(function() {
-            $('.select-kelurahan').select2();
-        });
             // Konfigurasi Toast
             toastr.options = {
                 "closeButton": true,
@@ -120,13 +102,13 @@
                 }
             };
 
-            $('#createFormBsu').on('submit', function(e) {
+            $('#createFormKelurahan').on('submit', function(e) {
                 e.preventDefault();
 
                 const formData = new FormData(this);
-
+                console.log(formData);
                 $.ajax({
-                    url: '/admin/bsu/store',
+                    url: '/admin/kelurahan',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -134,7 +116,7 @@
                     success: function(response) {
                         showToast('success', response.message);
                         setTimeout(() => {
-                            window.location.href = '/admin/bsu';
+                            window.location.href = '/admin/kelurahan';
                         }, 2000);
                     },
                     error: (xhr) => {

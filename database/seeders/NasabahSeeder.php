@@ -86,7 +86,7 @@ $email = strtolower(str_replace(' ', '', $name)) . '@gmail.com';
     $saldo->points = 0; // Poin default
     $saldo->save();
 
-    echo "Pengguna '{$name}' dengan email '{$email}' dan saldo '{$balance}' berhasil dibuat.\n";
+   
 }
     }
 }

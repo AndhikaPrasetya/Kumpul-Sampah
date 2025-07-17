@@ -24,9 +24,10 @@ return new class extends Migration
         Schema::create('bsu_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('kelurahan_id')->constrained('users')->onDelete('cascade');
             $table->string('rt'); 
             $table->string('rw');
-            $table->string('kelurahan');
+            $table->enum('status', ['approved', 'hold', 'reject']);
             $table->text('alamat'); // Data khusus BSU
             $table->timestamps();
         });

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\BsuDetail;
 use App\Models\CategorySampah;
+use App\Models\KelurahanDetails;
 use App\Models\NasabahDetail;
 use App\Models\Saldo;
 use Exception;
@@ -101,9 +102,20 @@ class DatabaseSeeder extends Seeder
         DB::beginTransaction();
         try {
             $role = Role::create(['name' => 'super admin']);
+            $kelurahanRole = Role::create(['name' => 'kelurahan']);
             $bsu = Role::create(['name' => 'bsu']);
             $nasabah = Role::create(['name' => 'nasabah']);
 
+            $kelurahanRole->givePermissionTo([
+                'create bsu',
+                'read bsu',
+                'update bsu',
+                'delete bsu',
+                'create histori transaction',
+                'read histori transaction',
+                'update histori transaction',
+                'delete histori transaction',
+            ]);
             $bsu->givePermissionTo([
                 'create kategori',
                 'read kategori',
@@ -191,17 +203,40 @@ class DatabaseSeeder extends Seeder
         // Create Super Admin user
         DB::beginTransaction();
         try {
-            $bsus = [];
-            foreach ($dataBsu as $bsu) {
-                $emailBsu =strtolower(str_replace(' ', '', $bsu) . '@gmail.com');
-                $bsu = User::create([
-                    'name' => $bsu,
-                    'email' => $emailBsu,
+            $kelurahan = user::create(
+                [
+                    'name' => 'Kelurahan Meruya Selatan',
+                    'email' => 'kelurahanmenruyaselatan@gmail.com',
                     'password' => bcrypt('password'),
+                ]
+            );
+
+
+            $kelurahan->assignRole('kelurahan');
+            $kelurahanDetail = new KelurahanDetails();
+            $kelurahanDetail->user_id = $kelurahan->id;
+            $kelurahanDetail->kode_pos = 11650;
+            $kelurahanDetail->alamat = 'Kembangan';
+            $kelurahanDetail->kecamatan = 'Kembangan';
+            $kelurahanDetail->kota = 'Jakarta Barat';
+            $kelurahanDetail->provinsi = 'DKI Jakarta';
+            $kelurahanDetail->save();
+
+
+            $bsus = [];
+            foreach ($dataBsu as $bsuName) { // Ubah $bsu menjadi $bsuName agar tidak bentrok dengan variabel $bsu setelahnya
+                $emailBsu = strtolower(str_replace(' ', '', $bsuName) . '@gmail.com');
+                $bsu = User::create([
+                    'name' => $bsuName,
+                    'email' => $emailBsu,
+                    'password' => bcrypt('password'), // Atau Hash::make('password')
                 ]);
 
                 $bsus[] = $bsu;
             }
+
+            // Dapatkan ID Kelurahan 'Meruya Selatan'
+            // Jika kelurahan belum ada, buat baru.
 
             foreach ($bsus as $bsu) {
                 $bsu->assignRole('bsu');
@@ -209,7 +244,8 @@ class DatabaseSeeder extends Seeder
                 $bsuDetail->user_id = $bsu->id;
                 $bsuDetail->rt = '01';
                 $bsuDetail->rw = '08';
-                $bsuDetail->kelurahan = 'Meruya Selatan';
+                $bsuDetail->status = 'approved';
+                $bsuDetail->kelurahan_id = $kelurahan->id; // Tambahkan ini
                 $bsuDetail->alamat = 'jl.H.saaba';
                 $bsuDetail->save();
             }
@@ -219,7 +255,9 @@ class DatabaseSeeder extends Seeder
                 'email' => 'nasabah@gmail.com',
                 'password' => bcrypt('password'),
             ]);
-          
+
+            $nasabah->assignRole('nasabah'); // Pindahkan ini ke sini agar peran di-assign setelah user dibuat
+
             $nasabahDetail = new NasabahDetail();
             $nasabahDetail->user_id = $nasabah->id;
             $nasabahDetail->bsu_id = $bsu->id;
@@ -233,17 +271,16 @@ class DatabaseSeeder extends Seeder
             $saldo->points = 0;
             $saldo->save();
 
-             $admin = User::create([
+            $admin = User::create([
                 'name' => 'admin',
                 'email' => 'admin@gmail.com',
                 'password' => bcrypt('password'),
-            ],);
+            ]);
 
-              $admin->assignRole('super admin');
-            $nasabah->assignRole('nasabah');
+            $admin->assignRole('super admin');
 
 
-            DB::commit();
+            DB::commit(); // Komit transaksi jika semua berhasil
         } catch (\Exception $e) {
             DB::rollBack();
             $this->command->error('Seeding failed nasabah: ' . $e->getMessage());

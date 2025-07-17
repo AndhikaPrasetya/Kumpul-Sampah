@@ -3,9 +3,9 @@
     <section class="content m-5">
         <div class="card card-primary">
             <div class="card-header bg-primary">
-                <h3 class="card-title text-white">Edit BSU</h3>
+                <h3 class="card-title text-white">Edit kelurahan</h3>
             </div>
-            <form id="updateFormBsu" data-id="{{ $bsu->id }}">
+            <form id="updateFormKelurahan" data-id="{{ $kelurahan->id }}">
                 @csrf
                 @method('PUT')
                 <div class="card-body">
@@ -14,14 +14,14 @@
                             <div class="form-group">
                                 <label for="name">Name</label>
                                 <input type="text" class="form-control shadow-sm" name="name" id="name"
-                                    value="{{ $bsu->name }}">
+                                    value="{{ $kelurahan->name }}">
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input type="email" class="form-control shadow-sm" name="email" id="email"
-                                    value="{{ $bsu->email }}">
+                                    value="{{ $kelurahan->email }}">
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
@@ -34,45 +34,31 @@
                             <div class="form-group">
                                 <label for="no_phone">Nomer Handphone</label>
                                 <input type="text" class="form-control shadow-sm" name="no_phone" id="no_phone"
-                                    placeholder="0812XXXXXX" value="{{$bsu->no_phone}}">
+                                    placeholder="0812XXXXXX" value="{{$kelurahan->no_phone}}">
                             </div>
                         </div>
                         <div class="col-12 col-md-2">
                             <div class="form-group">
-                                <label for="rt">RT</label>
-                                <input type="text" class="form-control shadow-sm" name="rt" id="rt" value="{{$bsuDetail->rt}}">
+                                <label for="kecamatan">kecamatan</label>
+                                <input type="text" class="form-control shadow-sm" name="kecamatan" id="kecamatan" value="{{$kelurahanDetail->kecamatan}}">
                             </div>
                         </div>
                         <div class="col-12 col-md-2">
                             <div class="form-group">
-                                <label for="rw">RW</label>
-                                <input type="text" class="form-control shadow-sm" name="rw" id="rw" value="{{$bsuDetail->rw}}">
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-4">
-                           <div class="form-group">
-                                <label for="kelurahan_id">Kelurahan</label>
-                                 <select name="kelurahan_id" class="form-control shadow-sm select-kelurahan" id="kelurahan_id">
-                                    <option value="" selected>Pilih Kelurahan</option>
-                                    @foreach ($kelurahans as $kelurahan)
-                                        <option value="{{$kelurahan->id}}" {{$bsuDetail->kelurahan_id ===$kelurahan->id?'selected' : ''}}>{{$kelurahan->user->name}}</option>
-                                    @endforeach
-                                </select>
+                                <label for="kota">kota</label>
+                                <input type="text" class="form-control shadow-sm" name="kota" id="kota" value="{{$kelurahanDetail->kota}}">
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
-                                <label for="status">Status</label>
-                                <select name="status" class="form-control shadow-sm" id="status">
-                                    <option value="approved" {{$bsuDetail->status ==='approved'?'selected' : ''}}>Approve</option>
-                                    <option value="hold" {{$bsuDetail->status ==='hold'?'selected' : ''}}>Hold</option>
-                                    <option value="reject" {{$bsuDetail->status ==='reject'?'selected' : ''}}>Reject</option>
-                                </select>
+                                <label for="provinsi">provinsi</label>
+                                <input type="text" class="form-control shadow-sm" name="provinsi" id="provinsi" value="{{$kelurahanDetail->provinsi}}">
                             </div>
                         </div>
-                          <div class="col-12">
+                        <div class="col-12">
                             <label for="alamat">Alamat</label>
-                            <textarea name="alamat" class="form-control shadow-sm" id="alamat">{{$bsuDetail->alamat}}</textarea>
+                            <textarea type="text" class="form-control shadow-sm" name="alamat" id="alamat"
+                            placeholder="Jl.kayu">{{$kelurahanDetail->alamat}}</textarea>
                         </div>
                     </div>
                 </div>
@@ -82,7 +68,7 @@
                             <i class="fas fa-save mr-1"></i> Submit
                         </button>
                         <button type="button" 
-                                onclick="window.location.href='{{ route('bsu.index') }}'"
+                                onclick="window.location.href='{{ route('kelurahan.index') }}'"
                                 class="btn btn-warning px-4">
                             <i class="fas fa-arrow-left mr-1"></i> Back
                         </button>
@@ -124,7 +110,7 @@
                 // formData.append('_method', 'PUT');
 
                 $.ajax({
-                    url: `/admin/bsu/update/${id}`,
+                    url: `/admin/kelurahan/${id}`,
                     type: 'PUT',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -155,9 +141,9 @@
                 });
             };
 
-            $('#updateFormBsu').on('submit', function(e) {
+            $('#updateFormKelurahan').on('submit', function(e) {
                 e.preventDefault();
-                handleFormSubmit('updateFormBsu');
+                handleFormSubmit('updateFormKelurahan');
             });
 
 

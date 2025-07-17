@@ -188,8 +188,6 @@
 
     </div>
 
-
-
     <!-- Form Login -->
     <div id="appCapsule" style="max-width: 400px;  margin: 0 auto;">
 
@@ -203,8 +201,13 @@
                 @csrf
                 <div>
                     <h2>Selamat datang kembali!</h2>
-                    <div>
+                    @if (session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                        </div>
+                    @endif
 
+                    <div>
                         <div class="form-group boxed">
                             <div class="input-wrapper">
                                 <label for="email">Email</label>
@@ -233,24 +236,30 @@
                                         style="font-size: 20px; color:#16a34a"></ion-icon>
                                 </button>
                             </div>
-                                <a href="{{ route('password.request') }}">Lupa Password?</a>
+                            <a href="{{ route('password.request') }}">Lupa Password?</a>
                         </div>
                     </div>
                     <div class=" transparent text-center" style="margin-top: 2em;">
                         <button type="submit" class="btn btn-primary btn-block btn-lg mb-1 fw-bold">Log in</button>
-                        <div>
-                            <p>Belum punya akun? <a href="{{ route('register') }}">Daftar</a> </p>
+                        <div class="text-center">
+                            <p class="text-muted">
+                                <i class="fas fa-user-plus me-2"></i>
+                                Belum punya akun? Pilih jenis akun Anda:
+                            </p>
+                            <div class="d-flex justify-content-center gap-3">
+                                <a href="{{ route('register') }}">Daftar User</a>
+                                <span>|</span>
+                                <a href="/register/bsu">Daftar BSU</a>
+                            </div>
                         </div>
                         <div>
                         </div>
                     </div>
                 </div>
-
-
             </form>
         </div>
 
-        
+
     </div>
 
     <script src={{ asset('/template/plugins/jquery/jquery.min.js') }}></script>
